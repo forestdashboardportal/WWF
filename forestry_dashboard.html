@@ -119,7 +119,7 @@
     </div>
   </div>
 
-  <p class="mt-6 text-xs text-emerald-100/50 text-center">WWF-Pakistan © 2024 · 100% Google Sheet Authenticated</p>
+  <p class="mt-6 text-xs text-emerald-100/50 text-center">WWF-Pakistan © 2024 · Session Persisted</p>
 </div>
 
 <!-- ========================================================
@@ -136,7 +136,7 @@
         </div>
         <div>
           <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">WWF-Pakistan Forestry Portal</h1>
-          <p class="text-xs text-emerald-100/80 font-medium">Live Google Sheets Sync (Read/Write) · Role-Based Access</p>
+          <p class="text-xs text-emerald-100/80 font-medium">Live Google Sheets Sync (Read/Write) · Session Remembered</p>
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
@@ -171,13 +171,13 @@
     <!-- Loading bar -->
     <div id="data-loading-bar" class="rounded-xl p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-3">
       <span class="w-5 h-5 border-2 border-emerald-300 border-t-emerald-700 rounded-full spin shrink-0"></span>
-      <span>Fetching dataset from Google Sheets…</span>
+      <span>Fetching live dataset from Google Sheets API…</span>
     </div>
 
     <!-- Data error bar -->
     <div id="data-error-bar" class="hidden rounded-xl p-4 bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-3">
       <span>⚠</span>
-      <span id="data-error-text">Could not load Google Sheets data.</span>
+      <span id="data-error-text">Could not load Google Sheets API data.</span>
       <button onclick="loadAllFromGoogleSheet()" class="ml-auto px-3 py-1 text-xs font-bold rounded-lg bg-rose-600 text-white hover:bg-rose-700">Retry</button>
     </div>
 
@@ -261,16 +261,45 @@
       </div>
     </div>
 
-    <!-- CHARTS -->
+    <!-- 4 DYNAMIC CONNECTED CHARTS GRID -->
     <div id="charts-section" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-5">
+      
+      <!-- Chart 1: Plants & Area Trajectory by Year -->
       <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-800"></i>Plants by Year</h3>
+        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-800"></i>1. Plants Planted by Year
+        </h3>
+        <p class="text-[11px] text-slate-400 mb-3">Annual distribution of planted seedlings across filtered records</p>
         <div class="h-56"><canvas id="chart-year"></canvas></div>
       </div>
+
+      <!-- Chart 2: Land Area by Global Practice -->
       <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-brand-800"></i>Area by Practice</h3>
+        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+          <i data-lucide="pie-chart" class="w-4 h-4 text-brand-800"></i>2. Area Share by WWF Practice (ha)
+        </h3>
+        <p class="text-[11px] text-slate-400 mb-3">Hectares restored across Forests, Freshwater, Food &amp; Marine pillars</p>
         <div class="h-56"><canvas id="chart-practice"></canvas></div>
       </div>
+
+      <!-- Chart 3: Province/Region Distribution -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+          <i data-lucide="map-pin" class="w-4 h-4 text-brand-800"></i>3. Total Plants by Province / Region
+        </h3>
+        <p class="text-[11px] text-slate-400 mb-3">Regional breakdown of plantation achievements across Pakistan</p>
+        <div class="h-60"><canvas id="chart-province"></canvas></div>
+      </div>
+
+      <!-- Chart 4: Average Survival Rate by Intervention Category -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+          <i data-lucide="activity" class="w-4 h-4 text-brand-800"></i>4. Average Survival Rate by Category (%)
+        </h3>
+        <p class="text-[11px] text-slate-400 mb-3">Ecological survival success across Afforestation, Rangeland, Watershed &amp; Other</p>
+        <div class="h-60"><canvas id="chart-category"></canvas></div>
+      </div>
+
     </div>
 
     <!-- CATEGORY MATRIX -->
@@ -298,7 +327,7 @@
       </div>
     </div>
 
-    <!-- DATA TABLE -->
+    <!-- DATA TABLE (COLLAPSED BY DEFAULT) -->
     <div id="table-section" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
       <div class="p-4 border-b border-slate-100 flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -306,28 +335,35 @@
           <span class="text-sm font-bold text-slate-800">Observation Records</span>
           <span id="table-row-count" class="text-xs text-slate-500 font-medium"></span>
         </div>
-        <span class="text-[11px] text-slate-400">Live dataset from Google Sheets</span>
+        <button id="table-toggle-btn" onclick="toggleTableExpand()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-brand-800 text-white hover:bg-brand-900 shadow transition">
+          <i id="table-toggle-icon" data-lucide="chevron-down" class="w-4 h-4"></i>
+          <span id="table-toggle-text">Expand Observation Records</span>
+        </button>
       </div>
-      <div class="overflow-x-auto custom-scrollbar">
-        <table class="w-full text-xs whitespace-nowrap">
-          <thead class="bg-gradient-to-r from-[#0D3824] to-[#17563A] text-white text-left">
-            <tr>
-              <th class="py-3 px-3.5">ID</th>
-              <th class="py-3 px-3.5">Code</th>
-              <th class="py-3 px-3.5">Intervention</th>
-              <th class="py-3 px-3.5">Practice</th>
-              <th class="py-3 px-3.5">Province</th>
-              <th class="py-3 px-3.5">Project</th>
-              <th class="py-3 px-3.5 text-center">Year</th>
-              <th class="py-3 px-3.5 text-right">Plants</th>
-              <th class="py-3 px-3.5 text-right">Area (ha)</th>
-              <th class="py-3 px-3.5 text-right">Survival %</th>
-              <th class="py-3 px-3.5">Remarks</th>
-              <th class="py-3 px-3.5 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody id="data-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
-        </table>
+
+      <!-- Collapsible Container (hidden by default) -->
+      <div id="table-collapsible-wrapper" class="hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-xs whitespace-nowrap">
+            <thead class="bg-gradient-to-r from-[#0D3824] to-[#17563A] text-white text-left">
+              <tr>
+                <th class="py-3 px-3.5">ID</th>
+                <th class="py-3 px-3.5">Code</th>
+                <th class="py-3 px-3.5">Intervention</th>
+                <th class="py-3 px-3.5">Practice</th>
+                <th class="py-3 px-3.5">Province</th>
+                <th class="py-3 px-3.5">Project</th>
+                <th class="py-3 px-3.5 text-center">Year</th>
+                <th class="py-3 px-3.5 text-right">Plants</th>
+                <th class="py-3 px-3.5 text-right">Area (ha)</th>
+                <th class="py-3 px-3.5 text-right">Survival %</th>
+                <th class="py-3 px-3.5">Remarks</th>
+                <th class="py-3 px-3.5 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="data-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -335,7 +371,7 @@
 
   <footer class="bg-white border-t border-slate-200 mt-auto py-4">
     <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
-      WWF-Pakistan Forestry Portal · 100% Google Sheet Driven
+      WWF-Pakistan Forestry Portal · 100% Google Sheet Driven · Session Remembered
     </div>
   </footer>
 </div>
@@ -550,6 +586,7 @@ let currentUser   = null;
 let records       = [];
 let whitelist     = { users: [], domains: [], pending: [] };
 let charts        = {};
+let isTableExpanded = false;
 
 // ── Formatters ────────────────────────────────────────────────────────────────
 const numFmt   = n => n != null ? Number(n).toLocaleString('en-US') : '—';
@@ -564,6 +601,24 @@ function showToast(msg, type='success') {
   t.innerHTML = `<span>${msg}</span>`;
   c.appendChild(t);
   setTimeout(() => t.remove(), 3500);
+}
+
+// ── Toggle Collapsible Observation Table ──────────────────────────────────────
+function toggleTableExpand() {
+  isTableExpanded = !isTableExpanded;
+  const wrapper = document.getElementById('table-collapsible-wrapper');
+  const txt = document.getElementById('table-toggle-text');
+  const btn = document.getElementById('table-toggle-btn');
+
+  if (isTableExpanded) {
+    wrapper.classList.remove('hidden');
+    txt.textContent = 'Collapse Observation Records';
+    btn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-700 text-white hover:bg-slate-800 shadow transition';
+  } else {
+    wrapper.classList.add('hidden');
+    txt.textContent = 'Expand Observation Records';
+    btn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-brand-800 text-white hover:bg-brand-900 shadow transition';
+  }
 }
 
 // ── Page switching ────────────────────────────────────────────────────────────
@@ -625,7 +680,6 @@ async function doAdminLogin() {
 
   if (!email) { showLoginError('Please enter Admin Email.'); return; }
 
-  // Check if email exists in Google Sheet Whitelist with role='admin'
   const user = whitelist.users.find(u => u.email && u.email.toLowerCase()===email && u.role==='admin');
   
   if (user) {
@@ -635,18 +689,20 @@ async function doAdminLogin() {
   }
 }
 
-// ── Login Success ─────────────────────────────────────────────────────────────
+// ── Login Success (Persists session to localStorage) ──────────────────────────
 function loginSuccess(email, role, name) {
   currentUser = { email, role, name: name||email };
+  localStorage.setItem('wwf_logged_user', JSON.stringify(currentUser));
   showToast(`Welcome, ${name||email}! (${role.toUpperCase()})`, 'success');
   syncHeaderUI();
   showDashboardPage();
   renderDashboard();
 }
 
-// ── Logout ────────────────────────────────────────────────────────────────────
+// ── Logout (Clears session from localStorage) ─────────────────────────────────
 function logoutUser() {
   currentUser = null;
+  localStorage.removeItem('wwf_logged_user');
   showLoginPage();
   showToast('Signed out successfully.', 'info');
 }
@@ -784,25 +840,82 @@ function updateKPIs(data) {
   document.getElementById('kpi-records-sub').textContent= `of ${records.length} total from Google Sheet`;
 }
 
-// ── Charts ────────────────────────────────────────────────────────────────────
+// ── DYNAMIC CONNECTED CHARTS ──────────────────────────────────────────────────
 function updateCharts(data) {
   const years = ['2023','2024','2025','2026'];
-  const plantsByYear = years.map(y=>data.filter(d=>String(d.Year)===y).reduce((s,d)=>s+(d.Plants_Count||0),0));
+  const plantsByYear = years.map(y => data.filter(d => String(d.Year)===y).reduce((s,d) => s + (d.Plants_Count||0), 0));
   if (charts.year) charts.year.destroy();
   charts.year = new Chart(document.getElementById('chart-year'), {
-    type:'bar',
-    data:{ labels:years, datasets:[{ label:'Plants', data:plantsByYear, backgroundColor:'#17563A', borderRadius:6 }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,ticks:{callback:v=>v>=1e6?v/1e6+'M':v>=1e3?v/1e3+'K':v}}} }
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [{ label: 'Plants Planted', data: plantsByYear, backgroundColor: '#17563A', borderRadius: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => v >= 1e6 ? v/1e6+'M' : v >= 1e3 ? v/1e3+'K' : v } } }
+    }
   });
 
-  const practices = [...new Set(data.map(d=>d.Practice).filter(Boolean))];
-  const areaByPrac = practices.map(p=>data.filter(d=>d.Practice===p).reduce((s,d)=>s+(d.Area_Covered_ha||0),0));
+  const practices = [...new Set(records.map(d => d.Practice).filter(Boolean))];
+  const areaByPrac = practices.map(p => data.filter(d => d.Practice===p).reduce((s,d) => s + (d.Area_Covered_ha||0), 0));
   const colors = ['#17563A','#2a9d8f','#e9c46a','#f4a261','#e76f51','#264653'];
   if (charts.practice) charts.practice.destroy();
   charts.practice = new Chart(document.getElementById('chart-practice'), {
-    type:'doughnut',
-    data:{ labels:practices, datasets:[{ data:areaByPrac, backgroundColor:colors }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'right',labels:{boxWidth:12,font:{size:11}}}} }
+    type: 'doughnut',
+    data: {
+      labels: practices,
+      datasets: [{ data: areaByPrac, backgroundColor: colors.slice(0, practices.length) }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } }
+    }
+  });
+
+  const provinces = [...new Set(records.map(d => d.Province_Region).filter(Boolean))];
+  const plantsByProv = provinces.map(pr => data.filter(d => d.Province_Region===pr).reduce((s,d) => s + (d.Plants_Count||0), 0));
+  if (charts.province) charts.province.destroy();
+  charts.province = new Chart(document.getElementById('chart-province'), {
+    type: 'bar',
+    data: {
+      labels: provinces.map(p => p.length > 18 ? p.slice(0,16)+'…' : p),
+      datasets: [{ label: 'Plants Count', data: plantsByProv, backgroundColor: '#2a9d8f', borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { x: { beginAtZero: true, ticks: { callback: v => v >= 1e3 ? v/1e3+'K' : v } } }
+    }
+  });
+
+  const categories = [
+    'A. AFFORESTATION, REFORESTATION AND REVEGETATION',
+    'B. RANGELAND AND GRASSLAND MANAGEMENT',
+    'C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES',
+    'D. OTHER FORESTRY-RELATED MEASURES'
+  ];
+  const shortCats = ['A. Afforestation', 'B. Rangeland', 'C. Watershed', 'D. Other'];
+  const survByCategory = categories.map(cat => {
+    const rows = data.filter(d => d.Intervention_Category === cat && d.Survival_Rate_pct != null);
+    if (!rows.length) return 0;
+    const avg = rows.reduce((s,d) => s + Number(d.Survival_Rate_pct), 0) / rows.length;
+    return (avg * 100).toFixed(1);
+  });
+  if (charts.category) charts.category.destroy();
+  charts.category = new Chart(document.getElementById('chart-category'), {
+    type: 'bar',
+    data: {
+      labels: shortCats,
+      datasets: [{ label: 'Avg Survival (%)', data: survByCategory, backgroundColor: ['#17563A','#e9c46a','#2a9d8f','#f4a261'], borderRadius: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { min: 0, max: 100, ticks: { callback: v => v + '%' } } }
+    }
   });
 }
 
@@ -957,7 +1070,6 @@ async function handleRecordSubmit(e) {
     Remarks_Evidence : document.getElementById('entry-remarks').value||null,
   };
 
-  // POST new record to Google Sheets API
   try {
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
@@ -1155,11 +1267,26 @@ function clearAllPending() {
   if(el) el.addEventListener(el.tagName==='SELECT'?'change':'input', renderDashboard);
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  loadAllFromGoogleSheet();
+// ── Init (Session persistence check) ──────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', async () => {
+  // Check for saved session in localStorage
+  const savedUser = localStorage.getItem('wwf_logged_user');
+  if (savedUser) {
+    try {
+      currentUser = JSON.parse(savedUser);
+      syncHeaderUI();
+      showDashboardPage();
+    } catch(e) {
+      currentUser = null;
+      showLoginPage();
+    }
+  } else {
+    showLoginPage();
+  }
+
+  // Load Google Sheet data
+  await loadAllFromGoogleSheet();
   onCategoryChange();
-  showLoginPage();
   if (window.lucide) lucide.createIcons();
 });
 </script>
