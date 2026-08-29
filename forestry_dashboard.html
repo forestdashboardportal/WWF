@@ -559,7 +559,7 @@
      ================================================================ -->
 <script>
 // ── Constants & Configuration ──────────────────────────────────────────────────
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzyGXA_aiiv8XQb2Y-yVEX72q6CBHmBbbq6hMooVIKnNKV-teoR9TjlPbXgd6IX3Tjf/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1G_xYK6NMLM1mg9UghumjvAs4FUr1KJdZmYXES-zxBKgOs6PQ5NfCkXleYWU2YaRk/exec";
 
 const CATALOG = [
   { cat:'A. AFFORESTATION, REFORESTATION AND REVEGETATION', code:'A-1', name:'Planting of seedlings',                        desc:'Establishing trees by planting nursery-raised seedlings.',                              practice:'Forests'    },
@@ -1071,11 +1071,12 @@ async function handleRecordSubmit(e) {
   };
 
   try {
+    const actionType = editId ? 'updateRecord' : 'addRecord';
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'addRecord', record: newRec })
+      body: JSON.stringify({ action: actionType, record: newRec })
     });
     
     if (editId) {
@@ -1096,9 +1097,21 @@ async function handleRecordSubmit(e) {
 
 function deleteRecord(id) {
   if (!currentUser || currentUser.role==='viewer') return;
-  if (!confirm(`Remove record #${id} from view?`)) return;
+  if (!confirm(`Delete record #${id} from Google Sheets?`)) return;
+
+  try {
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteRecord', recordId: Number(id) })
+    });
+  } catch(err) {
+    console.error('Delete request error:', err);
+  }
+
   records = records.filter(r=>r.Record_ID!==id);
-  showToast(`Record #${id} removed.`, 'info');
+  showToast(`Record #${id} deleted from Google Sheets.`, 'info');
   renderDashboard();
 }
 
