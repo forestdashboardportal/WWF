@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WWF-Pakistan Forestry & Ecological Analytics & Entry Portal</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#17563A',
+              900: '#0D3824',
+              950: '#052e16',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    @keyframes slideInDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-toast {
+      animation: slideInDown 0.25s ease-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- TOP HEADER -->
+  <header class="bg-gradient-to-r from-[#0D3824] via-[#17563A] to-[#1e6f4b] text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3.5">
+        <div class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shadow-inner shrink-0">
+          <i data-lucide="trees" class="w-6 h-6 text-emerald-300"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">WWF-Pakistan Forestry Portal</h1>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">2023–2026</span>
+          </div>
+          <p class="text-xs text-emerald-100/80 font-medium">Analytics Dashboard, Role-Based Whitelist & Data Entry System</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
+        <!-- New Data Entry Button -->
+        <button onclick="openDataEntryModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-400 text-brand-900 hover:bg-emerald-300 shadow transition">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>New Entry</span>
+        </button>
+
+        <!-- Whitelist Manager Button (Always Accessible with Smart Admin Prompt) -->
+        <button id="admin-whitelist-btn" onclick="handleWhitelistButtonClick()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-500 hover:bg-amber-400 text-white shadow transition relative">
+          <i data-lucide="shield-check" class="w-4 h-4 text-amber-100"></i>
+          <span>Manage Whitelist</span>
+          <span id="pending-requests-header-badge" class="hidden ml-1 px-1.5 py-0.2 text-[10px] font-extrabold rounded-full bg-rose-600 text-white animate-pulse">0</span>
+        </button>
+
+        <!-- CSV Export -->
+        <button onclick="exportToCSV()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition shadow-sm">
+          <i data-lucide="download" class="w-4 h-4 text-emerald-300"></i>
+          <span>Export CSV</span>
+        </button>
+
+        <!-- User / Auth Badge Button -->
+        <div id="auth-status-container" class="flex items-center">
+          <button id="login-trigger-btn" onclick="openAuthModal()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow transition">
+            <i data-lucide="user-check" class="w-4 h-4"></i>
+            <span>Sign In</span>
+          </button>
+
+          <div id="user-profile-badge" class="hidden flex items-center gap-2 bg-white/10 px-3 py-1 rounded-xl border border-white/20">
+            <div class="text-right">
+              <span id="user-display-email" class="text-xs font-bold block leading-none truncate max-w-[150px]">user@wwf.org</span>
+              <span id="user-display-role" class="text-[10px] font-extrabold uppercase tracking-wider px-1.5 py-0.2 rounded inline-block mt-0.5">EDITOR</span>
+            </div>
+            <button onclick="openAuthModal('demo')" class="text-xs text-emerald-200 hover:text-white px-1.5 py-1 rounded hover:bg-white/10 transition" title="Switch User">
+              <i data-lucide="user-cog" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="logoutUser()" class="text-xs text-rose-200 hover:text-white px-1.5 py-1 rounded hover:bg-rose-500/20 transition" title="Sign Out">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- ACTIVE USER INFO / ROLE NOTICE BAR -->
+    <div id="auth-info-banner" class="rounded-xl p-3 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border bg-emerald-50/80 border-emerald-200 text-emerald-900">
+      <div class="flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4 text-emerald-700 shrink-0"></i>
+        <span id="auth-banner-text">Welcome! Sign in to create, edit, or delete observation records.</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="whitelist-count-summary" class="font-semibold text-[11px] text-emerald-800">Whitelist: 5 authorized users, 4 allowed domains</span>
+        <button onclick="openAuthModal('demo')" class="underline hover:text-emerald-950 font-bold ml-1">Quick Demo Accounts</button>
+      </div>
+    </div>
+
+    <!-- FILTER CONTROL BAR -->
+    <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <i data-lucide="sliders-horizontal" class="w-4 h-4 text-brand-800"></i>
+          <span class="text-sm font-bold text-slate-800">Interactive Filter Panel</span>
+          <span id="active-filter-badge" class="hidden px-2 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-100 text-emerald-800">Filtered</span>
+        </div>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <button onclick="resetFilters()" class="text-xs font-semibold text-slate-500 hover:text-brand-800 flex items-center gap-1 transition ml-auto">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            <span>Reset All</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <!-- Search Box -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Search Keywords</label>
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
+            <input type="text" id="search-input" placeholder="Project, code, remark..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-800/20 focus:border-brand-800 transition">
+          </div>
+        </div>
+
+        <!-- Year Filter -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Reporting Year</label>
+          <select id="year-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-800/20 focus:border-brand-800 transition">
+            <option value="ALL">All Years (2023–2026)</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+
+        <!-- Practice Filter -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">WWF Practice</label>
+          <select id="practice-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-800/20 focus:border-brand-800 transition">
+            <option value="ALL">All Practices</option>
+            <option value="Forests">Forests</option>
+            <option value="Freshwater">Freshwater</option>
+            <option value="Food">Food</option>
+            <option value="Marine">Marine</option>
+          </select>
+        </div>
+
+        <!-- Province Filter -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Province / Region</label>
+          <select id="province-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-800/20 focus:border-brand-800 transition">
+            <option value="ALL">All Provinces</option>
+            <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Sindh">Sindh</option>
+            <option value="Balochistan">Balochistan</option>
+            <option value="Sindh & Balochistan">Sindh & Balochistan</option>
+            <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+            <option value="Azad Jammu & Kashmir">Azad Jammu & Kashmir</option>
+            <option value="Federal / National">Federal / National</option>
+            <option value="National">National</option>
+          </select>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Intervention Category</label>
+          <select id="category-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-800/20 focus:border-brand-800 transition">
+            <option value="ALL">All Categories</option>
+            <option value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A. Afforestation & Revegetation</option>
+            <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B. Rangeland & Grassland</option>
+            <option value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C. Watershed Management</option>
+            <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other Forestry Measures</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI CARDS GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden flex flex-col justify-between">
+        <div class="absolute right-3 top-3 w-10 h-10 rounded-xl bg-emerald-50 text-brand-800 flex items-center justify-center">
+          <i data-lucide="sprout" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Plants</span>
+          <div class="mt-1 flex items-baseline gap-2">
+            <h2 id="kpi-plants" class="text-2xl sm:text-3xl font-extrabold text-slate-900">0</h2>
+            <span class="text-xs text-emerald-600 font-bold">stems</span>
+          </div>
+        </div>
+        <p class="mt-3 text-[11px] text-slate-400 font-medium">Planted, regenerated, or distributed</p>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden flex flex-col justify-between">
+        <div class="absolute right-3 top-3 w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
+          <i data-lucide="map" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Area Restored / Covered</span>
+          <div class="mt-1 flex items-baseline gap-2">
+            <h2 id="kpi-area" class="text-2xl sm:text-3xl font-extrabold text-slate-900">0</h2>
+            <span class="text-xs text-blue-600 font-bold">ha</span>
+          </div>
+        </div>
+        <p class="mt-3 text-[11px] text-slate-400 font-medium">Rangeland, forest & watershed zones</p>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden flex flex-col justify-between">
+        <div class="absolute right-3 top-3 w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+          <i data-lucide="trending-up" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Survival Rate</span>
+          <div class="mt-1 flex items-baseline gap-2">
+            <h2 id="kpi-survival" class="text-2xl sm:text-3xl font-extrabold text-slate-900">0.0%</h2>
+          </div>
+        </div>
+        <p class="mt-3 text-[11px] text-slate-400 font-medium">Monitoring verification assessments</p>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm relative overflow-hidden flex flex-col justify-between">
+        <div class="absolute right-3 top-3 w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
+          <i data-lucide="layers" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Active Observations</span>
+          <div class="mt-1 flex items-baseline gap-2">
+            <h2 id="kpi-records" class="text-2xl sm:text-3xl font-extrabold text-slate-900">0</h2>
+            <span class="text-xs text-purple-600 font-bold">records</span>
+          </div>
+        </div>
+        <p class="mt-3 text-[11px] text-slate-400 font-medium">Database entries matching active filter</p>
+      </div>
+    </div>
+
+    <!-- CHARTS SECTION -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-emerald-600"></div>
+            <h3 class="text-sm font-bold text-slate-900">Annual Plants Achievement (2023–2026)</h3>
+          </div>
+          <span class="text-xs text-slate-400 font-medium">Volume</span>
+        </div>
+        <div class="h-64 mt-4">
+          <canvas id="chart-annual-plants"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+            <h3 class="text-sm font-bold text-slate-900">Annual Area Covered & Restored (ha)</h3>
+          </div>
+          <span class="text-xs text-slate-400 font-medium">Hectares</span>
+        </div>
+        <div class="h-64 mt-4">
+          <canvas id="chart-annual-area"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-teal-600"></div>
+            <h3 class="text-sm font-bold text-slate-900">Achievement by WWF Practice</h3>
+          </div>
+          <span class="text-xs text-slate-400 font-medium">Thematic Pillar</span>
+        </div>
+        <div class="h-64 mt-4 flex items-center justify-center">
+          <canvas id="chart-practice-pie"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-indigo-600"></div>
+            <h3 class="text-sm font-bold text-slate-900">Regional Distribution (Area in ha)</h3>
+          </div>
+          <span class="text-xs text-slate-400 font-medium">Province</span>
+        </div>
+        <div class="h-64 mt-4">
+          <canvas id="chart-province-bar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY MATRIX BY CATEGORY -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <i data-lucide="bookmark-check" class="w-4 h-4 text-brand-800"></i>
+          <h3 class="text-sm font-bold text-slate-900">Intervention Category Summary Matrix</h3>
+        </div>
+        <span class="text-xs text-slate-400 font-medium">Real-time dynamic rollup</span>
+      </div>
+
+      <div class="overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+              <th class="py-3 px-4">Category</th>
+              <th class="py-3 px-4 text-right">Total Plants</th>
+              <th class="py-3 px-4 text-right">Total Area (ha)</th>
+              <th class="py-3 px-4 text-right">Avg Survival %</th>
+              <th class="py-3 px-4 text-center">Interventions Tracked</th>
+            </tr>
+          </thead>
+          <tbody id="category-matrix-body" class="divide-y divide-slate-100">
+          </tbody>
+          <tfoot>
+            <tr id="category-matrix-total" class="bg-emerald-50/60 font-bold text-brand-900 border-t-2 border-brand-800">
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- DETAILED DATA TABLE / EXPLORER -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <i data-lucide="database" class="w-4 h-4 text-brand-800"></i>
+          <h3 class="text-sm font-bold text-slate-900">Observation Data Explorer</h3>
+          <span id="table-row-count" class="text-xs text-slate-500 font-semibold"></span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl max-h-[450px]">
+        <table class="w-full text-left text-xs divide-y divide-slate-200">
+          <thead class="bg-[#17563A] text-white font-semibold sticky top-0 z-10">
+            <tr>
+              <th class="py-3 px-3.5 whitespace-nowrap">ID</th>
+              <th class="py-3 px-3.5 whitespace-nowrap">Code</th>
+              <th class="py-3 px-3.5 whitespace-nowrap">Intervention Name</th>
+              <th class="py-3 px-3.5 whitespace-nowrap">Practice</th>
+              <th class="py-3 px-3.5 whitespace-nowrap">Province</th>
+              <th class="py-3 px-3.5 whitespace-nowrap">Project</th>
+              <th class="py-3 px-3.5 text-center whitespace-nowrap">Year</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Plants</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Area (ha)</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Survival %</th>
+              <th class="py-3 px-3.5 whitespace-nowrap">Remarks / Evidence</th>
+              <th class="py-3 px-3.5 text-center whitespace-nowrap">Action</th>
+            </tr>
+          </thead>
+          <tbody id="data-table-body" class="divide-y divide-slate-100 bg-white">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL 1: AUTHENTICATION & LOGIN -->
+  <div id="auth-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200 animate-in fade-in">
+      <div class="bg-gradient-to-r from-[#0D3824] via-[#17563A] to-[#1e6f4b] p-5 text-white text-center relative">
+        <button onclick="closeAuthModal()" class="absolute right-4 top-4 text-white/70 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="trees" class="w-6 h-6 text-emerald-300"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">WWF Forestry Portal Access</h3>
+        <p class="text-xs text-emerald-100/80">Sign in with authorized organizational email</p>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <!-- Auth Error Alert & Action Banner -->
+        <div id="auth-error-alert" class="hidden p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2">
+          <div class="flex items-start gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-rose-600 mt-0.5"></i>
+            <div class="flex-1">
+              <span id="auth-error-text" class="font-semibold block"></span>
+            </div>
+          </div>
+          <div id="auth-request-access-cta" class="pt-2 border-t border-rose-200/60 flex flex-wrap items-center gap-2">
+            <button onclick="handleRequestAccessClick()" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition">
+              📩 Request Access Now
+            </button>
+            <button onclick="switchAuthTab('admin')" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-white border border-rose-300 text-rose-700 hover:bg-rose-50 transition">
+              🔑 Admin Sign In
+            </button>
+          </div>
+        </div>
+
+        <!-- Auth Mode Tabs -->
+        <div class="flex rounded-xl bg-slate-100 p-1 text-xs font-semibold">
+          <button id="tab-user-btn" onclick="switchAuthTab('user')" class="flex-1 py-1.5 rounded-lg bg-white shadow-sm text-slate-800 transition">Email Sign-In</button>
+          <button id="tab-admin-btn" onclick="switchAuthTab('admin')" class="flex-1 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition">Admin Portal</button>
+          <button id="tab-demo-btn" onclick="switchAuthTab('demo')" class="flex-1 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition">Demo Switcher</button>
+        </div>
+
+        <!-- 1. USER TAB (EMAIL LOGIN) -->
+        <div id="auth-tab-user" class="space-y-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-700">Enter Organizational Email</label>
+            <div class="relative">
+              <i data-lucide="mail" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+              <input type="email" id="login-email-input" placeholder="e.g. field.officer@wwf.org" class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-800/20 focus:border-brand-800">
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>Domain Auto-Approved: <code class="text-emerald-700 font-medium">@wwf.org</code>, <code class="text-emerald-700 font-medium">@panda.org</code></span>
+            </div>
+          </div>
+
+          <button onclick="handleUserEmailLogin()" class="w-full bg-[#17563A] hover:bg-[#0D3824] text-white text-xs font-bold py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2">
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            <span>Sign In to Portal</span>
+          </button>
+        </div>
+
+        <!-- 2. ADMIN TAB (EMAIL + MASTER PASSWORD) -->
+        <div id="auth-tab-admin" class="hidden space-y-4">
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <label class="text-xs font-semibold text-slate-700">Admin Email</label>
+              <input type="email" id="admin-email-input" value="admin@wwf.org" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-800">
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-semibold text-slate-700">Master Password</label>
+                <span class="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">Default: admin123</span>
+              </div>
+              <input type="password" id="admin-pass-input" placeholder="••••••••" value="admin123" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-800">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button onclick="handleAdminPasswordLogin()" class="w-full bg-[#17563A] hover:bg-[#0D3824] text-white text-xs font-bold py-2.5 rounded-xl transition shadow">
+              Sign In as Admin
+            </button>
+            <button onclick="handleAdminLoginAndOpenWhitelist()" class="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2.5 rounded-xl transition shadow">
+              Open Whitelist Manager
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. DEMO SWITCHER TAB -->
+        <div id="auth-tab-demo" class="hidden space-y-3">
+          <span class="text-[11px] font-semibold text-slate-500 block">Select a pre-configured account to test permissions:</span>
+          <div class="space-y-1.5">
+            <button onclick="quickLogin('admin@wwf.org')" class="w-full p-2.5 text-left rounded-xl bg-amber-50/80 hover:bg-amber-100/80 border border-amber-200 text-amber-950 flex items-center justify-between transition">
+              <div>
+                <span class="text-xs font-bold block">admin@wwf.org</span>
+                <span class="text-[10px] text-amber-800">WWF Administrator • Full Permissions & Whitelist Access</span>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-amber-500 text-white uppercase">ADMIN</span>
+            </button>
+
+            <button onclick="quickLogin('field.officer@wwf.org')" class="w-full p-2.5 text-left rounded-xl bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-950 flex items-center justify-between transition">
+              <div>
+                <span class="text-xs font-bold block">field.officer@wwf.org</span>
+                <span class="text-[10px] text-emerald-800">KP Field Officer • Data Entry & Edit Permission</span>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-emerald-600 text-white uppercase">EDITOR</span>
+            </button>
+
+            <button onclick="quickLogin('mne.manager@wwf.org')" class="w-full p-2.5 text-left rounded-xl bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-950 flex items-center justify-between transition">
+              <div>
+                <span class="text-xs font-bold block">mne.manager@wwf.org</span>
+                <span class="text-[10px] text-emerald-800">M&E Coordinator • Data Entry & Verification</span>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-emerald-600 text-white uppercase">EDITOR</span>
+            </button>
+
+            <button onclick="quickLogin('tayyab@wwf.org')" class="w-full p-2.5 text-left rounded-xl bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-950 flex items-center justify-between transition">
+              <div>
+                <span class="text-xs font-bold block">tayyab@wwf.org</span>
+                <span class="text-[10px] text-emerald-800">Tayyab - Project Lead • Forestry Programme</span>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-emerald-600 text-white uppercase">EDITOR</span>
+            </button>
+
+            <button onclick="quickLogin('viewer@wwf.org')" class="w-full p-2.5 text-left rounded-xl bg-blue-50/80 hover:bg-blue-100/80 border border-blue-200 text-blue-950 flex items-center justify-between transition">
+              <div>
+                <span class="text-xs font-bold block">viewer@wwf.org</span>
+                <span class="text-[10px] text-blue-800">Observer Viewer • Read-Only Analytics</span>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-blue-600 text-white uppercase">VIEWER</span>
+            </button>
+
+            <button onclick="quickLogin('sarah.khan@wwf.org')" class="w-full p-2.5 text-left rounded-xl bg-purple-50/80 hover:bg-purple-100/80 border border-purple-200 text-purple-950 flex items-center justify-between transition">
+              <div>
+                <span class="text-xs font-bold block">sarah.khan@wwf.org</span>
+                <span class="text-[10px] text-purple-800">Domain Auto-Approval Test (@wwf.org)</span>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-purple-600 text-white uppercase">DOMAIN</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: WHITELIST & ACCESS CONTROL MANAGER -->
+  <div id="whitelist-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[88vh] flex flex-col animate-in fade-in">
+      <div class="bg-gradient-to-r from-[#0D3824] via-[#17563A] to-[#1e6f4b] p-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-300"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white leading-none">Access Control & Whitelist Manager</h3>
+            <p class="text-[11px] text-emerald-100/80 mt-0.5">Manage authorized user emails, domain auto-approvals, and access requests</p>
+          </div>
+        </div>
+        <button onclick="closeWhitelistModal()" class="text-white/70 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Whitelist Manager Sub-Navigation Tabs -->
+      <div class="flex border-b border-slate-200 bg-slate-50 px-4 pt-2 gap-1 text-xs font-semibold overflow-x-auto custom-scrollbar">
+        <button id="wl-tab-users-btn" onclick="switchWhitelistTab('users')" class="px-3 py-2 border-b-2 border-brand-800 text-brand-900 flex items-center gap-1.5 transition">
+          <i data-lucide="users" class="w-3.5 h-3.5"></i>
+          <span>Authorized Users</span>
+          <span id="wl-badge-users-count" class="px-1.5 py-0.2 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
+        </button>
+        <button id="wl-tab-domains-btn" onclick="switchWhitelistTab('domains')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition">
+          <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+          <span>Allowed Domains</span>
+          <span id="wl-badge-domains-count" class="px-1.5 py-0.2 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
+        </button>
+        <button id="wl-tab-requests-btn" onclick="switchWhitelistTab('requests')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition relative">
+          <i data-lucide="inbox" class="w-3.5 h-3.5"></i>
+          <span>Pending Requests</span>
+          <span id="wl-badge-requests-count" class="px-1.5 py-0.2 text-[10px] rounded-full bg-rose-100 text-rose-800 font-bold">0</span>
+        </button>
+        <button id="wl-tab-tools-btn" onclick="switchWhitelistTab('tools')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition">
+          <i data-lucide="wrench" class="w-3.5 h-3.5"></i>
+          <span>Bulk Tools & Backup</span>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+
+        <!-- TAB 1: AUTHORIZED USERS DIRECTORY -->
+        <div id="wl-section-users" class="space-y-4">
+          <!-- Add User Form -->
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5 text-[#17563A]"></i>
+              <span>Add New Authorized User</span>
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+              <input type="email" id="new-wl-email" placeholder="Email (e.g. officer@wwf.org)" class="sm:col-span-5 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+              <input type="text" id="new-wl-name" placeholder="Full Name" class="sm:col-span-3 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+              <select id="new-wl-role" class="sm:col-span-2 px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+                <option value="editor">Editor</option>
+                <option value="viewer">Viewer</option>
+                <option value="admin">Admin</option>
+              </select>
+              <button onclick="addNewWhitelistEmail()" class="sm:col-span-2 py-1.5 bg-[#17563A] text-white text-xs font-bold rounded-lg hover:bg-[#0D3824] transition shadow-sm">
+                Add User
+              </button>
+            </div>
+          </div>
+
+          <!-- Whitelist Table with Search -->
+          <div class="space-y-2">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <span class="text-xs font-bold text-slate-800">Authorized Registry List</span>
+              <div class="relative w-full sm:w-64">
+                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400"></i>
+                <input type="text" id="wl-search-input" oninput="renderWhitelistItems()" placeholder="Filter by email, role, name..." class="w-full pl-8 pr-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+              </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto" id="whitelist-items-container">
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: ALLOWED DOMAINS -->
+        <div id="wl-section-domains" class="hidden space-y-4">
+          <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs text-emerald-900 flex items-start gap-2.5">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-700 shrink-0 mt-0.5"></i>
+            <div>
+              <span class="font-bold block">Domain Auto-Approval Engine</span>
+              <span>Any user who signs in with an authorized organization email domain below will be granted access immediately without manual pre-approval.</span>
+            </div>
+          </div>
+
+          <!-- Add Domain Rule -->
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-[#17563A]"></i>
+              <span>Add Allowed Domain</span>
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+              <input type="text" id="new-wl-domain" placeholder="e.g. wwf.org or partner.org" class="sm:col-span-6 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+              <select id="new-wl-domain-role" class="sm:col-span-3 px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+                <option value="editor">Default: Editor</option>
+                <option value="viewer">Default: Viewer</option>
+              </select>
+              <button onclick="addNewAllowedDomain()" class="sm:col-span-3 py-1.5 bg-[#17563A] text-white text-xs font-bold rounded-lg hover:bg-[#0D3824] transition shadow-sm">
+                Add Domain
+              </button>
+            </div>
+          </div>
+
+          <!-- Allowed Domains List -->
+          <div class="space-y-1.5">
+            <span class="text-xs font-bold text-slate-800">Active Auto-Approved Domains</span>
+            <div class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-56 overflow-y-auto" id="allowed-domains-container">
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: PENDING ACCESS REQUESTS -->
+        <div id="wl-section-requests" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-800">Pending User Access Requests</span>
+            <div class="flex items-center gap-2">
+              <button onclick="approveAllPendingRequests()" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition">
+                Approve All as Editors
+              </button>
+              <button onclick="clearAllPendingRequests()" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                Clear All
+              </button>
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-72 overflow-y-auto" id="pending-requests-container">
+          </div>
+        </div>
+
+        <!-- TAB 4: BULK TOOLS & BACKUP -->
+        <div id="wl-section-tools" class="hidden space-y-4">
+          <!-- Bulk Add -->
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <span class="text-xs font-bold text-slate-800">Bulk Import Emails</span>
+            <p class="text-[11px] text-slate-500">Paste multiple email addresses separated by commas or new lines:</p>
+            <textarea id="bulk-emails-input" placeholder="officer1@wwf.org&#10;officer2@wwf.org, officer3@wwf.org" class="w-full p-2 text-xs rounded-lg border border-slate-200 bg-white min-h-[70px] focus:outline-none focus:ring-1 focus:ring-brand-800"></textarea>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-600 font-semibold">Assign Role:</span>
+                <select id="bulk-emails-role" class="px-2 py-1 text-xs rounded-lg border border-slate-200 bg-white">
+                  <option value="editor">Editor</option>
+                  <option value="viewer">Viewer</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <button onclick="handleBulkImport()" class="px-4 py-1.5 bg-[#17563A] text-white text-xs font-bold rounded-lg hover:bg-[#0D3824] transition">
+                Import Users
+              </button>
+            </div>
+          </div>
+
+          <!-- Export / Import & Reset -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3 rounded-xl border border-slate-200 bg-white space-y-2">
+              <span class="text-xs font-bold text-slate-800 block">Export Whitelist</span>
+              <p class="text-[11px] text-slate-400">Download whitelist data for backups.</p>
+              <div class="flex gap-1.5">
+                <button onclick="exportWhitelistJSON()" class="flex-1 py-1 text-[11px] font-bold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">JSON</button>
+                <button onclick="exportWhitelistCSV()" class="flex-1 py-1 text-[11px] font-bold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">CSV</button>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl border border-slate-200 bg-white space-y-2">
+              <span class="text-xs font-bold text-slate-800 block">Import JSON</span>
+              <p class="text-[11px] text-slate-400">Restore whitelist from saved JSON.</p>
+              <input type="file" id="whitelist-import-file" accept=".json" onchange="importWhitelistJSON(event)" class="text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
+            </div>
+
+            <div class="p-3 rounded-xl border border-rose-200 bg-rose-50/50 space-y-2">
+              <span class="text-xs font-bold text-rose-900 block">Reset System Presets</span>
+              <p class="text-[11px] text-rose-700/80">Restore default organizational accounts.</p>
+              <button onclick="resetWhitelistToDefaults()" class="w-full py-1 text-[11px] font-bold rounded-lg bg-rose-600 hover:bg-rose-700 text-white transition">
+                Reset to Defaults
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: DATA ENTRY & RECORD EDIT FORM -->
+  <div id="data-entry-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col animate-in fade-in">
+      <div class="bg-gradient-to-r from-[#0D3824] via-[#17563A] to-[#1e6f4b] p-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-300"></i>
+          <h3 id="data-entry-modal-title" class="text-sm font-bold text-white">Log New Forestry Achievement</h3>
+        </div>
+        <button onclick="closeDataEntryModal()" class="text-white/70 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+        <div id="entry-permission-alert" class="hidden p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
+          <span>You must be signed in as an authorized <strong>Editor</strong> or <strong>Admin</strong> to submit or edit records.</span>
+          <button type="button" onclick="closeDataEntryModal(); openAuthModal('user');" class="px-2.5 py-1 rounded-lg bg-amber-600 text-white font-bold hover:bg-amber-700 ml-2 shrink-0">Sign In Now</button>
+        </div>
+
+        <form id="new-record-form" onsubmit="handleRecordSubmit(event)" class="space-y-4">
+          <input type="hidden" id="entry-record-id" value="">
+
+          <!-- 1. Intervention -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Category *</label>
+              <select id="entry-category" onchange="onModalCategoryChange()" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
+                <option value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A. Afforestation & Revegetation</option>
+                <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B. Rangeland & Grassland</option>
+                <option value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C. Watershed Management</option>
+                <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other Forestry Measures</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Intervention Code *</label>
+              <select id="entry-code" onchange="onModalCodeChange()" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
+              </select>
+            </div>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+            <span id="entry-name-preview" class="text-xs font-bold text-slate-800 block"></span>
+            <p id="entry-desc-preview" class="text-[11px] text-slate-500"></p>
+          </div>
+
+          <!-- 2. Project Details -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Practice *</label>
+              <select id="entry-practice" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
+                <option value="Forests">Forests</option>
+                <option value="Freshwater">Freshwater</option>
+                <option value="Food">Food</option>
+                <option value="Marine">Marine</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Province *</label>
+              <select id="entry-province" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
+                <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Sindh">Sindh</option>
+                <option value="Balochistan">Balochistan</option>
+                <option value="Sindh & Balochistan">Sindh & Balochistan</option>
+                <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+                <option value="Azad Jammu & Kashmir">Azad Jammu & Kashmir</option>
+                <option value="Federal / National">Federal / National</option>
+                <option value="National">National</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Year *</label>
+              <select id="entry-year" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[11px] font-semibold text-slate-600">Project Title / Name *</label>
+            <input type="text" id="entry-project" placeholder="e.g. Billion Tree Tsunami - KP Phase II" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200" required>
+          </div>
+
+          <!-- 3. Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Plants Count</label>
+              <input type="number" id="entry-plants" placeholder="e.g. 50000" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200" min="0">
+            </div>
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Area Covered (ha)</label>
+              <input type="number" step="0.1" id="entry-area" placeholder="e.g. 75.5" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200" min="0">
+            </div>
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Survival (%)</label>
+              <input type="number" step="0.1" id="entry-survival" placeholder="e.g. 80.0" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200" min="0" max="100">
+            </div>
+          </div>
+
+          <!-- 4. Remarks -->
+          <div class="space-y-1">
+            <label class="text-[11px] font-semibold text-slate-600">Remarks / Supporting Evidence Reference</label>
+            <textarea id="entry-remarks" placeholder="GPS survey notes, monitoring reports, MoU references..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 min-h-[60px]"></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-2">
+            <button type="button" onclick="closeDataEntryModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Cancel</button>
+            <button type="submit" id="save-record-btn" class="px-5 py-2 text-xs font-bold text-white bg-[#17563A] hover:bg-[#0D3824] rounded-xl shadow">Save Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-4">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 font-medium">
+      WWF-Pakistan Forestry Interventions Management Suite • Offline & Online Ready
+    </div>
+  </footer>
+
+  <!-- EMBEDDED JAVASCRIPT DATA & ENGINE -->
+  <script>
+    const INITIAL_RECORDS = [{"Record_ID": 1, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Billion Tree Tsunami - KP Phase II", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-1", "Intervention_Name": "Planting of seedlings", "Intervention_Description": "Establishing trees by planting nursery-raised seedlings.", "Year": 2023, "Plants_Count": 52000, "Area_Covered_ha": 62, "Survival_Rate_pct": 0.78, "Remarks_Evidence": "Plantation records verified by KP Forest Dept; GPS - tagged plots. Annual monitoring report 2023 & 2024."}, {"Record_ID": 2, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Billion Tree Tsunami - KP Phase II", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-1", "Intervention_Name": "Planting of seedlings", "Intervention_Description": "Establishing trees by planting nursery-raised seedlings.", "Year": 2024, "Plants_Count": 68500, "Area_Covered_ha": 84.5, "Survival_Rate_pct": 0.82, "Remarks_Evidence": "Plantation records verified by KP Forest Dept; GPS - tagged plots. Annual monitoring report 2023 & 2024."}, {"Record_ID": 3, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Billion Tree Tsunami - KP Phase II", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-1", "Intervention_Name": "Planting of seedlings", "Intervention_Description": "Establishing trees by planting nursery-raised seedlings.", "Year": 2025, "Plants_Count": 74200, "Area_Covered_ha": 95, "Survival_Rate_pct": 0.85, "Remarks_Evidence": "Plantation records verified by KP Forest Dept; GPS - tagged plots. Annual monitoring report 2023 & 2024."}, {"Record_ID": 4, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Billion Tree Tsunami - KP Phase II", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-1", "Intervention_Name": "Planting of seedlings", "Intervention_Description": "Establishing trees by planting nursery-raised seedlings.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Plantation records verified by KP Forest Dept; GPS - tagged plots. Annual monitoring report 2023 & 2024."}, {"Record_ID": 5, "Practice": "Forests", "Province_Region": "Gilgit-Baltistan", "Project_Name": "Himalayan Biodiversity & Watershed Mgt - Gilgit - Baltistan", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-2", "Intervention_Name": "Assisted Natural Regeneration", "Intervention_Description": "Restoring forests by protecting and managing natural regeneration, supplemented by limited seed sowing or enrichment planting.", "Year": 2023, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "ANR stems estimated via line - transect sampling (n=120 plots); Source: GB Forestry Dept monitoring report 2024 - Q3."}, {"Record_ID": 6, "Practice": "Forests", "Province_Region": "Gilgit-Baltistan", "Project_Name": "Himalayan Biodiversity & Watershed Mgt - Gilgit - Baltistan", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-2", "Intervention_Name": "Assisted Natural Regeneration", "Intervention_Description": "Restoring forests by protecting and managing natural regeneration, supplemented by limited seed sowing or enrichment planting.", "Year": 2024, "Plants_Count": 18300, "Area_Covered_ha": 38, "Survival_Rate_pct": null, "Remarks_Evidence": "ANR stems estimated via line - transect sampling (n=120 plots); Source: GB Forestry Dept monitoring report 2024 - Q3."}, {"Record_ID": 7, "Practice": "Forests", "Province_Region": "Gilgit-Baltistan", "Project_Name": "Himalayan Biodiversity & Watershed Mgt - Gilgit - Baltistan", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-2", "Intervention_Name": "Assisted Natural Regeneration", "Intervention_Description": "Restoring forests by protecting and managing natural regeneration, supplemented by limited seed sowing or enrichment planting.", "Year": 2025, "Plants_Count": 24700, "Area_Covered_ha": 52.5, "Survival_Rate_pct": null, "Remarks_Evidence": "ANR stems estimated via line - transect sampling (n=120 plots); Source: GB Forestry Dept monitoring report 2024 - Q3."}, {"Record_ID": 8, "Practice": "Forests", "Province_Region": "Gilgit-Baltistan", "Project_Name": "Himalayan Biodiversity & Watershed Mgt - Gilgit - Baltistan", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-2", "Intervention_Name": "Assisted Natural Regeneration", "Intervention_Description": "Restoring forests by protecting and managing natural regeneration, supplemented by limited seed sowing or enrichment planting.", "Year": 2026, "Plants_Count": 31000, "Area_Covered_ha": 68, "Survival_Rate_pct": null, "Remarks_Evidence": "ANR stems estimated via line - transect sampling (n=120 plots); Source: GB Forestry Dept monitoring report 2024 - Q3."}, {"Record_ID": 9, "Practice": "Forests", "Province_Region": "Punjab", "Project_Name": "Thal Desert Afforestation Project - Punjab", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-3", "Intervention_Name": "Dry afforestation", "Intervention_Description": "Establishing trees in dry areas through planting and/or sowing drought-tolerant species using soil- and water-conservation techniques.", "Year": 2023, "Plants_Count": 8500, "Area_Covered_ha": 42, "Survival_Rate_pct": 0.62, "Remarks_Evidence": "Drought - tolerant species: Prosopis cineraria, Acacia nilotica; drip irrigation applied. Plantation register available."}, {"Record_ID": 10, "Practice": "Forests", "Province_Region": "Punjab", "Project_Name": "Thal Desert Afforestation Project - Punjab", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-3", "Intervention_Name": "Dry afforestation", "Intervention_Description": "Establishing trees in dry areas through planting and/or sowing drought-tolerant species using soil- and water-conservation techniques.", "Year": 2024, "Plants_Count": 11200, "Area_Covered_ha": 56, "Survival_Rate_pct": 0.67, "Remarks_Evidence": "Drought - tolerant species: Prosopis cineraria, Acacia nilotica; drip irrigation applied. Plantation register available."}, {"Record_ID": 11, "Practice": "Forests", "Province_Region": "Punjab", "Project_Name": "Thal Desert Afforestation Project - Punjab", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-3", "Intervention_Name": "Dry afforestation", "Intervention_Description": "Establishing trees in dry areas through planting and/or sowing drought-tolerant species using soil- and water-conservation techniques.", "Year": 2025, "Plants_Count": 13800, "Area_Covered_ha": 70, "Survival_Rate_pct": 0.71, "Remarks_Evidence": "Drought - tolerant species: Prosopis cineraria, Acacia nilotica; drip irrigation applied. Plantation register available."}, {"Record_ID": 12, "Practice": "Forests", "Province_Region": "Punjab", "Project_Name": "Thal Desert Afforestation Project - Punjab", "Intervention_Category": "A. AFFORESTATION, REFORESTATION AND REVEGETATION", "Intervention_Code": "A-3", "Intervention_Name": "Dry afforestation", "Intervention_Description": "Establishing trees in dry areas through planting and/or sowing drought-tolerant species using soil- and water-conservation techniques.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Drought - tolerant species: Prosopis cineraria, Acacia nilotica; drip irrigation applied. Plantation register available."}, {"Record_ID": 13, "Practice": "Freshwater", "Province_Region": "Sindh & Balochistan", "Project_Name": "Indus for All Programme - Sindh & Balochistan", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-1", "Intervention_Name": "Protection of rangelands/grasslands", "Intervention_Description": "Protection through fencing, watchers, controlled grazing or community management arrangements.", "Year": 2023, "Plants_Count": null, "Area_Covered_ha": 1250, "Survival_Rate_pct": null, "Remarks_Evidence": "Community rangeland management committees; fencing of 85 km; Source: IFA annual progress report."}, {"Record_ID": 14, "Practice": "Freshwater", "Province_Region": "Sindh & Balochistan", "Project_Name": "Indus for All Programme - Sindh & Balochistan", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-1", "Intervention_Name": "Protection of rangelands/grasslands", "Intervention_Description": "Protection through fencing, watchers, controlled grazing or community management arrangements.", "Year": 2024, "Plants_Count": null, "Area_Covered_ha": 1800, "Survival_Rate_pct": null, "Remarks_Evidence": "Community rangeland management committees; fencing of 85 km; Source: IFA annual progress report."}, {"Record_ID": 15, "Practice": "Freshwater", "Province_Region": "Sindh & Balochistan", "Project_Name": "Indus for All Programme - Sindh & Balochistan", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-1", "Intervention_Name": "Protection of rangelands/grasslands", "Intervention_Description": "Protection through fencing, watchers, controlled grazing or community management arrangements.", "Year": 2025, "Plants_Count": null, "Area_Covered_ha": 2100, "Survival_Rate_pct": null, "Remarks_Evidence": "Community rangeland management committees; fencing of 85 km; Source: IFA annual progress report."}, {"Record_ID": 16, "Practice": "Freshwater", "Province_Region": "Sindh & Balochistan", "Project_Name": "Indus for All Programme - Sindh & Balochistan", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-1", "Intervention_Name": "Protection of rangelands/grasslands", "Intervention_Description": "Protection through fencing, watchers, controlled grazing or community management arrangements.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": 2400, "Survival_Rate_pct": null, "Remarks_Evidence": "Community rangeland management committees; fencing of 85 km; Source: IFA annual progress report."}, {"Record_ID": 17, "Practice": "Freshwater", "Province_Region": "Sindh & Balochistan", "Project_Name": "Indus for All Programme - Sindh & Balochistan", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-2", "Intervention_Name": "Reseeding of native grasses", "Intervention_Description": "Restoration of degraded rangelands by sowing suitable native grass species.", "Year": 2023, "Plants_Count": null, "Area_Covered_ha": 320, "Survival_Rate_pct": null, "Remarks_Evidence": "Native grass species: Chrysopogon aucheri, Cenchrus ciliaris; seed procurement records available."}, {"Record_ID": 18, "Practice": "Freshwater", "Province_Region": "Sindh & Balochistan", "Project_Name": "Indus for All Programme - Sindh & Balochistan", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-2", "Intervention_Name": "Reseeding of native grasses", "Intervention_Description": "Restoration of degraded rangelands by sowing suitable native grass species.", "Year": 2024, "Plants_Count": 15000, "Area_Covered_ha": 480, "Survival_Rate_pct": null, "Remarks_Evidence": "Native grass species: Chrysopogon aucheri, Cenchrus ciliaris; seed procurement records available."}, {"Record_ID": 19, "Practice": "Freshwater", "Province_Region": "Sindh & Balochistan", "Project_Name": "Indus for All Programme - Sindh & Balochistan", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-2", "Intervention_Name": "Reseeding of native grasses", "Intervention_Description": "Restoration of degraded rangelands by sowing suitable native grass species.", "Year": 2025, "Plants_Count": 22000, "Area_Covered_ha": 620, "Survival_Rate_pct": null, "Remarks_Evidence": "Native grass species: Chrysopogon aucheri, Cenchrus ciliaris; seed procurement records available."}, {"Record_ID": 20, "Practice": "Freshwater", "Province_Region": "Sindh & Balochistan", "Project_Name": "Indus for All Programme - Sindh & Balochistan", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-2", "Intervention_Name": "Reseeding of native grasses", "Intervention_Description": "Restoration of degraded rangelands by sowing suitable native grass species.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Native grass species: Chrysopogon aucheri, Cenchrus ciliaris; seed procurement records available."}, {"Record_ID": 21, "Practice": "Freshwater", "Province_Region": "Balochistan", "Project_Name": "Balochistan Rangelands Resilience Project", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-3", "Intervention_Name": "Planting/sowing of palatable native trees and shrubs", "Intervention_Description": "Establishing native fodder trees and shrubs to improve rangeland productivity and resilience.", "Year": 2023, "Plants_Count": 6200, "Area_Covered_ha": 95, "Survival_Rate_pct": 0.73, "Remarks_Evidence": "Species: Zizyphus nummularia, Haloxylon recurvum; Source: BRR project M&E quarterly reports."}, {"Record_ID": 22, "Practice": "Freshwater", "Province_Region": "Balochistan", "Project_Name": "Balochistan Rangelands Resilience Project", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-3", "Intervention_Name": "Planting/sowing of palatable native trees and shrubs", "Intervention_Description": "Establishing native fodder trees and shrubs to improve rangeland productivity and resilience.", "Year": 2024, "Plants_Count": 8500, "Area_Covered_ha": 140, "Survival_Rate_pct": 0.76, "Remarks_Evidence": "Species: Zizyphus nummularia, Haloxylon recurvum; Source: BRR project M&E quarterly reports."}, {"Record_ID": 23, "Practice": "Freshwater", "Province_Region": "Balochistan", "Project_Name": "Balochistan Rangelands Resilience Project", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-3", "Intervention_Name": "Planting/sowing of palatable native trees and shrubs", "Intervention_Description": "Establishing native fodder trees and shrubs to improve rangeland productivity and resilience.", "Year": 2025, "Plants_Count": 10100, "Area_Covered_ha": 170, "Survival_Rate_pct": 0.79, "Remarks_Evidence": "Species: Zizyphus nummularia, Haloxylon recurvum; Source: BRR project M&E quarterly reports."}, {"Record_ID": 24, "Practice": "Freshwater", "Province_Region": "Balochistan", "Project_Name": "Balochistan Rangelands Resilience Project", "Intervention_Category": "B. RANGELAND AND GRASSLAND MANAGEMENT", "Intervention_Code": "B-3", "Intervention_Name": "Planting/sowing of palatable native trees and shrubs", "Intervention_Description": "Establishing native fodder trees and shrubs to improve rangeland productivity and resilience.", "Year": 2026, "Plants_Count": 12000, "Area_Covered_ha": 200, "Survival_Rate_pct": 0.81, "Remarks_Evidence": "Species: Zizyphus nummularia, Haloxylon recurvum; Source: BRR project M&E quarterly reports."}, {"Record_ID": 25, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Upper Swat Watershed Restoration - KP", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-1", "Intervention_Name": "Slope stabilization through bioengineering", "Intervention_Description": "Brushwood layering, vegetated/soft-gabion retaining structures and closely spaced planting.", "Year": 2023, "Plants_Count": null, "Area_Covered_ha": 18, "Survival_Rate_pct": null, "Remarks_Evidence": "Brushwood layering + vetiver grass strips along 14 km of erosion - prone slopes; Source: Civil works completion report 2024."}, {"Record_ID": 26, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Upper Swat Watershed Restoration - KP", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-1", "Intervention_Name": "Slope stabilization through bioengineering", "Intervention_Description": "Brushwood layering, vegetated/soft-gabion retaining structures and closely spaced planting.", "Year": 2024, "Plants_Count": null, "Area_Covered_ha": 32, "Survival_Rate_pct": null, "Remarks_Evidence": "Brushwood layering + vetiver grass strips along 14 km of erosion - prone slopes; Source: Civil works completion report 2024."}, {"Record_ID": 27, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Upper Swat Watershed Restoration - KP", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-1", "Intervention_Name": "Slope stabilization through bioengineering", "Intervention_Description": "Brushwood layering, vegetated/soft-gabion retaining structures and closely spaced planting.", "Year": 2025, "Plants_Count": null, "Area_Covered_ha": 47, "Survival_Rate_pct": null, "Remarks_Evidence": "Brushwood layering + vetiver grass strips along 14 km of erosion - prone slopes; Source: Civil works completion report 2024."}, {"Record_ID": 28, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Upper Swat Watershed Restoration - KP", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-1", "Intervention_Name": "Slope stabilization through bioengineering", "Intervention_Description": "Brushwood layering, vegetated/soft-gabion retaining structures and closely spaced planting.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Brushwood layering + vetiver grass strips along 14 km of erosion - prone slopes; Source: Civil works completion report 2024."}, {"Record_ID": 29, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Upper Swat Watershed Restoration - KP", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-2", "Intervention_Name": "Vegetated flood-control structures", "Intervention_Description": "Live spurs and brushwood check dams.", "Year": 2023, "Plants_Count": null, "Area_Covered_ha": 8.5, "Survival_Rate_pct": null, "Remarks_Evidence": "22 live brushwood spurs + 36 brushwood check dams installed; post - flood inspection June 2024 confirmed structural integrity."}, {"Record_ID": 30, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Upper Swat Watershed Restoration - KP", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-2", "Intervention_Name": "Vegetated flood-control structures", "Intervention_Description": "Live spurs and brushwood check dams.", "Year": 2024, "Plants_Count": null, "Area_Covered_ha": 14, "Survival_Rate_pct": null, "Remarks_Evidence": "22 live brushwood spurs + 36 brushwood check dams installed; post - flood inspection June 2024 confirmed structural integrity."}, {"Record_ID": 31, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Upper Swat Watershed Restoration - KP", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-2", "Intervention_Name": "Vegetated flood-control structures", "Intervention_Description": "Live spurs and brushwood check dams.", "Year": 2025, "Plants_Count": null, "Area_Covered_ha": 19.5, "Survival_Rate_pct": null, "Remarks_Evidence": "22 live brushwood spurs + 36 brushwood check dams installed; post - flood inspection June 2024 confirmed structural integrity."}, {"Record_ID": 32, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Upper Swat Watershed Restoration - KP", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-2", "Intervention_Name": "Vegetated flood-control structures", "Intervention_Description": "Live spurs and brushwood check dams.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "22 live brushwood spurs + 36 brushwood check dams installed; post - flood inspection June 2024 confirmed structural integrity."}, {"Record_ID": 33, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Chitral Integrated Flood Risk Management", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-3", "Intervention_Name": "Combined engineering and vegetative measures", "Intervention_Description": "Vegetated loose-stone spurs for flood control and slope stabilization.", "Year": 2023, "Plants_Count": null, "Area_Covered_ha": 5.2, "Survival_Rate_pct": null, "Remarks_Evidence": "Vegetated loose - stone spurs combined with willow stakes; Source: CIFRM Year - 2 progress report."}, {"Record_ID": 34, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Chitral Integrated Flood Risk Management", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-3", "Intervention_Name": "Combined engineering and vegetative measures", "Intervention_Description": "Vegetated loose-stone spurs for flood control and slope stabilization.", "Year": 2024, "Plants_Count": null, "Area_Covered_ha": 9.8, "Survival_Rate_pct": null, "Remarks_Evidence": "Vegetated loose - stone spurs combined with willow stakes; Source: CIFRM Year - 2 progress report."}, {"Record_ID": 35, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Chitral Integrated Flood Risk Management", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-3", "Intervention_Name": "Combined engineering and vegetative measures", "Intervention_Description": "Vegetated loose-stone spurs for flood control and slope stabilization.", "Year": 2025, "Plants_Count": null, "Area_Covered_ha": 14.3, "Survival_Rate_pct": null, "Remarks_Evidence": "Vegetated loose - stone spurs combined with willow stakes; Source: CIFRM Year - 2 progress report."}, {"Record_ID": 36, "Practice": "Freshwater", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Chitral Integrated Flood Risk Management", "Intervention_Category": "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", "Intervention_Code": "C-3", "Intervention_Name": "Combined engineering and vegetative measures", "Intervention_Description": "Vegetated loose-stone spurs for flood control and slope stabilization.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Vegetated loose - stone spurs combined with willow stakes; Source: CIFRM Year - 2 progress report."}, {"Record_ID": 37, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Billion Tree Tsunami - KP Phase II", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-1", "Intervention_Name": "Fruit plants under forestry-related projects", "Intervention_Description": "Planting or distribution as part of forestry, rangeland or watershed-management interventions.", "Year": 2023, "Plants_Count": 12500, "Area_Covered_ha": 28, "Survival_Rate_pct": 0.8, "Remarks_Evidence": "Fruit species: mango, guava, apricot, pomegranate; distributed to 1,240 households; verified via beneficiary lists."}, {"Record_ID": 38, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Billion Tree Tsunami - KP Phase II", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-1", "Intervention_Name": "Fruit plants under forestry-related projects", "Intervention_Description": "Planting or distribution as part of forestry, rangeland or watershed-management interventions.", "Year": 2024, "Plants_Count": 16800, "Area_Covered_ha": 38.5, "Survival_Rate_pct": 0.83, "Remarks_Evidence": "Fruit species: mango, guava, apricot, pomegranate; distributed to 1,240 households; verified via beneficiary lists."}, {"Record_ID": 39, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Billion Tree Tsunami - KP Phase II", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-1", "Intervention_Name": "Fruit plants under forestry-related projects", "Intervention_Description": "Planting or distribution as part of forestry, rangeland or watershed-management interventions.", "Year": 2025, "Plants_Count": 19200, "Area_Covered_ha": 44, "Survival_Rate_pct": 0.85, "Remarks_Evidence": "Fruit species: mango, guava, apricot, pomegranate; distributed to 1,240 households; verified via beneficiary lists."}, {"Record_ID": 40, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Billion Tree Tsunami - KP Phase II", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-1", "Intervention_Name": "Fruit plants under forestry-related projects", "Intervention_Description": "Planting or distribution as part of forestry, rangeland or watershed-management interventions.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Fruit species: mango, guava, apricot, pomegranate; distributed to 1,240 households; verified via beneficiary lists."}, {"Record_ID": 41, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Wild Olive Restoration - FATA/KP Merged Districts", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-2", "Intervention_Name": "Grafting of naturally occurring wild olive trees", "Intervention_Description": "Grafting of Olea ferruginea with cultivated olive varieties.", "Year": 2023, "Plants_Count": 3200, "Area_Covered_ha": null, "Survival_Rate_pct": 0.7, "Remarks_Evidence": "Grafting of Olea ferruginea with cultivated olive varieties; Source: FATA Secretariat extension records."}, {"Record_ID": 42, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Wild Olive Restoration - FATA/KP Merged Districts", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-2", "Intervention_Name": "Grafting of naturally occurring wild olive trees", "Intervention_Description": "Grafting of Olea ferruginea with cultivated olive varieties.", "Year": 2024, "Plants_Count": 4800, "Area_Covered_ha": null, "Survival_Rate_pct": 0.74, "Remarks_Evidence": "Grafting of Olea ferruginea with cultivated olive varieties; Source: FATA Secretariat extension records."}, {"Record_ID": 43, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Wild Olive Restoration - FATA/KP Merged Districts", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-2", "Intervention_Name": "Grafting of naturally occurring wild olive trees", "Intervention_Description": "Grafting of Olea ferruginea with cultivated olive varieties.", "Year": 2025, "Plants_Count": 5500, "Area_Covered_ha": null, "Survival_Rate_pct": 0.77, "Remarks_Evidence": "Grafting of Olea ferruginea with cultivated olive varieties; Source: FATA Secretariat extension records."}, {"Record_ID": 44, "Practice": "Forests", "Province_Region": "Khyber Pakhtunkhwa", "Project_Name": "Wild Olive Restoration - FATA/KP Merged Districts", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-2", "Intervention_Name": "Grafting of naturally occurring wild olive trees", "Intervention_Description": "Grafting of Olea ferruginea with cultivated olive varieties.", "Year": 2026, "Plants_Count": 6100, "Area_Covered_ha": null, "Survival_Rate_pct": 0.79, "Remarks_Evidence": "Grafting of Olea ferruginea with cultivated olive varieties; Source: FATA Secretariat extension records."}, {"Record_ID": 45, "Practice": "Forests", "Province_Region": "Federal / National", "Project_Name": "Green Pakistan Initiative - Federal", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-3", "Intervention_Name": "Distribution of seedlings", "Intervention_Description": "Provision to farmers, schools, communities or institutions for subsequent planting.", "Year": 2023, "Plants_Count": 85000, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Seedlings distributed to farmers, schools and communities; distribution verified; planted survival not tracked separately."}, {"Record_ID": 46, "Practice": "Forests", "Province_Region": "Federal / National", "Project_Name": "Green Pakistan Initiative - Federal", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-3", "Intervention_Name": "Distribution of seedlings", "Intervention_Description": "Provision to farmers, schools, communities or institutions for subsequent planting.", "Year": 2024, "Plants_Count": 120000, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Seedlings distributed to farmers, schools and communities; distribution verified; planted survival not tracked separately."}, {"Record_ID": 47, "Practice": "Forests", "Province_Region": "Federal / National", "Project_Name": "Green Pakistan Initiative - Federal", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-3", "Intervention_Name": "Distribution of seedlings", "Intervention_Description": "Provision to farmers, schools, communities or institutions for subsequent planting.", "Year": 2025, "Plants_Count": 145000, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Seedlings distributed to farmers, schools and communities; distribution verified; planted survival not tracked separately."}, {"Record_ID": 48, "Practice": "Forests", "Province_Region": "Federal / National", "Project_Name": "Green Pakistan Initiative - Federal", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-3", "Intervention_Name": "Distribution of seedlings", "Intervention_Description": "Provision to farmers, schools, communities or institutions for subsequent planting.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Seedlings distributed to farmers, schools and communities; distribution verified; planted survival not tracked separately."}, {"Record_ID": 49, "Practice": "Forests", "Province_Region": "National", "Project_Name": "National Environment Day & Planting Campaigns", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-4", "Intervention_Name": "Campaign/event plantations", "Intervention_Description": "Plants established during environmental campaigns, commemorative events or public plantation drives.", "Year": 2023, "Plants_Count": 35000, "Area_Covered_ha": 22, "Survival_Rate_pct": null, "Remarks_Evidence": "Events: World Environment Day (June 5), Pakistan Day campaigns; geotagged photos archived; plantation register available."}, {"Record_ID": 50, "Practice": "Forests", "Province_Region": "National", "Project_Name": "National Environment Day & Planting Campaigns", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-4", "Intervention_Name": "Campaign/event plantations", "Intervention_Description": "Plants established during environmental campaigns, commemorative events or public plantation drives.", "Year": 2024, "Plants_Count": 48000, "Area_Covered_ha": 30.5, "Survival_Rate_pct": null, "Remarks_Evidence": "Events: World Environment Day (June 5), Pakistan Day campaigns; geotagged photos archived; plantation register available."}, {"Record_ID": 51, "Practice": "Forests", "Province_Region": "National", "Project_Name": "National Environment Day & Planting Campaigns", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-4", "Intervention_Name": "Campaign/event plantations", "Intervention_Description": "Plants established during environmental campaigns, commemorative events or public plantation drives.", "Year": 2025, "Plants_Count": 52000, "Area_Covered_ha": 34, "Survival_Rate_pct": null, "Remarks_Evidence": "Events: World Environment Day (June 5), Pakistan Day campaigns; geotagged photos archived; plantation register available."}, {"Record_ID": 52, "Practice": "Forests", "Province_Region": "National", "Project_Name": "National Environment Day & Planting Campaigns", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-4", "Intervention_Name": "Campaign/event plantations", "Intervention_Description": "Plants established during environmental campaigns, commemorative events or public plantation drives.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Events: World Environment Day (June 5), Pakistan Day campaigns; geotagged photos archived; plantation register available."}, {"Record_ID": 53, "Practice": "Forests", "Province_Region": "Azad Jammu & Kashmir", "Project_Name": "Community Forest Protection - AJK", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-5", "Intervention_Name": "Forest/community protection", "Intervention_Description": "Protection of existing forest or tree cover through agreements, watchers, fencing, fire management.", "Year": 2023, "Plants_Count": null, "Area_Covered_ha": 3800, "Survival_Rate_pct": null, "Remarks_Evidence": "Community Forest Mgt Agreements with 28 villages; 34 FTE watchers deployed; Source: AJK Forests Dept MoU signed 2023."}, {"Record_ID": 54, "Practice": "Forests", "Province_Region": "Azad Jammu & Kashmir", "Project_Name": "Community Forest Protection - AJK", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-5", "Intervention_Name": "Forest/community protection", "Intervention_Description": "Protection of existing forest or tree cover through agreements, watchers, fencing, fire management.", "Year": 2024, "Plants_Count": null, "Area_Covered_ha": 4200, "Survival_Rate_pct": null, "Remarks_Evidence": "Community Forest Mgt Agreements with 28 villages; 34 FTE watchers deployed; Source: AJK Forests Dept MoU signed 2023."}, {"Record_ID": 55, "Practice": "Forests", "Province_Region": "Azad Jammu & Kashmir", "Project_Name": "Community Forest Protection - AJK", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-5", "Intervention_Name": "Forest/community protection", "Intervention_Description": "Protection of existing forest or tree cover through agreements, watchers, fencing, fire management.", "Year": 2025, "Plants_Count": null, "Area_Covered_ha": 4600, "Survival_Rate_pct": null, "Remarks_Evidence": "Community Forest Mgt Agreements with 28 villages; 34 FTE watchers deployed; Source: AJK Forests Dept MoU signed 2023."}, {"Record_ID": 56, "Practice": "Forests", "Province_Region": "Azad Jammu & Kashmir", "Project_Name": "Community Forest Protection - AJK", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-5", "Intervention_Name": "Forest/community protection", "Intervention_Description": "Protection of existing forest or tree cover through agreements, watchers, fencing, fire management.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": 5100, "Survival_Rate_pct": null, "Remarks_Evidence": "Community Forest Mgt Agreements with 28 villages; 34 FTE watchers deployed; Source: AJK Forests Dept MoU signed 2023."}, {"Record_ID": 57, "Practice": "Food", "Province_Region": "Balochistan", "Project_Name": "Climate - Smart Agriculture & Agroforestry - Balochistan", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-6", "Intervention_Name": "Agroforestry/farm forestry", "Intervention_Description": "Integration of trees on farms or agricultural land.", "Year": 2023, "Plants_Count": 18000, "Area_Covered_ha": 85, "Survival_Rate_pct": 0.76, "Remarks_Evidence": "Poplar, Eucalyptus & Moringa integrated on 850 farms; Source: CSA project farmer records & field verification reports."}, {"Record_ID": 58, "Practice": "Food", "Province_Region": "Balochistan", "Project_Name": "Climate - Smart Agriculture & Agroforestry - Balochistan", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-6", "Intervention_Name": "Agroforestry/farm forestry", "Intervention_Description": "Integration of trees on farms or agricultural land.", "Year": 2024, "Plants_Count": 26000, "Area_Covered_ha": 120, "Survival_Rate_pct": 0.79, "Remarks_Evidence": "Poplar, Eucalyptus & Moringa integrated on 850 farms; Source: CSA project farmer records & field verification reports."}, {"Record_ID": 59, "Practice": "Food", "Province_Region": "Balochistan", "Project_Name": "Climate - Smart Agriculture & Agroforestry - Balochistan", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-6", "Intervention_Name": "Agroforestry/farm forestry", "Intervention_Description": "Integration of trees on farms or agricultural land.", "Year": 2025, "Plants_Count": 34000, "Area_Covered_ha": 158, "Survival_Rate_pct": 0.82, "Remarks_Evidence": "Poplar, Eucalyptus & Moringa integrated on 850 farms; Source: CSA project farmer records & field verification reports."}, {"Record_ID": 60, "Practice": "Food", "Province_Region": "Balochistan", "Project_Name": "Climate - Smart Agriculture & Agroforestry - Balochistan", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-6", "Intervention_Name": "Agroforestry/farm forestry", "Intervention_Description": "Integration of trees on farms or agricultural land.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Poplar, Eucalyptus & Moringa integrated on 850 farms; Source: CSA project farmer records & field verification reports."}, {"Record_ID": 61, "Practice": "Marine", "Province_Region": "Sindh", "Project_Name": "Indus Delta Mangrove Restoration - Sindh", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-7", "Intervention_Name": "Mangrove/coastal forest restoration", "Intervention_Description": "Restoration and conservation of coastal mangrove ecosystems.", "Year": 2023, "Plants_Count": null, "Area_Covered_ha": 520, "Survival_Rate_pct": null, "Remarks_Evidence": "Species: Avicennia marina, Rhizophora mucronata; community - based protection; Source: IDMR satellite imagery analysis 2024."}, {"Record_ID": 62, "Practice": "Marine", "Province_Region": "Sindh", "Project_Name": "Indus Delta Mangrove Restoration - Sindh", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-7", "Intervention_Name": "Mangrove/coastal forest restoration", "Intervention_Description": "Restoration and conservation of coastal mangrove ecosystems.", "Year": 2024, "Plants_Count": null, "Area_Covered_ha": 720, "Survival_Rate_pct": null, "Remarks_Evidence": "Species: Avicennia marina, Rhizophora mucronata; community - based protection; Source: IDMR satellite imagery analysis 2024."}, {"Record_ID": 63, "Practice": "Marine", "Province_Region": "Sindh", "Project_Name": "Indus Delta Mangrove Restoration - Sindh", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-7", "Intervention_Name": "Mangrove/coastal forest restoration", "Intervention_Description": "Restoration and conservation of coastal mangrove ecosystems.", "Year": 2025, "Plants_Count": null, "Area_Covered_ha": 960, "Survival_Rate_pct": null, "Remarks_Evidence": "Species: Avicennia marina, Rhizophora mucronata; community - based protection; Source: IDMR satellite imagery analysis 2024."}, {"Record_ID": 64, "Practice": "Marine", "Province_Region": "Sindh", "Project_Name": "Indus Delta Mangrove Restoration - Sindh", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-7", "Intervention_Name": "Mangrove/coastal forest restoration", "Intervention_Description": "Restoration and conservation of coastal mangrove ecosystems.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": 1200, "Survival_Rate_pct": null, "Remarks_Evidence": "Species: Avicennia marina, Rhizophora mucronata; community - based protection; Source: IDMR satellite imagery analysis 2024."}, {"Record_ID": 65, "Practice": "Forests", "Province_Region": "Punjab", "Project_Name": "Urban Greening & School Plantation Initiative - Punjab", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-8", "Intervention_Name": "Urban Greening & School Plantation", "Intervention_Description": "Urban tree planting in metropolitan schools and community spaces.", "Year": 2023, "Plants_Count": 28000, "Area_Covered_ha": 14, "Survival_Rate_pct": 0.72, "Remarks_Evidence": "Urban tree planting in Lahore, Faisalabad, Multan; species: Ficus, Conocarpus, Dalbergia; Source: Punjab Env. Dept records."}, {"Record_ID": 66, "Practice": "Forests", "Province_Region": "Punjab", "Project_Name": "Urban Greening & School Plantation Initiative - Punjab", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-8", "Intervention_Name": "Urban Greening & School Plantation", "Intervention_Description": "Urban tree planting in metropolitan schools and community spaces.", "Year": 2024, "Plants_Count": 36000, "Area_Covered_ha": 18.5, "Survival_Rate_pct": 0.75, "Remarks_Evidence": "Urban tree planting in Lahore, Faisalabad, Multan; species: Ficus, Conocarpus, Dalbergia; Source: Punjab Env. Dept records."}, {"Record_ID": 67, "Practice": "Forests", "Province_Region": "Punjab", "Project_Name": "Urban Greening & School Plantation Initiative - Punjab", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-8", "Intervention_Name": "Urban Greening & School Plantation", "Intervention_Description": "Urban tree planting in metropolitan schools and community spaces.", "Year": 2025, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Urban tree planting in Lahore, Faisalabad, Multan; species: Ficus, Conocarpus, Dalbergia; Source: Punjab Env. Dept records."}, {"Record_ID": 68, "Practice": "Forests", "Province_Region": "Punjab", "Project_Name": "Urban Greening & School Plantation Initiative - Punjab", "Intervention_Category": "D. OTHER FORESTRY-RELATED MEASURES", "Intervention_Code": "D-8", "Intervention_Name": "Urban Greening & School Plantation", "Intervention_Description": "Urban tree planting in metropolitan schools and community spaces.", "Year": 2026, "Plants_Count": null, "Area_Covered_ha": null, "Survival_Rate_pct": null, "Remarks_Evidence": "Urban tree planting in Lahore, Faisalabad, Multan; species: Ficus, Conocarpus, Dalbergia; Source: Punjab Env. Dept records."}];
+
+    const CATALOG = [
+      { category: "A. AFFORESTATION, REFORESTATION AND REVEGETATION", code: "A-1", name: "Planting of seedlings", desc: "Establishing trees by planting nursery-raised seedlings.", practice: "Forests" },
+      { category: "A. AFFORESTATION, REFORESTATION AND REVEGETATION", code: "A-2", name: "Assisted Natural Regeneration", desc: "Restoring forests by protecting natural regeneration.", practice: "Forests" },
+      { category: "A. AFFORESTATION, REFORESTATION AND REVEGETATION", code: "A-3", name: "Dry afforestation", desc: "Establishing trees in dry areas using conservation techniques.", practice: "Forests" },
+      { category: "B. RANGELAND AND GRASSLAND MANAGEMENT", code: "B-1", name: "Protection of rangelands/grasslands", desc: "Protection through fencing, watchers, controlled grazing.", practice: "Freshwater" },
+      { category: "B. RANGELAND AND GRASSLAND MANAGEMENT", code: "B-2", name: "Reseeding of native grasses", desc: "Restoration of degraded rangelands by sowing native grass species.", practice: "Freshwater" },
+      { category: "B. RANGELAND AND GRASSLAND MANAGEMENT", code: "B-3", name: "Planting/sowing of palatable native trees and shrubs", desc: "Establishing native fodder trees and shrubs.", practice: "Freshwater" },
+      { category: "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", code: "C-1", name: "Slope stabilization through bioengineering", desc: "Brushwood layering, soft-gabion retaining structures.", practice: "Freshwater" },
+      { category: "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", code: "C-2", name: "Vegetated flood-control structures", desc: "Live spurs and brushwood check dams.", practice: "Freshwater" },
+      { category: "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES", code: "C-3", name: "Combined engineering and vegetative measures", desc: "Vegetated loose-stone spurs for flood control.", practice: "Freshwater" },
+      { category: "D. OTHER FORESTRY-RELATED MEASURES", code: "D-1", name: "Fruit plants under forestry-related projects", desc: "Planting/distribution of fruit trees to communities.", practice: "Forests" },
+      { category: "D. OTHER FORESTRY-RELATED MEASURES", code: "D-2", name: "Grafting of naturally occurring wild olive trees", desc: "Grafting wild olive trees with cultivated varieties.", practice: "Forests" },
+      { category: "D. OTHER FORESTRY-RELATED MEASURES", code: "D-3", name: "Distribution of seedlings", desc: "Seedling distribution to farmers and communities.", practice: "Forests" },
+      { category: "D. OTHER FORESTRY-RELATED MEASURES", code: "D-4", name: "Campaign/event plantations", desc: "Plantations established during campaigns/events.", practice: "Forests" },
+      { category: "D. OTHER FORESTRY-RELATED MEASURES", code: "D-5", name: "Forest/community protection", desc: "Protection of existing forest cover through agreements & watchers.", practice: "Forests" },
+      { category: "D. OTHER FORESTRY-RELATED MEASURES", code: "D-6", name: "Agroforestry/farm forestry", desc: "Integration of trees on agricultural farmland.", practice: "Food" },
+      { category: "D. OTHER FORESTRY-RELATED MEASURES", code: "D-7", name: "Mangrove/coastal forest restoration", desc: "Restoration of coastal mangrove forests.", practice: "Marine" },
+      { category: "D. OTHER FORESTRY-RELATED MEASURES", code: "D-8", name: "Urban Greening & School Plantation", desc: "Urban tree planting in metropolitan schools.", practice: "Forests" }
+    ];
+
+    // State
+    let records = JSON.parse(localStorage.getItem("wwf_offline_records") || "null") || INITIAL_RECORDS;
+    let whitelist = JSON.parse(localStorage.getItem("wwf_offline_whitelist") || "null") || [
+      { email: "field.officer@wwf.org", name: "KP Field Officer", role: "editor", addedAt: "2024-01-15" },
+      { email: "mne.manager@wwf.org", name: "M&E Coordinator", role: "editor", addedAt: "2024-02-01" },
+      { email: "tayyab@wwf.org", name: "Tayyab - Project Lead", role: "editor", addedAt: "2024-02-10" },
+      { email: "viewer@wwf.org", name: "Observer Viewer", role: "viewer", addedAt: "2024-03-01" }
+    ];
+    let currentUser = JSON.parse(localStorage.getItem("wwf_offline_user") || "null");
+
+    let charts = {};
+
+    // Formatters
+    const numFmt = (n) => n != null ? Number(n).toLocaleString('en-US') : '—';
+    const floatFmt = (n) => n != null ? Number(n).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '—';
+
+    // Auth Engine
+    function syncAuthUI() {
+      const triggerBtn = document.getElementById('login-trigger-btn');
+      const badge = document.getElementById('user-profile-badge');
+      const adminBtn = document.getElementById('admin-whitelist-btn');
+
+      if (currentUser) {
+        triggerBtn.classList.add('hidden');
+        badge.classList.remove('hidden');
+        document.getElementById('user-display-email').textContent = currentUser.email;
+        document.getElementById('user-display-role').textContent = currentUser.role.toUpperCase();
+
+        if (currentUser.role === 'admin') {
+          adminBtn.classList.remove('hidden');
+        } else {
+          adminBtn.classList.add('hidden');
+        }
+      } else {
+        triggerBtn.classList.remove('hidden');
+        badge.classList.add('hidden');
+        adminBtn.classList.add('hidden');
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById('auth-modal').classList.remove('hidden');
+      document.getElementById('auth-error-alert').classList.add('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+    }
+
+    function switchAuthTab(tab) {
+      const userTab = document.getElementById('auth-tab-user');
+      const adminTab = document.getElementById('auth-tab-admin');
+      const userBtn = document.getElementById('tab-user-btn');
+      const adminBtn = document.getElementById('tab-admin-btn');
+      document.getElementById('auth-error-alert').classList.add('hidden');
+
+      if (tab === 'user') {
+        userTab.classList.remove('hidden');
+        adminTab.classList.add('hidden');
+        userBtn.className = "flex-1 py-1.5 rounded-lg bg-white shadow-sm text-slate-800 transition";
+        adminBtn.className = "flex-1 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition";
+      } else {
+        userTab.classList.add('hidden');
+        adminTab.classList.remove('hidden');
+        adminBtn.className = "flex-1 py-1.5 rounded-lg bg-white shadow-sm text-slate-800 transition";
+        userBtn.className = "flex-1 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition";
+      }
+    }
+
+    function handleUserEmailLogin() {
+      const email = document.getElementById('login-email-input').value.trim().toLowerCase();
+      if (!email) return showAuthError('Please enter your email.');
+
+      const found = whitelist.find(u => u.email.toLowerCase() === email);
+      if (found) {
+        currentUser = { email: found.email, name: found.name, role: found.role };
+        localStorage.setItem("wwf_offline_user", JSON.stringify(currentUser));
+        syncAuthUI();
+        closeAuthModal();
+        renderDashboard();
+      } else {
+        showAuthError(`Access Denied: "${email}" is not authorized. Contact admin@wwf.org for whitelist access.`);
+      }
+    }
+
+    function quickLogin(email) {
+      document.getElementById('login-email-input').value = email;
+      handleUserEmailLogin();
+    }
+
+    function handleAdminPasswordLogin() {
+      const email = document.getElementById('admin-email-input').value.trim().toLowerCase();
+      const pass = document.getElementById('admin-pass-input').value;
+
+      if (email === 'admin@wwf.org' && pass === 'admin123') {
+        currentUser = { email: 'admin@wwf.org', name: 'WWF Administrator', role: 'admin' };
+        localStorage.setItem("wwf_offline_user", JSON.stringify(currentUser));
+        syncAuthUI();
+        closeAuthModal();
+        renderDashboard();
+      } else {
+        showAuthError('Invalid Admin credentials. (Default: admin@wwf.org / admin123)');
+      }
+    }
+
+    function logoutUser() {
+      currentUser = null;
+      localStorage.removeItem("wwf_offline_user");
+      syncAuthUI();
+      renderDashboard();
+    }
+
+    function showAuthError(msg) {
+      const alert = document.getElementById('auth-error-alert');
+      document.getElementById('auth-error-text').textContent = msg;
+      alert.classList.remove('hidden');
+    }
+
+    // Whitelist Manager
+    function openWhitelistModal() {
+      renderWhitelistItems();
+      document.getElementById('whitelist-modal').classList.remove('hidden');
+    }
+
+    function closeWhitelistModal() {
+      document.getElementById('whitelist-modal').classList.add('hidden');
+    }
+
+    function renderWhitelistItems() {
+      const container = document.getElementById('whitelist-items-container');
+      container.innerHTML = '';
+      whitelist.forEach(u => {
+        const div = document.createElement('div');
+        div.className = 'p-2.5 flex items-center justify-between hover:bg-slate-50 text-xs';
+        div.innerHTML = `
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-slate-800">${u.email}</span>
+              <span class="px-1.5 py-0.2 text-[10px] font-bold rounded ${u.role === 'editor' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${u.role.toUpperCase()}</span>
+            </div>
+            <span class="text-[11px] text-slate-400">${u.name || ''}</span>
+          </div>
+          <button onclick="removeWhitelistEmail('${u.email}')" class="text-rose-500 hover:text-rose-700 p-1">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        `;
+        container.appendChild(div);
+      });
+      lucide.createIcons();
+    }
+
+    function addNewWhitelistEmail() {
+      const email = document.getElementById('new-wl-email').value.trim().toLowerCase();
+      const name = document.getElementById('new-wl-name').value.trim();
+      const role = document.getElementById('new-wl-role').value;
+
+      if (!email || !email.includes('@')) return alert('Please enter a valid email.');
+      if (whitelist.some(u => u.email === email)) return alert('Email is already whitelisted.');
+
+      whitelist.unshift({ email, name: name || email.split('@')[0], role, addedAt: new Date().toISOString().slice(0, 10) });
+      localStorage.setItem("wwf_offline_whitelist", JSON.stringify(whitelist));
+      document.getElementById('new-wl-email').value = '';
+      document.getElementById('new-wl-name').value = '';
+      renderWhitelistItems();
+    }
+
+    function removeWhitelistEmail(email) {
+      whitelist = whitelist.filter(u => u.email !== email);
+      localStorage.setItem("wwf_offline_whitelist", JSON.stringify(whitelist));
+      renderWhitelistItems();
+    }
+
+    // Data Entry Modal
+    function openDataEntryModal() {
+      onModalCategoryChange();
+      const alert = document.getElementById('entry-permission-alert');
+      const saveBtn = document.getElementById('save-record-btn');
+
+      if (!currentUser || currentUser.role === 'viewer') {
+        alert.classList.remove('hidden');
+        saveBtn.disabled = true;
+        saveBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      } else {
+        alert.classList.add('hidden');
+        saveBtn.disabled = false;
+        saveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+
+      document.getElementById('data-entry-modal').classList.remove('hidden');
+    }
+
+    function closeDataEntryModal() {
+      document.getElementById('data-entry-modal').classList.add('hidden');
+    }
+
+    function onModalCategoryChange() {
+      const cat = document.getElementById('entry-category').value;
+      const codeSelect = document.getElementById('entry-code');
+      codeSelect.innerHTML = '';
+      const matches = CATALOG.filter(i => i.category === cat);
+      matches.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.code;
+        opt.textContent = `${m.code} — ${m.name}`;
+        codeSelect.appendChild(opt);
+      });
+      onModalCodeChange();
+    }
+
+    function onModalCodeChange() {
+      const code = document.getElementById('entry-code').value;
+      const match = CATALOG.find(i => i.code === code);
+      if (match) {
+        document.getElementById('entry-name-preview').textContent = match.name;
+        document.getElementById('entry-desc-preview').textContent = match.desc;
+        document.getElementById('entry-practice').value = match.practice;
+      }
+    }
+
+    function handleNewRecordSubmit(e) {
+      e.preventDefault();
+      if (!currentUser || currentUser.role === 'viewer') {
+        return alert('You must be logged in as an authorized Editor or Admin to add records.');
+      }
+
+      const maxId = records.reduce((max, r) => Math.max(max, r.Record_ID || 0), 0);
+      const code = document.getElementById('entry-code').value;
+      const catalogItem = CATALOG.find(i => i.code === code);
+
+      const pVal = document.getElementById('entry-plants').value.trim();
+      const aVal = document.getElementById('entry-area').value.trim();
+      const sVal = document.getElementById('entry-survival').value.trim();
+
+      const newRec = {
+        Record_ID: maxId + 1,
+        Practice: document.getElementById('entry-practice').value,
+        Province_Region: document.getElementById('entry-province').value,
+        Project_Name: document.getElementById('entry-project').value.trim(),
+        Intervention_Category: document.getElementById('entry-category').value,
+        Intervention_Code: code,
+        Intervention_Name: catalogItem ? catalogItem.name : '',
+        Intervention_Description: catalogItem ? catalogItem.desc : '',
+        Year: parseInt(document.getElementById('entry-year').value, 10),
+        Plants_Count: pVal ? parseInt(pVal, 10) : null,
+        Area_Covered_ha: aVal ? parseFloat(aVal) : null,
+        Survival_Rate_pct: sVal ? parseFloat(sVal) / 100.0 : null,
+        Remarks_Evidence: document.getElementById('entry-remarks').value.trim() || `Submitted by ${currentUser.email}`
+      };
+
+      records.unshift(newRec);
+      localStorage.setItem("wwf_offline_records", JSON.stringify(records));
+
+      closeDataEntryModal();
+      document.getElementById('new-record-form').reset();
+      renderDashboard();
+      alert(`Success: Record for ${newRec.Intervention_Code} (${newRec.Year}) saved!`);
+    }
+
+    function deleteRecordById(id) {
+      if (!currentUser || currentUser.role === 'viewer') return alert('Editor or Admin permission required to delete.');
+      if (!confirm('Are you sure you want to delete this observation record?')) return;
+
+      records = records.filter(r => r.Record_ID !== id);
+      localStorage.setItem("wwf_offline_records", JSON.stringify(records));
+      renderDashboard();
+    }
+
+    // Filter Engine & Render
+    function getFilteredData() {
+      const search = document.getElementById('search-input').value.toLowerCase().trim();
+      const year = document.getElementById('year-select').value;
+      const practice = document.getElementById('practice-select').value;
+      const province = document.getElementById('province-select').value;
+      const category = document.getElementById('category-select').value;
+
+      const isFiltered = search || year !== 'ALL' || practice !== 'ALL' || province !== 'ALL' || category !== 'ALL';
+      document.getElementById('active-filter-badge').classList.toggle('hidden', !isFiltered);
+
+      return records.filter(d => {
+        if (year !== 'ALL' && String(d.Year) !== year) return false;
+        if (practice !== 'ALL' && d.Practice !== practice) return false;
+        if (province !== 'ALL' && d.Province_Region !== province) return false;
+        if (category !== 'ALL' && d.Intervention_Category !== category) return false;
+
+        if (search) {
+          const match = [
+            d.Project_Name,
+            d.Intervention_Code,
+            d.Intervention_Name,
+            d.Intervention_Description,
+            d.Remarks_Evidence,
+            d.Practice,
+            d.Province_Region
+          ].some(val => val && String(val).toLowerCase().includes(search));
+          if (!match) return false;
+        }
+        return true;
+      });
+    }
+
+    function updateKPIs(data) {
+      let totalPlants = 0, totalArea = 0, survivalSum = 0, survivalCount = 0;
+
+      data.forEach(d => {
+        if (d.Plants_Count) totalPlants += Number(d.Plants_Count);
+        if (d.Area_Covered_ha) totalArea += Number(d.Area_Covered_ha);
+        if (d.Survival_Rate_pct != null) {
+          survivalSum += Number(d.Survival_Rate_pct);
+          survivalCount += 1;
+        }
+      });
+
+      document.getElementById('kpi-plants').textContent = numFmt(totalPlants);
+      document.getElementById('kpi-area').textContent = floatFmt(totalArea);
+      document.getElementById('kpi-survival').textContent = survivalCount > 0 ? ((survivalSum / survivalCount) * 100).toFixed(1) + '%' : '—';
+      document.getElementById('kpi-records').textContent = numFmt(data.length);
+    }
+
+    function updateCharts(data) {
+      const years = ['2023', '2024', '2025', '2026'];
+      const plantsByYear = { '2023': 0, '2024': 0, '2025': 0, '2026': 0 };
+      const areaByYear = { '2023': 0, '2024': 0, '2025': 0, '2026': 0 };
+
+      data.forEach(d => {
+        const yr = String(d.Year);
+        if (plantsByYear[yr] !== undefined && d.Plants_Count) plantsByYear[yr] += Number(d.Plants_Count);
+        if (areaByYear[yr] !== undefined && d.Area_Covered_ha) areaByYear[yr] += Number(d.Area_Covered_ha);
+      });
+
+      if (charts.plants) charts.plants.destroy();
+      const ctx1 = document.getElementById('chart-annual-plants').getContext('2d');
+      charts.plants = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: years,
+          datasets: [{ label: 'Plants', data: years.map(y => plantsByYear[y]), backgroundColor: '#17563A', borderRadius: 8 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+
+      if (charts.area) charts.area.destroy();
+      const ctx2 = document.getElementById('chart-annual-area').getContext('2d');
+      charts.area = new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: years,
+          datasets: [{ label: 'Area (ha)', data: years.map(y => areaByYear[y]), borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.1)', fill: true, tension: 0.3 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+
+      const practiceMap = {};
+      data.forEach(d => {
+        const pr = d.Practice || 'Unknown';
+        practiceMap[pr] = (practiceMap[pr] || 0) + (d.Plants_Count ? Number(d.Plants_Count) : 0);
+      });
+
+      if (charts.practice) charts.practice.destroy();
+      const ctx3 = document.getElementById('chart-practice-pie').getContext('2d');
+      charts.practice = new Chart(ctx3, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(practiceMap),
+          datasets: [{ data: Object.values(practiceMap), backgroundColor: ['#17563A', '#0284c7', '#eab308', '#0d9488'] }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+      });
+
+      const provMap = {};
+      data.forEach(d => {
+        const prov = d.Province_Region || 'Other';
+        provMap[prov] = (provMap[prov] || 0) + (d.Area_Covered_ha ? Number(d.Area_Covered_ha) : 0);
+      });
+
+      if (charts.province) charts.province.destroy();
+      const ctx4 = document.getElementById('chart-province-bar').getContext('2d');
+      charts.province = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(provMap),
+          datasets: [{ label: 'Area (ha)', data: Object.values(provMap), backgroundColor: '#6366f1', borderRadius: 6 }]
+        },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    }
+
+    function updateCategoryMatrix(data) {
+      const cats = [
+        "A. AFFORESTATION, REFORESTATION AND REVEGETATION",
+        "B. RANGELAND AND GRASSLAND MANAGEMENT",
+        "C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES",
+        "D. OTHER FORESTRY-RELATED MEASURES"
+      ];
+
+      const tbody = document.getElementById('category-matrix-body');
+      tbody.innerHTML = '';
+
+      let totalP = 0, totalA = 0, totalSurvSum = 0, totalSurvCnt = 0, totalRecs = 0;
+
+      cats.forEach(cat => {
+        const rows = data.filter(d => d.Intervention_Category === cat);
+        let plants = 0, area = 0, survSum = 0, survCnt = 0;
+        
+        rows.forEach(r => {
+          if (r.Plants_Count) plants += Number(r.Plants_Count);
+          if (r.Area_Covered_ha) area += Number(r.Area_Covered_ha);
+          if (r.Survival_Rate_pct != null) {
+            survSum += Number(r.Survival_Rate_pct);
+            survCnt += 1;
+          }
+        });
+
+        totalP += plants;
+        totalA += area;
+        totalSurvSum += survSum;
+        totalSurvCnt += survCnt;
+        totalRecs += rows.length;
+
+        const avgSurv = survCnt > 0 ? ((survSum / survCnt) * 100).toFixed(1) + '%' : 'N/A';
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+        tr.innerHTML = `
+          <td class="py-2.5 px-4 font-medium text-slate-800">${cat}</td>
+          <td class="py-2.5 px-4 text-right font-semibold text-emerald-700">${numFmt(plants)}</td>
+          <td class="py-2.5 px-4 text-right font-semibold text-blue-700">${floatFmt(area)}</td>
+          <td class="py-2.5 px-4 text-right font-medium text-slate-700">${avgSurv}</td>
+          <td class="py-2.5 px-4 text-center text-slate-500 font-semibold">${rows.length}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const overallAvgSurv = totalSurvCnt > 0 ? ((totalSurvSum / totalSurvCnt) * 100).toFixed(1) + '%' : 'N/A';
+      document.getElementById('category-matrix-total').innerHTML = `
+        <td class="py-3 px-4">Grand Total</td>
+        <td class="py-3 px-4 text-right">${numFmt(totalP)}</td>
+        <td class="py-3 px-4 text-right">${floatFmt(totalA)}</td>
+        <td class="py-3 px-4 text-right">${overallAvgSurv}</td>
+        <td class="py-3 px-4 text-center">${totalRecs}</td>
+      `;
+    }
+
+    function updateTable(data) {
+      const tbody = document.getElementById('data-table-body');
+      tbody.innerHTML = '';
+      document.getElementById('table-row-count').textContent = `Showing ${data.length} records`;
+
+      data.forEach((d, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = idx % 2 === 0 ? 'bg-white hover:bg-emerald-50/40 transition' : 'bg-slate-50/60 hover:bg-emerald-50/40 transition';
+        
+        let survBadge = '<span class="text-slate-400">—</span>';
+        if (d.Survival_Rate_pct != null) {
+          const pct = Number(d.Survival_Rate_pct) * 100;
+          const colorClass = pct >= 80 ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : (pct >= 70 ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-rose-100 text-rose-800 border-rose-300');
+          survBadge = `<span class="px-2 py-0.5 text-[11px] font-bold rounded-md border ${colorClass}">${pct.toFixed(1)}%</span>`;
+        }
+
+        const deleteBtn = currentUser && currentUser.role !== 'viewer'
+          ? `<button onclick="deleteRecordById(${d.Record_ID})" class="text-rose-500 hover:text-rose-700 p-1" title="Delete"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>`
+          : '<span class="text-slate-300">—</span>';
+
+        tr.innerHTML = `
+          <td class="py-2.5 px-3.5 font-mono text-slate-400">${d.Record_ID}</td>
+          <td class="py-2.5 px-3.5 font-bold text-brand-800">${d.Intervention_Code}</td>
+          <td class="py-2.5 px-3.5 font-medium text-slate-800 max-w-xs truncate" title="${d.Intervention_Description || ''}">${d.Intervention_Name}</td>
+          <td class="py-2.5 px-3.5"><span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-100 text-slate-700">${d.Practice || '—'}</span></td>
+          <td class="py-2.5 px-3.5 text-slate-600">${d.Province_Region || '—'}</td>
+          <td class="py-2.5 px-3.5 text-slate-600 max-w-xs truncate" title="${d.Project_Name}">${d.Project_Name}</td>
+          <td class="py-2.5 px-3.5 text-center font-bold text-slate-800">${d.Year}</td>
+          <td class="py-2.5 px-3.5 text-right font-semibold text-emerald-700">${numFmt(d.Plants_Count)}</td>
+          <td class="py-2.5 px-3.5 text-right font-semibold text-blue-700">${floatFmt(d.Area_Covered_ha)}</td>
+          <td class="py-2.5 px-3.5 text-right">${survBadge}</td>
+          <td class="py-2.5 px-3.5 text-slate-500 max-w-sm truncate" title="${d.Remarks_Evidence || ''}">${d.Remarks_Evidence || '—'}</td>
+          <td class="py-2.5 px-3.5 text-center">${deleteBtn}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderDashboard() {
+      const data = getFilteredData();
+      updateKPIs(data);
+      updateCharts(data);
+      updateCategoryMatrix(data);
+      updateTable(data);
+      lucide.createIcons();
+    }
+
+    function resetFilters() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('year-select').value = 'ALL';
+      document.getElementById('practice-select').value = 'ALL';
+      document.getElementById('province-select').value = 'ALL';
+      document.getElementById('category-select').value = 'ALL';
+      renderDashboard();
+    }
+
+    function exportToCSV() {
+      const data = getFilteredData();
+      if (!data.length) return alert('No data to export!');
+
+      const headers = Object.keys(data[0]);
+      const csvRows = [headers.join(',')];
+
+      data.forEach(row => {
+        const values = headers.map(h => {
+          const val = row[h] == null ? '' : String(row[h]);
+          return `"${val.replace(/"/g, '""')}"`;
+        });
+        csvRows.push(values.join(','));
+      });
+
+      const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `WWF_Forestry_Data_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    }
+
+    // Event Listeners
+    document.getElementById('search-input').addEventListener('input', renderDashboard);
+    document.getElementById('year-select').addEventListener('change', renderDashboard);
+    document.getElementById('practice-select').addEventListener('change', renderDashboard);
+    document.getElementById('province-select').addEventListener('change', renderDashboard);
+    document.getElementById('category-select').addEventListener('change', renderDashboard);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      syncAuthUI();
+      renderDashboard();
+    });
+  </script>
+</body>
+</html>
