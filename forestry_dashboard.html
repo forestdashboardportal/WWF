@@ -11,12 +11,15 @@
     <!-- Google Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
@@ -212,35 +215,52 @@
     .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
     @keyframes scaleIn { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .animate-scaleIn { animation: scaleIn 0.2s ease-out; }
+    .dashboard-subtab-btn { color: #64748b; }
+    .dashboard-subtab-btn:hover { color: #17563A; background: #ffffff; }
+    .dashboard-subtab-btn.active { color: #ffffff; background: #17563A; box-shadow: 0 3px 10px rgba(23,86,58,.2); }
     </style>
   </head>
-  <body class="bg-slate-50/50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-900">
+  <body
+    class="bg-slate-50/50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-900">
 
     <!-- TOAST CONTAINER -->
-    <div id="toast-container" class="fixed top-4 right-4 z-[999] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+    <div id="toast-container"
+      class="fixed top-4 right-4 z-[999] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
     <!-- ========================================================
      PAGE 1: LOGIN LANDING (Redesigned Glassmorphism UI)
      ======================================================== -->
-    <div id="login-page" class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800 p-4 relative overflow-hidden">
+    <div id="login-page"
+      class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800 p-4 relative overflow-hidden">
       <!-- Decorative Ambient Lights -->
-      <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl pointer-events-none"></div>
+      <div
+        class="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none"></div>
+      <div
+        class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl pointer-events-none"></div>
 
       <!-- Login Card -->
-      <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/20 backdrop-blur-md relative z-10 animate-scaleIn">
-        
+      <div
+        class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/20 backdrop-blur-md relative z-10 animate-scaleIn">
+
         <!-- Header Brand Banner -->
-        <div class="bg-gradient-to-br from-brand-900 via-brand-800 to-emerald-900 p-8 text-center relative border-b border-emerald-700/30">
-          <div class="w-20 h-20 rounded-2xl bg-white p-2.5 flex items-center justify-center mx-auto mb-4 shadow-xl ring-4 ring-white/15">
-            <img src="WWF%20LOGO.jpeg" alt="WWF Logo" class="w-full h-full object-contain" />
+        <div
+          class="bg-gradient-to-br from-brand-900 via-brand-800 to-emerald-900 p-8 text-center relative border-b border-emerald-700/30">
+          <div
+            class="w-20 h-20 rounded-2xl bg-white p-2.5 flex items-center justify-center mx-auto mb-4 shadow-xl ring-4 ring-white/15">
+            <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
+              class="w-full h-full object-contain" />
           </div>
-          <h1 class="text-2xl font-extrabold text-white tracking-tight">WWF-Pakistan</h1>
-          <p class="text-sm font-semibold text-emerald-200 mt-1">Forestry Interventions Portal</p>
-          <p class="text-xs text-emerald-100/70 mt-0.5">2023 – 2026 Analytics & Data Management</p>
-          
-          <div class="inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/25 text-xs font-medium backdrop-blur-sm">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <h1
+            class="text-2xl font-extrabold text-white tracking-tight">WWF-Pakistan</h1>
+          <p class="text-sm font-semibold text-emerald-200 mt-1">Forestry
+            Interventions Portal</p>
+          <p class="text-xs text-emerald-100/70 mt-0.5">2023 – 2026 Analytics &
+            Data Management</p>
+
+          <div
+            class="inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/25 text-xs font-medium backdrop-blur-sm">
+            <span
+              class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span id="login-status-badge">Syncing Google Sheet Whitelist…</span>
           </div>
         </div>
@@ -249,27 +269,38 @@
         <div class="p-8 space-y-5">
 
           <!-- Error Alert -->
-          <div id="login-error-alert" class="hidden p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2.5 animate-fadeIn">
+          <div id="login-error-alert"
+            class="hidden p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2.5 animate-fadeIn">
             <div class="flex items-start gap-2.5">
-              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
-              <span id="login-error-text" class="font-medium leading-relaxed flex-1"></span>
+              <i data-lucide="alert-circle"
+                class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
+              <span id="login-error-text"
+                class="font-medium leading-relaxed flex-1"></span>
             </div>
-            <div id="login-request-cta" class="hidden flex flex-wrap gap-2 pt-2 border-t border-rose-200/60">
-              <button onclick="handleRequestAccess()" class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm flex items-center gap-1.5">
-                <i data-lucide="mail-plus" class="w-3.5 h-3.5"></i> Request Access
+            <div id="login-request-cta"
+              class="hidden flex flex-wrap gap-2 pt-2 border-t border-rose-200/60">
+              <button onclick="handleRequestAccess()"
+                class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm flex items-center gap-1.5">
+                <i data-lucide="mail-plus" class="w-3.5 h-3.5"></i> Request
+                Access
               </button>
-              <button onclick="switchLoginTab('admin')" class="px-3 py-1.5 text-xs font-semibold rounded-xl border border-rose-300 text-rose-700 hover:bg-rose-100/50 transition flex items-center gap-1.5">
-                <i data-lucide="key-round" class="w-3.5 h-3.5"></i> Admin Sign In
+              <button onclick="switchLoginTab('admin')"
+                class="px-3 py-1.5 text-xs font-semibold rounded-xl border border-rose-300 text-rose-700 hover:bg-rose-100/50 transition flex items-center gap-1.5">
+                <i data-lucide="key-round" class="w-3.5 h-3.5"></i> Admin Sign
+                In
               </button>
             </div>
           </div>
 
           <!-- Tab Selector -->
-          <div class="flex rounded-2xl bg-slate-100 p-1 text-xs font-semibold gap-1">
-            <button id="login-tab-email-btn" onclick="switchLoginTab('email')" class="flex-1 py-2.5 rounded-xl bg-white shadow-sm text-slate-800 font-bold transition">
+          <div
+            class="flex rounded-2xl bg-slate-100 p-1 text-xs font-semibold gap-1">
+            <button id="login-tab-email-btn" onclick="switchLoginTab('email')"
+              class="flex-1 py-2.5 rounded-xl bg-white shadow-sm text-slate-800 font-bold transition">
               User Sign‑In
             </button>
-            <button id="login-tab-admin-btn" onclick="switchLoginTab('admin')" class="flex-1 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 transition">
+            <button id="login-tab-admin-btn" onclick="switchLoginTab('admin')"
+              class="flex-1 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 transition">
               Admin Portal
             </button>
           </div>
@@ -277,18 +308,23 @@
           <!-- TAB: User Email -->
           <div id="login-tab-email" class="space-y-4">
             <div class="space-y-1.5">
-              <label class="text-xs font-bold text-slate-700">Whitelisted Email Address</label>
+              <label class="text-xs font-bold text-slate-700">Whitelisted Email
+                Address</label>
               <div class="relative">
-                <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="email" id="login-email" placeholder="e.g. officer@wwf.org"
+                <i data-lucide="mail"
+                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="email" id="login-email"
+                  placeholder="e.g. officer@wwf.org"
                   class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
                   onkeydown="if(event.key==='Enter') doEmailLogin()">
               </div>
-              <p class="text-[11px] text-slate-400">Instant access for authorized team members & whitelisted domains.</p>
+              <p class="text-[11px] text-slate-400">Instant access for
+                authorized team members & whitelisted domains.</p>
             </div>
             <button onclick="doEmailLogin()" id="email-login-btn"
               class="w-full py-3 bg-brand-800 hover:bg-brand-900 text-white font-bold text-sm rounded-xl transition shadow-md shadow-brand-800/20 hover:shadow-lg flex items-center justify-center gap-2">
-              <span id="email-login-spinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
+              <span id="email-login-spinner"
+                class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
               <span>Sign In with Email</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
@@ -297,25 +333,31 @@
           <!-- TAB: Admin Portal -->
           <div id="login-tab-admin" class="hidden space-y-4">
             <div class="space-y-1.5">
-              <label class="text-xs font-bold text-slate-700">Admin Email</label>
+              <label class="text-xs font-bold text-slate-700">Admin
+                Email</label>
               <div class="relative">
-                <i data-lucide="shield" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <i data-lucide="shield"
+                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input type="email" id="admin-email" placeholder="admin@wwf.org"
                   class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition">
               </div>
             </div>
             <div class="space-y-1.5">
-              <label class="text-xs font-bold text-slate-700">Admin Password</label>
+              <label class="text-xs font-bold text-slate-700">Admin
+                Password</label>
               <div class="relative">
-                <i data-lucide="key-round" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="password" id="admin-password" placeholder="Enter password" autocomplete="current-password"
+                <i data-lucide="key-round"
+                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="password" id="admin-password"
+                  placeholder="Enter password" autocomplete="current-password"
                   class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition"
                   onkeydown="if(event.key==='Enter') doAdminLogin()">
               </div>
             </div>
             <button onclick="doAdminLogin()" id="admin-login-btn"
               class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl transition shadow-md shadow-amber-500/20 hover:shadow-lg flex items-center justify-center gap-2">
-              <span id="admin-login-spinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
+              <span id="admin-login-spinner"
+                class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
               <span>Sign In as Administrator</span>
               <i data-lucide="lock" class="w-4 h-4"></i>
             </button>
@@ -324,29 +366,40 @@
         </div>
       </div>
 
-      <p class="mt-6 text-xs text-emerald-100/50 text-center font-medium">WWF-Pakistan © 2024 · All Rights Reserved · Secure Session</p>
+      <p
+        class="mt-6 text-xs text-emerald-100/50 text-center font-medium">WWF-Pakistan
+        © 2024 · All Rights Reserved · Secure Session</p>
     </div>
 
     <!-- ========================================================
      PAGE 2: DASHBOARD APPLICATION SHELL
      ======================================================== -->
-    <div id="dashboard-page" class="page-hidden flex min-h-screen w-full max-w-full overflow-x-hidden">
+    <div id="dashboard-page"
+      class="page-hidden flex min-h-screen w-full max-w-full overflow-x-hidden">
 
       <!-- LEFT SIDEBAR -->
-      <aside id="app-sidebar" class="fixed left-0 top-0 h-screen w-64 z-40 bg-gradient-to-b from-brand-950 via-brand-900 to-brand-800 text-white shadow-2xl flex flex-col border-r border-white/10">
+      <aside id="app-sidebar"
+        class="fixed left-0 top-0 h-screen w-64 z-40 bg-gradient-to-b from-brand-950 via-brand-900 to-brand-800 text-white shadow-2xl flex flex-col border-r border-white/10">
 
         <!-- Sidebar Header -->
-        <div class="p-4 border-b border-white/10 flex items-center justify-between">
+        <div
+          class="p-4 border-b border-white/10 flex items-center justify-between">
           <div class="flex items-center gap-3 overflow-hidden">
-            <div class="w-10 h-10 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md border border-white/20 shrink-0 overflow-hidden">
-              <img src="WWF%20LOGO.jpeg" alt="WWF Logo" class="w-full h-full object-contain" />
+            <div
+              class="w-10 h-10 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md border border-white/20 shrink-0 overflow-hidden">
+              <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
+                class="w-full h-full object-contain" />
             </div>
             <div class="sidebar-brand min-w-0">
-              <h2 class="text-sm font-extrabold leading-tight text-white truncate">WWF-Pakistan</h2>
-              <p class="text-[10px] text-emerald-200/80 font-semibold uppercase tracking-wider">Forestry Portal</p>
+              <h2
+                class="text-sm font-extrabold leading-tight text-white truncate">WWF-Pakistan</h2>
+              <p
+                class="text-[10px] text-emerald-200/80 font-semibold uppercase tracking-wider">Forestry
+                Portal</p>
             </div>
           </div>
-          <button id="sidebar-toggle" onclick="toggleSidebar()" title="Collapse sidebar"
+          <button id="sidebar-toggle" onclick="toggleSidebar()"
+            title="Collapse sidebar"
             class="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition shrink-0">
             <i data-lucide="panel-left-close" class="w-4 h-4"></i>
           </button>
@@ -354,10 +407,13 @@
 
         <!-- Navigation Links -->
         <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto custom-scrollbar">
-          <div class="sidebar-tag px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300/60">Views & Reporting</div>
+          <div
+            class="sidebar-tag px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300/60">Views
+            & Reporting</div>
           <button id="nav-dashboard" onclick="switchNav('dashboard')"
             class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition bg-white/15 text-white shadow-inner">
-            <i data-lucide="layout-dashboard" class="w-4 h-4 text-emerald-300"></i>
+            <i data-lucide="layout-dashboard"
+              class="w-4 h-4 text-emerald-300"></i>
             <span class="sidebar-label">Analytics Dashboard</span>
           </button>
           <button id="nav-data" onclick="switchNav('data')"
@@ -369,13 +425,17 @@
 
         <!-- Sidebar User & Session -->
         <div class="p-3 border-t border-white/10 space-y-2">
-          <div class="sidebar-user-card bg-white/10 rounded-2xl p-3 border border-white/10 flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-emerald-500/30 flex items-center justify-center shrink-0 text-sm font-extrabold text-emerald-100 border border-white/10">
+          <div
+            class="sidebar-user-card bg-white/10 rounded-2xl p-3 border border-white/10 flex items-center gap-2.5">
+            <div
+              class="w-9 h-9 rounded-xl bg-emerald-500/30 flex items-center justify-center shrink-0 text-sm font-extrabold text-emerald-100 border border-white/10">
               <span id="sidebar-user-initial">U</span>
             </div>
             <div class="sidebar-user-details flex-1 min-w-0">
-              <span id="sidebar-email" class="text-xs font-bold text-white block leading-tight truncate">user@wwf.org</span>
-              <span id="sidebar-role" class="inline-block mt-0.5 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-600 text-white">EDITOR</span>
+              <span id="sidebar-email"
+                class="text-xs font-bold text-white block leading-tight truncate">user@wwf.org</span>
+              <span id="sidebar-role"
+                class="inline-block mt-0.5 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-600 text-white">EDITOR</span>
             </div>
           </div>
           <button onclick="logoutUser()"
@@ -387,51 +447,68 @@
       </aside>
 
       <!-- MAIN CONTENT AREA -->
-      <div id="app-main" class="flex-1 ml-64 flex flex-col min-h-screen min-w-0 max-w-full overflow-x-hidden">
+      <div id="app-main"
+        class="flex-1 ml-64 flex flex-col min-h-screen min-w-0 max-w-full overflow-x-hidden">
 
         <!-- TOP APPLICATION HEADER -->
-        <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
-          <div class="w-full px-5 sm:px-8 py-3.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <header
+          class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
+          <div
+            class="w-full px-5 sm:px-8 py-3.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <div class="flex items-center gap-2.5">
-                <h1 id="page-title" class="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight">Forestry Dashboard</h1>
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <h1 id="page-title"
+                  class="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight">Forestry
+                  Dashboard</h1>
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold">
+                  <span
+                    class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   Google Sheets Live
                 </span>
               </div>
-              <p id="page-subtitle" class="text-xs text-slate-500 font-medium mt-0.5">2023–2026 Interventions · Interactive Reporting & Filtering</p>
+              <p id="page-subtitle"
+                class="text-xs text-slate-500 font-medium mt-0.5">2023–2026
+                Interventions · Interactive Reporting & Filtering</p>
             </div>
 
             <!-- Header Action Controls -->
             <div class="flex flex-wrap items-center gap-2.5">
               <button onclick="openDataEntryModal()"
                 class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-brand-800 hover:bg-brand-900 text-white shadow-sm hover:shadow transition">
-                <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-300"></i>
+                <i data-lucide="plus-circle"
+                  class="w-4 h-4 text-emerald-300"></i>
                 <span>New Record</span>
               </button>
 
               <button id="admin-wl-btn" onclick="openWhitelistModal()"
                 class="hidden inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-sm transition">
-                <i data-lucide="shield-check" class="w-4 h-4 text-amber-100"></i>
+                <i data-lucide="shield-check"
+                  class="w-4 h-4 text-amber-100"></i>
                 <span>Manage Whitelist</span>
-                <span id="pending-badge" class="hidden px-1.5 text-[10px] font-extrabold rounded-full bg-rose-600 text-white animate-pulse">0</span>
+                <span id="pending-badge"
+                  class="hidden px-1.5 text-[10px] font-extrabold rounded-full bg-rose-600 text-white animate-pulse">0</span>
               </button>
 
               <button onclick="exportToCSV()"
                 class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm transition">
-                <i data-lucide="download" class="w-3.5 h-3.5 text-slate-500"></i>
+                <i data-lucide="download"
+                  class="w-3.5 h-3.5 text-slate-500"></i>
                 <span>Export CSV</span>
               </button>
 
               <!-- User Header Pill -->
-              <div class="hidden sm:flex items-center gap-2 bg-slate-100/80 px-3 py-1.5 rounded-xl border border-slate-200/80">
-                <div class="w-6 h-6 rounded-lg bg-brand-800 text-white flex items-center justify-center text-xs font-bold">
+              <div
+                class="hidden sm:flex items-center gap-2 bg-slate-100/80 px-3 py-1.5 rounded-xl border border-slate-200/80">
+                <div
+                  class="w-6 h-6 rounded-lg bg-brand-800 text-white flex items-center justify-center text-xs font-bold">
                   <i data-lucide="user" class="w-3.5 h-3.5"></i>
                 </div>
                 <div class="text-left">
-                  <span id="hdr-email" class="text-xs font-bold block leading-none truncate max-w-[130px] text-slate-800">user@wwf.org</span>
-                  <span id="hdr-role" class="text-[9px] font-extrabold uppercase tracking-wider px-1 rounded inline-block mt-0.5"></span>
+                  <span id="hdr-email"
+                    class="text-xs font-bold block leading-none truncate max-w-[130px] text-slate-800">user@wwf.org</span>
+                  <span id="hdr-role"
+                    class="text-[9px] font-extrabold uppercase tracking-wider px-1 rounded inline-block mt-0.5"></span>
                 </div>
               </div>
             </div>
@@ -441,55 +518,103 @@
         <!-- ========================================================
          VIEW 1: ANALYTICS DASHBOARD
          ======================================================== -->
-        <main id="dashboard-view" class="flex-1 w-full px-5 sm:px-8 py-6 space-y-6">
+        <main id="dashboard-view"
+          class="flex-1 w-full px-5 sm:px-8 py-6 space-y-6">
 
           <!-- Loading State Bar -->
-          <div id="data-loading-bar" class="rounded-2xl p-4 bg-emerald-50/80 border border-emerald-200 text-emerald-900 text-xs font-medium flex items-center gap-3 shadow-sm">
-            <span class="w-4 h-4 border-2 border-emerald-400 border-t-emerald-800 rounded-full spin shrink-0"></span>
-            <span>Fetching live dataset and whitelist from Google Sheets API…</span>
+          <div id="data-loading-bar"
+            class="rounded-2xl p-4 bg-emerald-50/80 border border-emerald-200 text-emerald-900 text-xs font-medium flex items-center gap-3 shadow-sm">
+            <span
+              class="w-4 h-4 border-2 border-emerald-400 border-t-emerald-800 rounded-full spin shrink-0"></span>
+            <span>Fetching live dataset and whitelist from Google Sheets
+              API…</span>
           </div>
 
           <!-- Error State Bar -->
-          <div id="data-error-bar" class="hidden rounded-2xl p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-3 shadow-sm">
-            <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-600 shrink-0"></i>
-            <span id="data-error-text" class="flex-1">Could not load Google Sheets API data.</span>
-            <button onclick="loadAllFromGoogleSheet()" class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition">Retry</button>
+          <div id="data-error-bar"
+            class="hidden rounded-2xl p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-3 shadow-sm">
+            <i data-lucide="alert-octagon"
+              class="w-4 h-4 text-rose-600 shrink-0"></i>
+            <span id="data-error-text" class="flex-1">Could not load Google
+              Sheets API data.</span>
+            <button onclick="loadAllFromGoogleSheet()"
+              class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition">Retry</button>
           </div>
 
+          <nav
+            class="flex items-center gap-1.5 overflow-x-auto rounded-2xl bg-slate-100/80 border border-slate-200/80 p-1.5"
+            aria-label="Dashboard views">
+            <button
+              class="dashboard-subtab-btn active inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+              data-tab="overview" onclick="setDashboardSubtab('overview')"><i
+                data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+              Overview</button>
+            <button
+              class="dashboard-subtab-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+              data-tab="performance"
+              onclick="setDashboardSubtab('performance')"><i
+                data-lucide="chart-no-axes-combined" class="w-3.5 h-3.5"></i>
+              Performance</button>
+            <button
+              class="dashboard-subtab-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+              data-tab="insights" onclick="setDashboardSubtab('insights')"><i
+                data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              Insights</button>
+            <button
+              class="dashboard-subtab-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+              data-tab="records" onclick="setDashboardSubtab('records')"><i
+                data-lucide="rows-3" class="w-3.5 h-3.5"></i> Records</button>
+          </nav>
+
           <!-- COMMAND FILTER SECTION -->
-          <section id="filter-section" class="hidden bg-white rounded-3xl p-5 shadow-card border border-slate-200/80 space-y-4">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <section id="filter-section"
+            class="hidden bg-white rounded-3xl p-5 shadow-card border border-slate-200/80 space-y-4">
+            <div
+              class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
               <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
+                <div
+                  class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
                   <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
                 </div>
                 <div>
-                  <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Filter & Drill Down</h3>
+                  <h3
+                    class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Filter
+                    & Drill Down</h3>
                 </div>
-                <span id="active-filter-badge" class="hidden px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">Active Filters</span>
+                <span id="active-filter-badge"
+                  class="hidden px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">Active
+                  Filters</span>
               </div>
-              <button onclick="resetFilters()" class="text-xs font-semibold text-slate-500 hover:text-brand-800 flex items-center gap-1.5 transition">
+              <button onclick="resetFilters()"
+                class="text-xs font-semibold text-slate-500 hover:text-brand-800 flex items-center gap-1.5 transition">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                 <span>Reset All Filters</span>
               </button>
             </div>
 
             <!-- Filter Controls Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
               <!-- Search -->
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Search</label>
+                <label
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Search</label>
                 <div class="relative">
-                  <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                  <input id="search-input" type="text" placeholder="Project, code, tab..."
+                  <i data-lucide="search"
+                    class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <input id="search-input" type="text"
+                    placeholder="Project, code, tab..."
                     class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition">
                 </div>
               </div>
 
               <!-- Year Filter -->
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Reporting Year</label>
-                <select id="year-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
+                <label
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Reporting
+                  Year</label>
+                <select id="year-select"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
                   <option value="ALL">All Years (2023–2026)</option>
                   <option>2023</option><option>2024</option><option>2025</option><option>2026</option>
                 </select>
@@ -497,16 +622,22 @@
 
               <!-- Project Tab Filter -->
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Project Tab</label>
-                <select id="tab-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
+                <label
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Project
+                  Tab</label>
+                <select id="tab-select"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
                   <option value="ALL">All Project Tabs</option>
                 </select>
               </div>
 
               <!-- Practice Filter -->
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Global Practice</label>
-                <select id="practice-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
+                <label
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Global
+                  Practice</label>
+                <select id="practice-select"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
                   <option value="ALL">All Practices</option>
                   <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
                 </select>
@@ -514,157 +645,276 @@
 
               <!-- Category Filter -->
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Category</label>
-                <select id="category-select" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
+                <label
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Category</label>
+                <select id="category-select"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
                   <option value="ALL">All Categories</option>
-                  <option value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A. Afforestation &amp; Revegetation</option>
-                  <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B. Rangeland &amp; Grassland</option>
-                  <option value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C. Watershed Management</option>
-                  <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other Measures</option>
+                  <option
+                    value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A.
+                    Afforestation &amp; Revegetation</option>
+                  <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B.
+                    Rangeland &amp; Grassland</option>
+                  <option
+                    value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C.
+                    Watershed Management</option>
+                  <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other
+                    Measures</option>
                 </select>
               </div>
+            </div>
+            <div
+              class="flex items-center gap-2 text-[11px] text-slate-400 pt-1"><i
+                data-lucide="info" class="w-3.5 h-3.5"></i><span
+                id="filter-summary">Showing the full live portfolio</span></div>
+          </section>
+
+          <!-- PORTFOLIO INSIGHTS -->
+          <section id="insights-section" data-dashboard-tab="insights"
+            class="hidden space-y-5">
+            <div class="flex items-end justify-between gap-3 px-1"><div><p
+                  class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-700">Portfolio
+                  intelligence</p><h2
+                  class="text-xl font-extrabold text-slate-900 tracking-tight">Where
+                  the work is landing</h2></div><span
+                class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400"><i
+                  data-lucide="mouse-pointer-2" class="w-3.5 h-3.5"></i> Click a
+                chart to explore</span></div>
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+              <div
+                class="xl:col-span-2 bg-slate-950 rounded-3xl p-5 sm:p-6 shadow-card overflow-hidden relative"><div
+                  class="absolute right-0 top-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div><div
+                  class="relative flex items-start justify-between mb-4"><div><h3
+                      class="text-sm font-bold text-white">Coverage
+                      momentum</h3><p
+                      class="text-[11px] text-slate-400 mt-1">Area covered over
+                      time, hectares</p></div><span
+                    class="text-[10px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-400/10 px-2 py-1 rounded-lg">Trend</span></div><div
+                  class="relative h-64"><canvas
+                    id="chart-area-trend"></canvas></div></div>
+              <div
+                class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80"><div
+                  class="flex items-start justify-between mb-4"><div><h3
+                      class="text-sm font-bold text-slate-800">Monitoring
+                      health</h3><p
+                      class="text-[11px] text-slate-400 mt-1">Metric
+                      availability in selection</p></div><i
+                    data-lucide="clipboard-check"
+                    class="w-4 h-4 text-emerald-600"></i></div><div
+                  class="h-48"><canvas id="chart-quality"></canvas></div><div
+                  id="quality-summary"
+                  class="mt-3 grid grid-cols-3 gap-2 text-center"></div></div>
+            </div>
+            <div class="grid grid-cols-1 gap-5">
+              <div
+                class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80"><div
+                  class="flex items-start justify-between mb-4"><div><h3
+                      class="text-sm font-bold text-slate-800">Intervention
+                      mix</h3><p class="text-[11px] text-slate-400 mt-1">Records
+                      by intervention type</p></div><i data-lucide="layers-3"
+                    class="w-4 h-4 text-amber-600"></i></div><div
+                  class="h-72"><canvas
+                    id="chart-intervention"></canvas></div></div>
             </div>
           </section>
 
           <!-- KPI METRIC CARDS -->
-          <section id="kpi-section" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            
+          <section id="kpi-section" data-dashboard-tab="overview"
+            class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
             <!-- Card 1: Plants -->
-            <div class="bg-gradient-to-br from-white to-emerald-50/40 rounded-3xl p-5 shadow-card border border-emerald-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
+            <div
+              class="bg-gradient-to-br from-white to-emerald-50/40 rounded-3xl p-5 shadow-card border border-emerald-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Plants</span>
-                <div class="w-9 h-9 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                <span
+                  class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total
+                  Plants</span>
+                <div
+                  class="w-9 h-9 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
                   <i data-lucide="sprout" class="w-4 h-4"></i>
                 </div>
               </div>
               <div>
-                <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="kpi-plants">—</div>
-                <div class="text-[11px] text-emerald-700 font-medium mt-1 truncate" id="kpi-plants-sub">Loading…</div>
+                <div
+                  class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                  id="kpi-plants">—</div>
+                <div
+                  class="text-[11px] text-emerald-700 font-medium mt-1 truncate"
+                  id="kpi-plants-sub">Loading…</div>
               </div>
             </div>
 
             <!-- Card 2: Area -->
-            <div class="bg-gradient-to-br from-white to-sky-50/40 rounded-3xl p-5 shadow-card border border-sky-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
+            <div
+              class="bg-gradient-to-br from-white to-sky-50/40 rounded-3xl p-5 shadow-card border border-sky-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Area (ha)</span>
-                <div class="w-9 h-9 rounded-2xl bg-sky-500/10 text-sky-600 flex items-center justify-center">
+                <span
+                  class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total
+                  Area (ha)</span>
+                <div
+                  class="w-9 h-9 rounded-2xl bg-sky-500/10 text-sky-600 flex items-center justify-center">
                   <i data-lucide="map" class="w-4 h-4"></i>
                 </div>
               </div>
               <div>
-                <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="kpi-area">—</div>
-                <div class="text-[11px] text-sky-700 font-medium mt-1 truncate" id="kpi-area-sub">Loading…</div>
+                <div
+                  class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                  id="kpi-area">—</div>
+                <div class="text-[11px] text-sky-700 font-medium mt-1 truncate"
+                  id="kpi-area-sub">Loading…</div>
               </div>
             </div>
 
             <!-- Card 3: Survival -->
-            <div class="bg-gradient-to-br from-white to-amber-50/40 rounded-3xl p-5 shadow-card border border-amber-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
+            <div
+              class="bg-gradient-to-br from-white to-amber-50/40 rounded-3xl p-5 shadow-card border border-amber-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Avg Survival Rate</span>
-                <div class="w-9 h-9 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                <span
+                  class="text-xs font-bold text-slate-500 uppercase tracking-wider">Avg
+                  Survival Rate</span>
+                <div
+                  class="w-9 h-9 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
                   <i data-lucide="activity" class="w-4 h-4"></i>
                 </div>
               </div>
               <div>
-                <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="kpi-survival">—</div>
-                <div class="text-[11px] text-amber-700 font-medium mt-1 truncate" id="kpi-survival-sub">Loading…</div>
+                <div
+                  class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                  id="kpi-survival">—</div>
+                <div
+                  class="text-[11px] text-amber-700 font-medium mt-1 truncate"
+                  id="kpi-survival-sub">Loading…</div>
               </div>
             </div>
 
             <!-- Card 4: Records -->
-            <div class="bg-gradient-to-br from-white to-purple-50/40 rounded-3xl p-5 shadow-card border border-purple-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
+            <div
+              class="bg-gradient-to-br from-white to-purple-50/40 rounded-3xl p-5 shadow-card border border-purple-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Filtered Records</span>
-                <div class="w-9 h-9 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center">
+                <span
+                  class="text-xs font-bold text-slate-500 uppercase tracking-wider">Filtered
+                  Records</span>
+                <div
+                  class="w-9 h-9 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center">
                   <i data-lucide="database" class="w-4 h-4"></i>
                 </div>
               </div>
               <div>
-                <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="kpi-records">—</div>
-                <div class="text-[11px] text-purple-700 font-medium mt-1 truncate" id="kpi-records-sub">Loading…</div>
+                <div
+                  class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                  id="kpi-records">—</div>
+                <div
+                  class="text-[11px] text-purple-700 font-medium mt-1 truncate"
+                  id="kpi-records-sub">Loading…</div>
               </div>
             </div>
 
           </section>
 
           <!-- 4 DYNAMIC CONNECTED CHARTS -->
-          <section id="charts-section" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <section id="charts-section" data-dashboard-tab="performance"
+            class="hidden grid grid-cols-1 lg:grid-cols-2 gap-5">
 
             <!-- Chart 1: Plants by Year -->
-            <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
+            <div
+              class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between mb-1">
-                  <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <h3
+                    class="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-brand-800"></span>
                     1. Plants Planted by Year
                   </h3>
-                  <span class="text-[11px] font-semibold text-slate-400">2023–2026</span>
+                  <span
+                    class="text-[11px] font-semibold text-slate-400">2023–2026</span>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-4">Annual distribution of planted seedlings across filtered dataset</p>
+                <p class="text-[11px] text-slate-400 mb-4">Annual distribution
+                  of planted seedlings across filtered dataset</p>
               </div>
               <div class="h-60 w-full"><canvas id="chart-year"></canvas></div>
             </div>
 
             <!-- Chart 2: Practice Share -->
-            <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
+            <div
+              class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between mb-1">
-                  <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <h3
+                    class="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-teal-600"></span>
                     2. Area Share by WWF Practice (ha)
                   </h3>
-                  <span class="text-[11px] font-semibold text-slate-400">Pillar Distribution</span>
+                  <span class="text-[11px] font-semibold text-slate-400">Pillar
+                    Distribution</span>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-4">Hectares restored across Forests, Freshwater, Food & Marine</p>
+                <p class="text-[11px] text-slate-400 mb-4">Hectares restored
+                  across Forests, Freshwater, Food & Marine</p>
               </div>
-              <div class="h-60 w-full"><canvas id="chart-practice"></canvas></div>
+              <div class="h-60 w-full"><canvas
+                  id="chart-practice"></canvas></div>
             </div>
 
             <!-- Chart 3: Plants by Project Tab -->
-            <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
+            <div
+              class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between mb-1">
-                  <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <h3
+                    class="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-sky-600"></span>
                     3. Total Plants by Project Tab
                   </h3>
-                  <span class="text-[11px] font-semibold text-slate-400">Source Tabs</span>
+                  <span class="text-[11px] font-semibold text-slate-400">Source
+                    Tabs</span>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-4">Plantation achievements distributed across workbook project tabs</p>
+                <p class="text-[11px] text-slate-400 mb-4">Plantation
+                  achievements distributed across workbook project tabs</p>
               </div>
-              <div class="h-64 w-full"><canvas id="chart-province"></canvas></div>
+              <div class="h-64 w-full"><canvas
+                  id="chart-province"></canvas></div>
             </div>
 
             <!-- Chart 4: Survival by Category -->
-            <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
+            <div
+              class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between mb-1">
-                  <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <h3
+                    class="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-amber-500"></span>
                     4. Average Survival Rate by Category (%)
                   </h3>
-                  <span class="text-[11px] font-semibold text-slate-400">Success Rate</span>
+                  <span class="text-[11px] font-semibold text-slate-400">Success
+                    Rate</span>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-4">Ecological survival success across Afforestation, Rangeland, Watershed & Other</p>
+                <p class="text-[11px] text-slate-400 mb-4">Ecological survival
+                  success across Afforestation, Rangeland, Watershed & Other</p>
               </div>
-              <div class="h-64 w-full"><canvas id="chart-category"></canvas></div>
+              <div class="h-64 w-full"><canvas
+                  id="chart-category"></canvas></div>
             </div>
 
           </section>
 
           <!-- CATEGORY MATRIX TABLE -->
-          <section id="matrix-section" class="hidden bg-white rounded-3xl shadow-card border border-slate-200/80 overflow-hidden">
-            <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
+          <section id="matrix-section" data-dashboard-tab="records"
+            class="hidden bg-white rounded-3xl shadow-card border border-slate-200/80 overflow-hidden">
+            <div
+              class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
               <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
+                <div
+                  class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
                   <i data-lucide="table" class="w-4 h-4"></i>
                 </div>
-                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Category Performance Breakdown</h3>
+                <h3
+                  class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Category
+                  Performance Breakdown</h3>
               </div>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-xs">
-                <thead class="bg-slate-50/80 text-slate-600 font-bold border-b border-slate-100">
+                <thead
+                  class="bg-slate-50/80 text-slate-600 font-bold border-b border-slate-100">
                   <tr>
                     <th class="py-3 px-5 text-left">Category</th>
                     <th class="py-3 px-5 text-right">Plants Planted</th>
@@ -673,7 +923,8 @@
                     <th class="py-3 px-5 text-center">Records</th>
                   </tr>
                 </thead>
-                <tbody id="category-matrix-body" class="divide-y divide-slate-100"></tbody>
+                <tbody id="category-matrix-body"
+                  class="divide-y divide-slate-100"></tbody>
                 <tfoot class="bg-slate-900 text-white font-bold text-xs">
                   <tr id="category-matrix-total"></tr>
                 </tfoot>
@@ -682,20 +933,27 @@
           </section>
 
           <!-- COLLAPSIBLE OBSERVATION RECORDS TABLE -->
-          <section id="table-section" class="hidden bg-white rounded-3xl shadow-card border border-slate-200/80 overflow-hidden">
-            <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <section id="table-section" data-dashboard-tab="records"
+            class="hidden bg-white rounded-3xl shadow-card border border-slate-200/80 overflow-hidden">
+            <div
+              class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
+                <div
+                  class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
                   <i data-lucide="list" class="w-4 h-4"></i>
                 </div>
                 <div>
-                  <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Observation Records</h3>
-                  <p id="table-row-count" class="text-[11px] text-slate-400 font-medium"></p>
+                  <h3
+                    class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Observation
+                    Records</h3>
+                  <p id="table-row-count"
+                    class="text-[11px] text-slate-400 font-medium"></p>
                 </div>
               </div>
               <button id="table-toggle-btn" onclick="toggleTableExpand()"
                 class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-brand-800 text-white hover:bg-brand-900 shadow-sm transition">
-                <i id="table-toggle-icon" data-lucide="chevron-down" class="w-4 h-4"></i>
+                <i id="table-toggle-icon" data-lucide="chevron-down"
+                  class="w-4 h-4"></i>
                 <span id="table-toggle-text">Expand Observation Records</span>
               </button>
             </div>
@@ -704,7 +962,8 @@
             <div id="table-collapsible-wrapper" class="hidden">
               <div class="overflow-x-auto custom-scrollbar max-h-[500px]">
                 <table class="w-full text-xs whitespace-nowrap">
-                  <thead class="bg-gradient-to-r from-brand-950 to-brand-800 text-white text-left sticky top-0 z-10">
+                  <thead
+                    class="bg-gradient-to-r from-brand-950 to-brand-800 text-white text-left sticky top-0 z-10">
                     <tr>
                       <th class="py-3 px-3.5 font-bold">ID</th>
                       <th class="py-3 px-3.5 font-bold">Code</th>
@@ -714,13 +973,16 @@
                       <th class="py-3 px-3.5 font-bold">Project</th>
                       <th class="py-3 px-3.5 text-center font-bold">Year</th>
                       <th class="py-3 px-3.5 text-right font-bold">Plants</th>
-                      <th class="py-3 px-3.5 text-right font-bold">Area (ha)</th>
-                      <th class="py-3 px-3.5 text-right font-bold">Survival %</th>
+                      <th class="py-3 px-3.5 text-right font-bold">Area
+                        (ha)</th>
+                      <th class="py-3 px-3.5 text-right font-bold">Survival
+                        %</th>
                       <th class="py-3 px-3.5 font-bold">Remarks</th>
                       <th class="py-3 px-3.5 text-center font-bold">Action</th>
                     </tr>
                   </thead>
-                  <tbody id="data-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+                  <tbody id="data-table-body"
+                    class="divide-y divide-slate-100 bg-white"></tbody>
                 </table>
               </div>
             </div>
@@ -731,48 +993,64 @@
         <!-- ========================================================
          VIEW 2: PROJECT WORKSHEETS (WIDE FORMAT SPREADSHEET VIEW)
          ======================================================== -->
-        <main id="data-page" class="page-hidden flex-1 w-full min-w-0 max-w-full px-5 sm:px-8 py-6 space-y-5 overflow-x-hidden">
+        <main id="data-page"
+          class="page-hidden flex-1 w-full min-w-0 max-w-full px-5 sm:px-8 py-6 space-y-5 overflow-x-hidden">
 
           <!-- Header & New Tab Actions -->
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full min-w-0">
+          <div
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full min-w-0">
             <div class="min-w-0">
-              <h2 class="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2">
+              <h2
+                class="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2">
                 <i data-lucide="sheet" class="w-5 h-5 text-brand-800"></i>
                 Project Worksheets
               </h2>
-              <p class="text-xs text-slate-500 mt-0.5">Live multi-year worksheet view with editable reporting columns (2023–2026)</p>
+              <p class="text-xs text-slate-500 mt-0.5">Live multi-year worksheet
+                view with editable reporting columns (2023–2026)</p>
             </div>
             <div class="flex flex-wrap gap-2 shrink-0">
               <button onclick="openNewTabModal()"
                 class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-brand-800 text-white hover:bg-brand-900 shadow-sm transition">
-                <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-300"></i>
+                <i data-lucide="plus-circle"
+                  class="w-4 h-4 text-emerald-300"></i>
                 <span>+ Add Project Tab</span>
               </button>
             </div>
           </div>
 
           <!-- TOP WORKSHEET TAB SWITCHER RAIL -->
-          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-card p-2 flex items-center gap-2 w-full min-w-0 max-w-full overflow-hidden">
-            <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 px-2 shrink-0 flex items-center gap-1.5">
+          <div
+            class="bg-white rounded-2xl border border-slate-200/80 shadow-card p-2 flex items-center gap-2 w-full min-w-0 max-w-full overflow-hidden">
+            <div
+              class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 px-2 shrink-0 flex items-center gap-1.5">
               <i data-lucide="folder" class="w-3.5 h-3.5"></i> Tabs:
             </div>
-            <div id="data-tab-switcher" class="flex flex-nowrap items-center gap-1.5 overflow-x-auto custom-scrollbar py-1 flex-1 min-w-0">
+            <div id="data-tab-switcher"
+              class="flex flex-nowrap items-center gap-1.5 overflow-x-auto custom-scrollbar py-1 flex-1 min-w-0">
               <!-- Injected by JS -->
             </div>
           </div>
 
           <!-- Worksheet Action Controls Toolbar -->
-          <div id="wide-table-controls" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3.5 bg-white rounded-2xl border border-slate-200/80 shadow-card w-full min-w-0 max-w-full page-hidden">
+          <div id="wide-table-controls"
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3.5 bg-white rounded-2xl border border-slate-200/80 shadow-card w-full min-w-0 max-w-full page-hidden">
             <div class="min-w-0 flex-1">
-              <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selected Worksheet</div>
-              <div id="selected-data-tab" class="text-sm font-extrabold text-brand-900 truncate">No project selected</div>
+              <div
+                class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selected
+                Worksheet</div>
+              <div id="selected-data-tab"
+                class="text-sm font-extrabold text-brand-900 truncate">No
+                project selected</div>
             </div>
-            
+
             <!-- Quick Filter in Worksheet -->
             <div class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
               <div class="relative w-full sm:w-60">
-                <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5"></i>
-                <input type="text" id="wide-search-input" oninput="filterWideTable(this.value)" placeholder="Search interventions..."
+                <i data-lucide="search"
+                  class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="wide-search-input"
+                  oninput="filterWideTable(this.value)"
+                  placeholder="Search interventions..."
                   class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
               </div>
               <button id="wide-edit-toggle-btn" onclick="toggleWideEditMode()"
@@ -789,49 +1067,101 @@
           </div>
 
           <!-- Wide Table Container (Strictly isolated horizontal scroll) -->
-          <div id="wide-table-wrapper" class="bg-white rounded-3xl shadow-card border border-slate-200/80 w-full min-w-0 max-w-full overflow-hidden page-hidden">
-            <div class="w-full min-w-0 overflow-x-auto custom-scrollbar max-h-[600px]">
+          <div id="wide-table-wrapper"
+            class="bg-white rounded-3xl shadow-card border border-slate-200/80 w-full min-w-0 max-w-full overflow-hidden page-hidden">
+            <div
+              class="w-full min-w-0 overflow-x-auto custom-scrollbar max-h-[600px]">
               <table id="wide-table" class="w-full text-xs min-w-[1780px]">
                 <colgroup>
-                  <col class="col-practice"><col class="col-project"><col class="col-type">
-                  <col span="12" class="col-year"><col class="col-remarks"><col class="col-actions">
+                  <col class="col-practice"><col class="col-project"><col
+                    class="col-type">
+                  <col span="12" class="col-year"><col class="col-remarks"><col
+                    class="col-actions">
                 </colgroup>
                 <thead>
                   <!-- Header Row 1: Spans -->
                   <tr class="text-white">
-                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Practice</th>
-                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Project</th>
-                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Type of Intervention</th>
-                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2023 Reporting</th>
-                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2024 Reporting</th>
-                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2025 Reporting</th>
-                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2026 Reporting</th>
-                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Documentation</th>
-                    <th colspan="1" class="py-3 px-3 text-center font-bold bg-[#062115]">Actions</th>
+                    <th colspan="1"
+                      class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Practice</th>
+                    <th colspan="1"
+                      class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Project</th>
+                    <th colspan="1"
+                      class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Type
+                      of Intervention</th>
+                    <th colspan="3"
+                      class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2023
+                      Reporting</th>
+                    <th colspan="3"
+                      class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2024
+                      Reporting</th>
+                    <th colspan="3"
+                      class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2025
+                      Reporting</th>
+                    <th colspan="3"
+                      class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2026
+                      Reporting</th>
+                    <th colspan="1"
+                      class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Documentation</th>
+                    <th colspan="1"
+                      class="py-3 px-3 text-center font-bold bg-[#062115]">Actions</th>
                   </tr>
                   <!-- Header Row 2: Sub-columns with Year Context -->
                   <tr class="text-white/90">
-                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Pillar</th>
-                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Project Title</th>
-                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Code &amp; Description</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'23 Plants</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'23 Area (ha)</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'23 Surv %</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'24 Plants</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'24 Area (ha)</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'24 Surv %</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'25 Plants</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'25 Area (ha)</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'25 Surv %</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'26 Plants</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'26 Area (ha)</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'26 Surv %</th>
-                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Remarks / Notes</th>
-                    <th class="py-2 px-3 text-center font-semibold bg-[#0D3824] w-20 text-[10px]">Controls</th>
+                    <th
+                      class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Pillar</th>
+                    <th
+                      class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Project
+                      Title</th>
+                    <th
+                      class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Code
+                      &amp; Description</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'23
+                      Plants</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'23
+                      Area (ha)</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'23
+                      Surv %</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'24
+                      Plants</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'24
+                      Area (ha)</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'24
+                      Surv %</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'25
+                      Plants</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'25
+                      Area (ha)</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'25
+                      Surv %</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'26
+                      Plants</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'26
+                      Area (ha)</th>
+                    <th
+                      class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'26
+                      Surv %</th>
+                    <th
+                      class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Remarks
+                      / Notes</th>
+                    <th
+                      class="py-2 px-3 text-center font-semibold bg-[#0D3824] w-20 text-[10px]">Controls</th>
                   </tr>
                 </thead>
-                <tbody id="wide-table-body" class="divide-y divide-slate-100"></tbody>
-                <tfoot id="wide-table-footer" class="bg-slate-900 text-white font-bold text-xs"></tfoot>
+                <tbody id="wide-table-body"
+                  class="divide-y divide-slate-100"></tbody>
+                <tfoot id="wide-table-footer"
+                  class="bg-slate-900 text-white font-bold text-xs"></tfoot>
               </table>
             </div>
           </div>
@@ -846,21 +1176,29 @@
           </div>
 
           <!-- Empty state -->
-          <div id="data-page-empty" class="hidden flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-200/80 shadow-card">
-            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-brand-800 flex items-center justify-center mb-4">
+          <div id="data-page-empty"
+            class="hidden flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-200/80 shadow-card">
+            <div
+              class="w-16 h-16 rounded-2xl bg-emerald-50 text-brand-800 flex items-center justify-center mb-4">
               <i data-lucide="sheet" class="w-8 h-8"></i>
             </div>
-            <h3 class="text-sm font-bold text-slate-800 mb-1">Select a Project Tab Above</h3>
-            <p class="text-xs text-slate-400">Choose a project tab from the top bar to inspect and edit multi-year rows.</p>
+            <h3 class="text-sm font-bold text-slate-800 mb-1">Select a Project
+              Tab Above</h3>
+            <p class="text-xs text-slate-400">Choose a project tab from the top
+              bar to inspect and edit multi-year rows.</p>
           </div>
 
         </main>
 
         <!-- FOOTER -->
-        <footer class="bg-white border-t border-slate-200/80 mt-auto py-4 px-5 sm:px-8">
-          <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
-            <div>WWF-Pakistan Forestry Interventions Portal · 100% Google Sheets Synced</div>
-            <div class="font-medium text-slate-500">2023–2026 Reporting Cycle</div>
+        <footer
+          class="bg-white border-t border-slate-200/80 mt-auto py-4 px-5 sm:px-8">
+          <div
+            class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
+            <div>WWF-Pakistan Forestry Interventions Portal · 100% Google Sheets
+              Synced</div>
+            <div class="font-medium text-slate-500">2023–2026 Reporting
+              Cycle</div>
           </div>
         </footer>
 
@@ -870,97 +1208,138 @@
     <!-- ========================================================
      MODAL: WHITELIST MANAGER (Admin only)
      ======================================================== -->
-    <div id="whitelist-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
-      <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[88vh] flex flex-col animate-scaleIn">
-        <div class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
+    <div id="whitelist-modal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
+      <div
+        class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[88vh] flex flex-col animate-scaleIn">
+        <div
+          class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-emerald-300">
+            <div
+              class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-emerald-300">
               <i data-lucide="shield-check" class="w-5 h-5"></i>
             </div>
             <div>
-              <h3 class="text-sm font-bold leading-tight">Access Control &amp; Whitelist Manager</h3>
-              <p class="text-[11px] text-emerald-100/70 mt-0.5">Manage users, domains, and access requests · Google Sheet Live</p>
+              <h3 class="text-sm font-bold leading-tight">Access Control &amp;
+                Whitelist Manager</h3>
+              <p class="text-[11px] text-emerald-100/70 mt-0.5">Manage users,
+                domains, and access requests · Google Sheet Live</p>
             </div>
           </div>
-          <button onclick="closeWhitelistModal()" class="text-white/70 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+          <button onclick="closeWhitelistModal()"
+            class="text-white/70 hover:text-white transition"><i data-lucide="x"
+              class="w-5 h-5"></i></button>
         </div>
 
         <!-- Tabs -->
-        <div class="flex border-b border-slate-200 bg-slate-50 px-5 pt-2 gap-1 text-xs font-semibold overflow-x-auto">
-          <button id="wl-tab-users-btn" onclick="switchWlTab('users')" class="px-4 py-2.5 border-b-2 border-brand-800 text-brand-900 font-bold flex items-center gap-1.5 whitespace-nowrap">
+        <div
+          class="flex border-b border-slate-200 bg-slate-50 px-5 pt-2 gap-1 text-xs font-semibold overflow-x-auto">
+          <button id="wl-tab-users-btn" onclick="switchWlTab('users')"
+            class="px-4 py-2.5 border-b-2 border-brand-800 text-brand-900 font-bold flex items-center gap-1.5 whitespace-nowrap">
             <i data-lucide="users" class="w-3.5 h-3.5"></i> Users
-            <span id="wl-users-count" class="px-1.5 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
+            <span id="wl-users-count"
+              class="px-1.5 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
           </button>
-          <button id="wl-tab-domains-btn" onclick="switchWlTab('domains')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+          <button id="wl-tab-domains-btn" onclick="switchWlTab('domains')"
+            class="px-4 py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
             <i data-lucide="globe" class="w-3.5 h-3.5"></i> Allowed Domains
-            <span id="wl-domains-count" class="px-1.5 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
+            <span id="wl-domains-count"
+              class="px-1.5 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
           </button>
-          <button id="wl-tab-requests-btn" onclick="switchWlTab('requests')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+          <button id="wl-tab-requests-btn" onclick="switchWlTab('requests')"
+            class="px-4 py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
             <i data-lucide="inbox" class="w-3.5 h-3.5"></i> Pending Requests
-            <span id="wl-requests-count" class="px-1.5 text-[10px] rounded-full bg-rose-100 text-rose-700 font-bold">0</span>
+            <span id="wl-requests-count"
+              class="px-1.5 text-[10px] rounded-full bg-rose-100 text-rose-700 font-bold">0</span>
           </button>
         </div>
 
         <div class="p-6 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
           <!-- Users Tab -->
           <div id="wl-section-users" class="space-y-4">
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-              <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                <i data-lucide="user-plus" class="w-3.5 h-3.5 text-brand-800"></i> Add Whitelisted User
+            <div
+              class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+              <span
+                class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="user-plus"
+                  class="w-3.5 h-3.5 text-brand-800"></i> Add Whitelisted User
               </span>
               <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
-                <input type="email" id="wl-new-email" placeholder="email@wwf.org"
+                <input type="email" id="wl-new-email"
+                  placeholder="email@wwf.org"
                   class="col-span-5 px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600">
                 <input type="text" id="wl-new-name" placeholder="Full Name"
                   class="col-span-3 px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600">
-                <select id="wl-new-role" class="col-span-2 px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none">
+                <select id="wl-new-role"
+                  class="col-span-2 px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none">
                   <option value="editor">Editor</option>
                   <option value="viewer">Viewer</option>
                   <option value="admin">Admin</option>
                 </select>
-                <button onclick="wlAddUser()" class="col-span-2 py-2 bg-brand-800 text-white text-xs font-bold rounded-xl hover:bg-brand-900 transition shadow-sm">Add</button>
+                <button onclick="wlAddUser()"
+                  class="col-span-2 py-2 bg-brand-800 text-white text-xs font-bold rounded-xl hover:bg-brand-900 transition shadow-sm">Add</button>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-slate-800">Whitelisted Users (from Google Sheet)</span>
-                <input type="text" id="wl-search" oninput="renderWlUsers()" placeholder="Filter users..."
+                <span class="text-xs font-bold text-slate-800">Whitelisted Users
+                  (from Google Sheet)</span>
+                <input type="text" id="wl-search" oninput="renderWlUsers()"
+                  placeholder="Filter users..."
                   class="px-3 py-1 text-xs rounded-xl border border-slate-200 w-44 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               </div>
-              <div id="wl-users-list" class="border border-slate-200/80 rounded-2xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar"></div>
+              <div id="wl-users-list"
+                class="border border-slate-200/80 rounded-2xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar"></div>
             </div>
           </div>
 
           <!-- Domains Tab -->
           <div id="wl-section-domains" class="hidden space-y-4">
-            <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 text-xs text-emerald-900 flex items-start gap-2.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-700 shrink-0 mt-0.5"></i>
-              <div><strong>Domain Auto-Approval:</strong> Any user signing in with an email matching these domains gets immediate access.</div>
+            <div
+              class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 text-xs text-emerald-900 flex items-start gap-2.5">
+              <i data-lucide="check-circle"
+                class="w-4 h-4 text-emerald-700 shrink-0 mt-0.5"></i>
+              <div><strong>Domain Auto-Approval:</strong> Any user signing in
+                with an email matching these domains gets immediate
+                access.</div>
             </div>
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-              <span class="text-xs font-bold text-slate-800">Add Allowed Domain</span>
+            <div
+              class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+              <span class="text-xs font-bold text-slate-800">Add Allowed
+                Domain</span>
               <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
                 <input type="text" id="wl-new-domain" placeholder="wwf.org"
                   class="col-span-6 px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600">
-                <select id="wl-new-domain-role" class="col-span-3 px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
-                  <option value="editor">Editor</option><option value="viewer">Viewer</option>
+                <select id="wl-new-domain-role"
+                  class="col-span-3 px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
+                  <option value="editor">Editor</option><option
+                    value="viewer">Viewer</option>
                 </select>
-                <button onclick="wlAddDomain()" class="col-span-3 py-2 bg-brand-800 text-white text-xs font-bold rounded-xl hover:bg-brand-900 transition shadow-sm">Add Domain</button>
+                <button onclick="wlAddDomain()"
+                  class="col-span-3 py-2 bg-brand-800 text-white text-xs font-bold rounded-xl hover:bg-brand-900 transition shadow-sm">Add
+                  Domain</button>
               </div>
             </div>
-            <div id="wl-domains-list" class="border border-slate-200/80 rounded-2xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar"></div>
+            <div id="wl-domains-list"
+              class="border border-slate-200/80 rounded-2xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar"></div>
           </div>
 
           <!-- Pending Requests Tab -->
           <div id="wl-section-requests" class="hidden space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-800">Pending Access Requests</span>
+              <span class="text-xs font-bold text-slate-800">Pending Access
+                Requests</span>
               <div class="flex gap-2">
-                <button onclick="approveAllPending()" class="px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm">Approve All</button>
-                <button onclick="clearAllPending()" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">Clear All</button>
+                <button onclick="approveAllPending()"
+                  class="px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm">Approve
+                  All</button>
+                <button onclick="clearAllPending()"
+                  class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">Clear
+                  All</button>
               </div>
             </div>
-            <div id="wl-requests-list" class="border border-slate-200/80 rounded-2xl overflow-hidden divide-y divide-slate-100 max-h-72 overflow-y-auto custom-scrollbar"></div>
+            <div id="wl-requests-list"
+              class="border border-slate-200/80 rounded-2xl overflow-hidden divide-y divide-slate-100 max-h-72 overflow-y-auto custom-scrollbar"></div>
           </div>
         </div>
       </div>
@@ -969,100 +1348,143 @@
     <!-- ========================================================
      MODAL: DATA ENTRY / EDIT (Single Long-Format Record)
      ======================================================== -->
-    <div id="data-entry-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
-      <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col animate-scaleIn">
-        <div class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
+    <div id="data-entry-modal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
+      <div
+        class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col animate-scaleIn">
+        <div
+          class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-emerald-300">
+            <div
+              class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-emerald-300">
               <i data-lucide="plus-circle" class="w-5 h-5"></i>
             </div>
-            <h3 id="entry-modal-title" class="text-sm font-bold">New Forestry Record</h3>
+            <h3 id="entry-modal-title" class="text-sm font-bold">New Forestry
+              Record</h3>
           </div>
-          <button onclick="closeDataEntryModal()" class="text-white/70 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+          <button onclick="closeDataEntryModal()"
+            class="text-white/70 hover:text-white transition"><i data-lucide="x"
+              class="w-5 h-5"></i></button>
         </div>
 
         <div class="p-6 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-          <div id="entry-perm-alert" class="hidden p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
-            <span>You need <strong>Editor</strong> or <strong>Admin</strong> access to submit records.</span>
-            <button onclick="closeDataEntryModal()" class="px-3 py-1.5 rounded-xl bg-amber-600 text-white font-bold hover:bg-amber-700 ml-2">OK</button>
+          <div id="entry-perm-alert"
+            class="hidden p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
+            <span>You need <strong>Editor</strong> or <strong>Admin</strong>
+              access to submit records.</span>
+            <button onclick="closeDataEntryModal()"
+              class="px-3 py-1.5 rounded-xl bg-amber-600 text-white font-bold hover:bg-amber-700 ml-2">OK</button>
           </div>
 
-          <form id="entry-form" onsubmit="handleRecordSubmit(event)" class="space-y-4">
+          <form id="entry-form" onsubmit="handleRecordSubmit(event)"
+            class="space-y-4">
             <input type="hidden" id="entry-record-id">
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Category *</label>
-                <select id="entry-category" onchange="onCategoryChange()" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
-                  <option value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A. Afforestation &amp; Revegetation</option>
-                  <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B. Rangeland &amp; Grassland</option>
-                  <option value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C. Watershed Management</option>
-                  <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other Forestry</option>
+                <label class="text-[11px] font-bold text-slate-700">Category
+                  *</label>
+                <select id="entry-category" onchange="onCategoryChange()"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
+                  <option
+                    value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A.
+                    Afforestation &amp; Revegetation</option>
+                  <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B.
+                    Rangeland &amp; Grassland</option>
+                  <option
+                    value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C.
+                    Watershed Management</option>
+                  <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other
+                    Forestry</option>
                 </select>
               </div>
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Code *</label>
-                <select id="entry-code" onchange="onCodeChange()" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white"></select>
+                <label class="text-[11px] font-bold text-slate-700">Code
+                  *</label>
+                <select id="entry-code" onchange="onCodeChange()"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white"></select>
               </div>
             </div>
 
             <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-              <span id="entry-name-preview" class="text-xs font-bold text-slate-800 block"></span>
-              <p id="entry-desc-preview" class="text-[11px] text-slate-500 mt-0.5"></p>
+              <span id="entry-name-preview"
+                class="text-xs font-bold text-slate-800 block"></span>
+              <p id="entry-desc-preview"
+                class="text-[11px] text-slate-500 mt-0.5"></p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Practice *</label>
-                <select id="entry-practice" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
+                <label class="text-[11px] font-bold text-slate-700">Practice
+                  *</label>
+                <select id="entry-practice"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
                   <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
                 </select>
               </div>
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Tab Name *</label>
-                <input type="text" id="entry-tab" placeholder="e.g. WRAP Project"
+                <label class="text-[11px] font-bold text-slate-700">Tab Name
+                  *</label>
+                <input type="text" id="entry-tab"
+                  placeholder="e.g. WRAP Project"
                   class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               </div>
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Year *</label>
-                <select id="entry-year" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
-                  <option>2023</option><option selected>2024</option><option>2025</option><option>2026</option>
+                <label class="text-[11px] font-bold text-slate-700">Year
+                  *</label>
+                <select id="entry-year"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
+                  <option>2023</option><option
+                    selected>2024</option><option>2025</option><option>2026</option>
                 </select>
               </div>
             </div>
 
             <div class="space-y-1">
-              <label class="text-[11px] font-bold text-slate-700">Project Title *</label>
-              <input type="text" id="entry-project" placeholder="e.g. Billion Tree Tsunami - KP Phase II"
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500" required>
+              <label class="text-[11px] font-bold text-slate-700">Project Title
+                *</label>
+              <input type="text" id="entry-project"
+                placeholder="e.g. Billion Tree Tsunami - KP Phase II"
+                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                required>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Plants Count</label>
-                <input type="number" id="entry-plants" placeholder="e.g. 50000" min="0"
+                <label class="text-[11px] font-bold text-slate-700">Plants
+                  Count</label>
+                <input type="number" id="entry-plants" placeholder="e.g. 50000"
+                  min="0"
                   class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               </div>
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Area (ha)</label>
-                <input type="number" step="0.1" id="entry-area" placeholder="e.g. 75.5" min="0"
+                <label class="text-[11px] font-bold text-slate-700">Area
+                  (ha)</label>
+                <input type="number" step="0.1" id="entry-area"
+                  placeholder="e.g. 75.5" min="0"
                   class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               </div>
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Survival (%)</label>
-                <input type="number" step="0.1" id="entry-survival" placeholder="e.g. 80.0" min="0" max="100"
+                <label class="text-[11px] font-bold text-slate-700">Survival
+                  (%)</label>
+                <input type="number" step="0.1" id="entry-survival"
+                  placeholder="e.g. 80.0" min="0" max="100"
                   class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               </div>
             </div>
 
             <div class="space-y-1">
-              <label class="text-[11px] font-bold text-slate-700">Remarks / Evidence</label>
-              <textarea id="entry-remarks" rows="2" placeholder="GPS survey notes, monitoring reports..."
+              <label class="text-[11px] font-bold text-slate-700">Remarks /
+                Evidence</label>
+              <textarea id="entry-remarks" rows="2"
+                placeholder="GPS survey notes, monitoring reports..."
                 class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"></textarea>
             </div>
 
-            <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-              <button type="button" onclick="closeDataEntryModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
+            <div
+              class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button type="button" onclick="closeDataEntryModal()"
+                class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
               <button type="submit" id="entry-submit-btn"
                 class="px-5 py-2.5 text-xs font-bold text-white bg-brand-800 hover:bg-brand-900 rounded-xl shadow transition flex items-center gap-2">
                 <span id="entry-submit-label">Save Record to Google Sheet</span>
@@ -1076,18 +1498,24 @@
     <!-- ========================================================
      MODAL: CONFIRMATION DIALOG (Reusable Custom Modal)
      ======================================================== -->
-    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4 animate-fadeIn">
-      <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200 animate-scaleIn">
-        <div class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center gap-2.5">
+    <div id="confirm-modal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4 animate-fadeIn">
+      <div
+        class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200 animate-scaleIn">
+        <div
+          class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center gap-2.5">
           <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-300"></i>
           <h3 id="confirm-title" class="text-sm font-bold">Confirm Action</h3>
         </div>
         <div class="p-6 space-y-4">
-          <p id="confirm-message" class="text-sm text-slate-700 leading-relaxed"></p>
+          <p id="confirm-message"
+            class="text-sm text-slate-700 leading-relaxed"></p>
           <div id="confirm-extra" class="space-y-2"></div>
           <div class="flex items-center justify-end gap-2 pt-2">
-            <button id="confirm-cancel-btn" onclick="closeConfirm(false)" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
-            <button id="confirm-ok-btn" onclick="closeConfirm(true)" class="px-5 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow transition">Confirm</button>
+            <button id="confirm-cancel-btn" onclick="closeConfirm(false)"
+              class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
+            <button id="confirm-ok-btn" onclick="closeConfirm(true)"
+              class="px-5 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow transition">Confirm</button>
           </div>
         </div>
       </div>
@@ -1096,39 +1524,56 @@
     <!-- ========================================================
      MODAL: ADD NEW PROJECT TAB
      ======================================================== -->
-    <div id="new-tab-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
-      <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 animate-scaleIn">
-        <div class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
+    <div id="new-tab-modal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
+      <div
+        class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 animate-scaleIn">
+        <div
+          class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <i data-lucide="folder-plus" class="w-5 h-5 text-emerald-300"></i>
             <h3 class="text-sm font-bold">Add New Project Tab</h3>
           </div>
-          <button onclick="closeNewTabModal()" class="text-white/70 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+          <button onclick="closeNewTabModal()"
+            class="text-white/70 hover:text-white transition"><i data-lucide="x"
+              class="w-5 h-5"></i></button>
         </div>
         <div class="p-6 space-y-4">
-          <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
-            Creates a new project tab in your dataset with a starter row. The tab will appear in both the top switcher and all dashboard filters.
+          <div
+            class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
+            Creates a new project tab in your dataset with a starter row. The
+            tab will appear in both the top switcher and all dashboard filters.
           </div>
-          <form id="new-tab-form" onsubmit="handleNewTabSubmit(event)" class="space-y-4">
+          <form id="new-tab-form" onsubmit="handleNewTabSubmit(event)"
+            class="space-y-4">
             <div class="space-y-1">
-              <label class="text-[11px] font-bold text-slate-700">Tab Name *</label>
-              <input type="text" id="new-tab-name" required placeholder="e.g. Green Punjab Initiative"
+              <label class="text-[11px] font-bold text-slate-700">Tab Name
+                *</label>
+              <input type="text" id="new-tab-name" required
+                placeholder="e.g. Green Punjab Initiative"
                 class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600">
             </div>
             <div class="space-y-1">
-              <label class="text-[11px] font-bold text-slate-700">Default Practice *</label>
-              <select id="new-tab-practice" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white">
+              <label class="text-[11px] font-bold text-slate-700">Default
+                Practice *</label>
+              <select id="new-tab-practice" required
+                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white">
                 <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
               </select>
             </div>
             <div class="space-y-1">
-              <label class="text-[11px] font-bold text-slate-700">Default Project Title *</label>
-              <input type="text" id="new-tab-project" required placeholder="e.g. Green Punjab - Afforestation Phase I"
+              <label class="text-[11px] font-bold text-slate-700">Default
+                Project Title *</label>
+              <input type="text" id="new-tab-project" required
+                placeholder="e.g. Green Punjab - Afforestation Phase I"
                 class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600">
             </div>
             <div class="flex items-center justify-end gap-2 pt-2">
-              <button type="button" onclick="closeNewTabModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
-              <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-brand-800 hover:bg-brand-900 rounded-xl shadow transition">Create Tab &amp; Add Row</button>
+              <button type="button" onclick="closeNewTabModal()"
+                class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
+              <button type="submit"
+                class="px-5 py-2 text-xs font-bold text-white bg-brand-800 hover:bg-brand-900 rounded-xl shadow transition">Create
+                Tab &amp; Add Row</button>
             </div>
           </form>
         </div>
@@ -1138,129 +1583,188 @@
     <!-- ========================================================
      MODAL: PER-ROW WIDE EDIT (2023–2026 Reporting)
      ======================================================== -->
-    <div id="wide-edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
-      <div class="bg-white rounded-3xl max-w-5xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[92vh] flex flex-col animate-scaleIn">
-        <div class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
+    <div id="wide-edit-modal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
+      <div
+        class="bg-white rounded-3xl max-w-5xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[92vh] flex flex-col animate-scaleIn">
+        <div
+          class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <i data-lucide="edit-3" class="w-5 h-5 text-emerald-300"></i>
-            <h3 id="wide-edit-title" class="text-sm font-bold">Edit Intervention Row (Wide Format)</h3>
+            <h3 id="wide-edit-title" class="text-sm font-bold">Edit Intervention
+              Row (Wide Format)</h3>
           </div>
-          <button onclick="closeWideEditModal()" class="text-white/70 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+          <button onclick="closeWideEditModal()"
+            class="text-white/70 hover:text-white transition"><i data-lucide="x"
+              class="w-5 h-5"></i></button>
         </div>
 
         <div class="p-6 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-          <form id="wide-edit-form" onsubmit="handleWideEditSubmit(event)" class="space-y-4">
+          <form id="wide-edit-form" onsubmit="handleWideEditSubmit(event)"
+            class="space-y-4">
             <input type="hidden" id="wide-edit-row-index">
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Practice *</label>
-                <select id="wide-edit-practice" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <label class="text-[11px] font-bold text-slate-700">Practice
+                  *</label>
+                <select id="wide-edit-practice"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
                   <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
                 </select>
               </div>
               <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-700">Tab Name *</label>
-                <input type="text" id="wide-edit-tab" placeholder="e.g. WRAP Project"
+                <label class="text-[11px] font-bold text-slate-700">Tab Name
+                  *</label>
+                <input type="text" id="wide-edit-tab"
+                  placeholder="e.g. WRAP Project"
                   class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
               </div>
             </div>
 
             <div class="space-y-1">
-              <label class="text-[11px] font-bold text-slate-700">Project Title *</label>
-              <input type="text" id="wide-edit-project" required placeholder="e.g. Billion Tree Tsunami - KP Phase II"
+              <label class="text-[11px] font-bold text-slate-700">Project Title
+                *</label>
+              <input type="text" id="wide-edit-project" required
+                placeholder="e.g. Billion Tree Tsunami - KP Phase II"
                 class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
             </div>
 
             <div class="space-y-1">
               <label class="text-[11px] font-bold text-slate-700">
-                Type of Intervention (composite: <span class="text-emerald-700 font-mono">A-1. Name — Description</span>) *
+                Type of Intervention (composite: <span
+                  class="text-emerald-700 font-mono">A-1. Name —
+                  Description</span>) *
               </label>
-              <textarea id="wide-edit-type" rows="2" required placeholder="A-1. Planting of seedlings — Establishing trees by planting nursery-raised seedlings."
+              <textarea id="wide-edit-type" rows="2" required
+                placeholder="A-1. Planting of seedlings — Establishing trees by planting nursery-raised seedlings."
                 class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono"></textarea>
-              <p class="text-[10px] text-slate-400">Format: <code class="bg-slate-100 px-1 rounded">CODE. Name — Description</code></p>
+              <p class="text-[10px] text-slate-400">Format: <code
+                  class="bg-slate-100 px-1 rounded">CODE. Name —
+                  Description</code></p>
             </div>
 
             <!-- Year Blocks: 4 Side-by-Side Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
               <!-- 2023 -->
-              <div class="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-200 space-y-2.5">
-                <div class="text-[11px] font-extrabold text-emerald-800 text-center pb-1 border-b border-emerald-200">2023</div>
+              <div
+                class="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-200 space-y-2.5">
+                <div
+                  class="text-[11px] font-extrabold text-emerald-800 text-center pb-1 border-b border-emerald-200">2023</div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Plants (No.)</label>
-                  <input type="number" id="wide-edit-p23" min="0" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label class="text-[10px] font-semibold text-slate-600">Plants
+                    (No.)</label>
+                  <input type="number" id="wide-edit-p23" min="0"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Area (ha)</label>
-                  <input type="number" id="wide-edit-a23" min="0" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label class="text-[10px] font-semibold text-slate-600">Area
+                    (ha)</label>
+                  <input type="number" id="wide-edit-a23" min="0" step="0.1"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Survival (%)</label>
-                  <input type="number" id="wide-edit-s23" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label
+                    class="text-[10px] font-semibold text-slate-600">Survival
+                    (%)</label>
+                  <input type="number" id="wide-edit-s23" step="0.1"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
               </div>
 
               <!-- 2024 -->
-              <div class="p-3.5 rounded-2xl bg-sky-50/50 border border-sky-200 space-y-2.5">
-                <div class="text-[11px] font-extrabold text-sky-800 text-center pb-1 border-b border-sky-200">2024</div>
+              <div
+                class="p-3.5 rounded-2xl bg-sky-50/50 border border-sky-200 space-y-2.5">
+                <div
+                  class="text-[11px] font-extrabold text-sky-800 text-center pb-1 border-b border-sky-200">2024</div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Plants (No.)</label>
-                  <input type="number" id="wide-edit-p24" min="0" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label class="text-[10px] font-semibold text-slate-600">Plants
+                    (No.)</label>
+                  <input type="number" id="wide-edit-p24" min="0"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Area (ha)</label>
-                  <input type="number" id="wide-edit-a24" min="0" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label class="text-[10px] font-semibold text-slate-600">Area
+                    (ha)</label>
+                  <input type="number" id="wide-edit-a24" min="0" step="0.1"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Survival (%)</label>
-                  <input type="number" id="wide-edit-s24" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label
+                    class="text-[10px] font-semibold text-slate-600">Survival
+                    (%)</label>
+                  <input type="number" id="wide-edit-s24" step="0.1"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
               </div>
 
               <!-- 2025 -->
-              <div class="p-3.5 rounded-2xl bg-amber-50/50 border border-amber-200 space-y-2.5">
-                <div class="text-[11px] font-extrabold text-amber-800 text-center pb-1 border-b border-amber-200">2025</div>
+              <div
+                class="p-3.5 rounded-2xl bg-amber-50/50 border border-amber-200 space-y-2.5">
+                <div
+                  class="text-[11px] font-extrabold text-amber-800 text-center pb-1 border-b border-amber-200">2025</div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Plants (No.)</label>
-                  <input type="number" id="wide-edit-p25" min="0" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label class="text-[10px] font-semibold text-slate-600">Plants
+                    (No.)</label>
+                  <input type="number" id="wide-edit-p25" min="0"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Area (ha)</label>
-                  <input type="number" id="wide-edit-a25" min="0" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label class="text-[10px] font-semibold text-slate-600">Area
+                    (ha)</label>
+                  <input type="number" id="wide-edit-a25" min="0" step="0.1"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Survival (%)</label>
-                  <input type="number" id="wide-edit-s25" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label
+                    class="text-[10px] font-semibold text-slate-600">Survival
+                    (%)</label>
+                  <input type="number" id="wide-edit-s25" step="0.1"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
               </div>
 
               <!-- 2026 -->
-              <div class="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-200 space-y-2.5">
-                <div class="text-[11px] font-extrabold text-purple-800 text-center pb-1 border-b border-purple-200">2026</div>
+              <div
+                class="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-200 space-y-2.5">
+                <div
+                  class="text-[11px] font-extrabold text-purple-800 text-center pb-1 border-b border-purple-200">2026</div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Plants (No.)</label>
-                  <input type="number" id="wide-edit-p26" min="0" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label class="text-[10px] font-semibold text-slate-600">Plants
+                    (No.)</label>
+                  <input type="number" id="wide-edit-p26" min="0"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Area (ha)</label>
-                  <input type="number" id="wide-edit-a26" min="0" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label class="text-[10px] font-semibold text-slate-600">Area
+                    (ha)</label>
+                  <input type="number" id="wide-edit-a26" min="0" step="0.1"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
                 <div class="space-y-1">
-                  <label class="text-[10px] font-semibold text-slate-600">Survival (%)</label>
-                  <input type="number" id="wide-edit-s26" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                  <label
+                    class="text-[10px] font-semibold text-slate-600">Survival
+                    (%)</label>
+                  <input type="number" id="wide-edit-s26" step="0.1"
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
                 </div>
               </div>
             </div>
 
             <div class="space-y-1">
-              <label class="text-[11px] font-bold text-slate-700">Remarks / Evidence</label>
-              <textarea id="wide-edit-remarks" rows="2" placeholder="GPS survey notes, monitoring reports..."
+              <label class="text-[11px] font-bold text-slate-700">Remarks /
+                Evidence</label>
+              <textarea id="wide-edit-remarks" rows="2"
+                placeholder="GPS survey notes, monitoring reports..."
                 class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"></textarea>
             </div>
 
-            <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-              <button type="button" onclick="closeWideEditModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
-              <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-brand-800 hover:bg-brand-900 rounded-xl shadow transition flex items-center gap-2">
+            <div
+              class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button type="button" onclick="closeWideEditModal()"
+                class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
+              <button type="submit"
+                class="px-5 py-2 text-xs font-bold text-white bg-brand-800 hover:bg-brand-900 rounded-xl shadow transition flex items-center gap-2">
                 <i data-lucide="save" class="w-3.5 h-3.5"></i>
                 <span>Save Row Changes</span>
               </button>
@@ -1323,6 +1827,7 @@ let whitelist     = { users: [], domains: [], pending: [] };
 let charts        = {};
 let isTableExpanded = false;
 let activeNav     = 'dashboard';
+let dashboardSubtab = 'overview';
 let activeDataTab = null;
 let isWideEditMode = false;
 let wideCurrentRows = [];
@@ -1778,6 +2283,7 @@ async function loadAllFromGoogleSheet() {
       records = data.map(r => ({
         Record_ID: r.Record_ID != null ? Number(r.Record_ID) : null,
         Practice: r.Practice || 'Forests',
+        Province_Region: r.Province_Region || '',
         Tab_Name: r.Tab_Name || '',
         Project_Name: r.Project_Name || '',
         Intervention_Category: r.Intervention_Category || '',
@@ -1829,9 +2335,23 @@ async function loadAllFromGoogleSheet() {
 function showSection(mode, errMsg='') {
   document.getElementById('data-loading-bar').classList.toggle('hidden', mode!=='loading');
   document.getElementById('data-error-bar').classList.toggle('hidden', mode!=='error');
-  const sections = ['filter-section','kpi-section','charts-section','matrix-section','table-section'];
+  const sections = ['filter-section','kpi-section','charts-section','insights-section','matrix-section','table-section'];
   sections.forEach(id => document.getElementById(id).classList.toggle('hidden', mode!=='data'));
+  if (mode === 'data') setDashboardSubtab(dashboardSubtab);
   if (mode==='error') document.getElementById('data-error-text').textContent = errMsg;
+}
+
+function setDashboardSubtab(tab) {
+  dashboardSubtab = tab;
+  document.querySelectorAll('.dashboard-subtab-btn').forEach(button => {
+    const active = button.dataset.tab === tab;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+  document.querySelectorAll('[data-dashboard-tab]').forEach(section => {
+    section.classList.toggle('hidden', section.dataset.dashboardTab !== tab);
+  });
+  requestAnimationFrame(() => Object.values(charts).forEach(chart => chart && chart.resize()));
 }
 
 function updatePendingBadge() {
@@ -1844,6 +2364,12 @@ function updatePendingBadge() {
 }
 
 // ── Filtering Logic ───────────────────────────────────────────────────────────
+function getMonitoringStatus(row) {
+  const fields = ['Plants_Count', 'Area_Covered_ha', 'Survival_Rate_pct'];
+  const available = fields.filter(field => row[field] != null && row[field] !== '').length;
+  return available === fields.length ? 'complete' : available === 0 ? 'missing' : 'partial';
+}
+
 function getFilteredData() {
   const q    = (document.getElementById('search-input').value||'').toLowerCase();
   const yr   = document.getElementById('year-select').value;
@@ -1852,7 +2378,7 @@ function getFilteredData() {
   const cat  = document.getElementById('category-select').value;
   const hasFilter = q||yr!=='ALL'||prac!=='ALL'||tab!=='ALL'||cat!=='ALL';
   document.getElementById('active-filter-badge').classList.toggle('hidden', !hasFilter);
-  return records.filter(d => {
+  const filtered = records.filter(d => {
     if (yr   !=='ALL' && String(d.Year)!==yr)                                      return false;
     if (prac !=='ALL' && d.Practice!==prac)                                        return false;
     if (tab  !=='ALL' && d.Tab_Name!==tab)                                         return false;
@@ -1860,6 +2386,9 @@ function getFilteredData() {
     if (q && !JSON.stringify(d).toLowerCase().includes(q))                         return false;
     return true;
   });
+  const summary = document.getElementById('filter-summary');
+  if (summary) summary.textContent = hasFilter ? `Showing ${filtered.length.toLocaleString()} of ${records.length.toLocaleString()} records across the selected filters` : 'Showing the full live portfolio';
+  return filtered;
 }
 
 // ── Render KPI Cards ──────────────────────────────────────────────────────────
@@ -2050,6 +2579,17 @@ function updateCharts(data) {
       }
     }
   });
+
+  const areaByYear = years.map(y => data.filter(d => String(d.Year)===y).reduce((s,d) => s + (Number(d.Area_Covered_ha)||0), 0));
+  const interventionCounts = [...new Set(data.map(d => d.Intervention_Name).filter(Boolean))].map(name => ({ name, count: data.filter(d => d.Intervention_Name===name).length })).sort((a,b) => b.count-a.count).slice(0, 10);
+  const statusCounts = ['complete','partial','missing'].map(status => data.filter(row => getMonitoringStatus(row)===status).length);
+  const chartDefaults = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0f172a', padding: 10, cornerRadius: 8 } } };
+  Object.keys({areaTrend:1, quality:1, intervention:1}).forEach(key => { if (charts[key]) charts[key].destroy(); });
+  charts.areaTrend = new Chart(document.getElementById('chart-area-trend'), { type: 'line', data: { labels: years, datasets: [{ label: 'Area covered', data: areaByYear, borderColor: '#6ee7b7', backgroundColor: 'rgba(52,211,153,.16)', fill: true, tension: .35, pointRadius: 4, pointBackgroundColor: '#d1fae5' }] }, options: { ...chartDefaults, scales: { x: { grid: { display: false }, ticks: { color: '#94a3b8' } }, y: { beginAtZero: true, grid: { color: 'rgba(148,163,184,.15)' }, ticks: { color: '#94a3b8', callback: value => value >= 1000 ? value/1000+'K' : value } } } } });
+  charts.quality = new Chart(document.getElementById('chart-quality'), { type: 'doughnut', data: { labels: ['Complete','Partial','Needs monitoring'], datasets: [{ data: statusCounts, backgroundColor: ['#10b981','#f59e0b','#f43f5e'], borderWidth: 3, borderColor: '#fff' }] }, options: { ...chartDefaults, cutout: '68%', plugins: { ...chartDefaults.plugins, legend: { display: false } } } });
+  charts.intervention = new Chart(document.getElementById('chart-intervention'), { type: 'polarArea', data: { labels: interventionCounts.map(item => item.name), datasets: [{ data: interventionCounts.map(item => item.count), backgroundColor: ['#17563A','#0284c7','#f59e0b','#10b981','#ef4444','#64748b','#84cc16','#0ea5e9','#e11d48','#a16207'], borderWidth: 2, borderColor: '#fff' }] }, options: { ...chartDefaults, scales: { r: { beginAtZero: true, ticks: { display: false }, grid: { color: '#e2e8f0' } } }, plugins: { ...chartDefaults.plugins, legend: { display: true, position: 'right', labels: { boxWidth: 10, font: { size: 10, family: 'Inter' } } } } } });
+  const qualitySummary = document.getElementById('quality-summary');
+  if (qualitySummary) qualitySummary.innerHTML = [['Complete',statusCounts[0],'text-emerald-700'],['Partial',statusCounts[1],'text-amber-700'],['Missing',statusCounts[2],'text-rose-700']].map(item => `<div><div class="text-base font-extrabold ${item[2]}">${item[1]}</div><div class="text-[10px] font-bold uppercase tracking-wide text-slate-400">${item[0]}</div></div>`).join('');
 }
 
 // ── Render Category Performance Matrix ────────────────────────────────────────
