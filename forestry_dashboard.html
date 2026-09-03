@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WWF-Pakistan Forestry Portal</title>
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="Favicon.png"/>
-  <link rel="shortcut icon" type="image/png" href="Favicon.png"/>
-  <link rel="apple-touch-icon" href="Favicon.png"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WWF-Pakistan Forestry Portal</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="Favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="Favicon.png" />
+    <link rel="apple-touch-icon" href="Favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
     tailwind.config = {
       theme: { extend: { colors: { brand: { 800: '#17563A', 900: '#0D3824' } } } }
     };
   </script>
-  <style>
+    <style>
     .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -26,542 +27,767 @@
     .spin { animation: spin 1s linear infinite; }
     .page-hidden { display: none !important; }
   </style>
-</head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+  </head>
+  <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-<!-- TOAST CONTAINER -->
-<div id="toast-container" class="fixed top-4 right-4 z-[999] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"
+      class="fixed top-4 right-4 z-[999] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
-<!-- ========================================================
+    <!-- ========================================================
      PAGE 1: LOGIN LANDING
      ======================================================== -->
-<div id="login-page" class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#0D3824] via-[#17563A] to-[#1e6f4b] p-4">
+    <div id="login-page"
+      class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#0D3824] via-[#17563A] to-[#1e6f4b] p-4">
 
-  <!-- Card -->
-  <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+      <!-- Card -->
+      <div
+        class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/10">
 
-    <!-- Header -->
-    <div class="bg-gradient-to-r from-[#0D3824] via-[#17563A] to-[#1e6f4b] p-8 text-center">
-      <div class="w-20 h-20 rounded-2xl bg-white p-2 flex items-center justify-center mx-auto mb-4 shadow-xl ring-4 ring-white/20">
-        <img src="WWF%20LOGO.jpeg" alt="WWF Logo" class="w-full h-full object-contain" />
-      </div>
-      <h1 class="text-2xl font-extrabold text-white tracking-tight">WWF-Pakistan</h1>
-      <p class="text-sm font-semibold text-emerald-200 mt-1">Forestry Interventions Portal</p>
-      <p class="text-xs text-emerald-100/70 mt-1">2023 – 2026 Analytics & Data Management</p>
-      <div class="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[11px] font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span id="login-status-badge">Syncing Google Sheet Whitelist…</span>
-      </div>
-    </div>
-
-    <!-- Login Body -->
-    <div class="p-8 space-y-5">
-
-      <!-- Error Alert -->
-      <div id="login-error-alert" class="hidden p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2">
-        <div class="flex items-start gap-2">
-          <span class="text-rose-500 mt-0.5">⚠</span>
-          <span id="login-error-text" class="font-semibold flex-1"></span>
-        </div>
-        <div id="login-request-cta" class="hidden flex flex-wrap gap-2 pt-1 border-t border-rose-200/50">
-          <button onclick="handleRequestAccess()" class="px-3 py-1 text-[11px] font-bold rounded-lg bg-rose-600 text-white hover:bg-rose-700">📩 Request Access</button>
-          <button onclick="switchLoginTab('admin')" class="px-3 py-1 text-[11px] font-semibold rounded-lg border border-rose-300 text-rose-700 hover:bg-rose-50">🔑 Admin Sign In</button>
-        </div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="flex rounded-xl bg-slate-100 p-1 text-xs font-semibold gap-1">
-        <button id="login-tab-email-btn" onclick="switchLoginTab('email')"
-          class="flex-1 py-2 rounded-lg bg-white shadow text-slate-800 transition">
-          User Sign‑In
-        </button>
-        <button id="login-tab-admin-btn" onclick="switchLoginTab('admin')"
-          class="flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-800 transition">
-          Admin Portal
-        </button>
-      </div>
-
-      <!-- TAB: Email only (viewer / editor) -->
-      <div id="login-tab-email" class="space-y-4">
-        <div class="space-y-1.5">
-          <label class="text-xs font-bold text-slate-700">Enter Whitelisted Email</label>
-          <div class="relative">
-            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">✉</span>
-            <input type="email" id="login-email" placeholder="e.g. officer@wwf.org"
-              class="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-600"
-              onkeydown="if(event.key==='Enter') doEmailLogin()">
+        <!-- Header -->
+        <div
+          class="bg-gradient-to-r from-[#0D3824] via-[#17563A] to-[#1e6f4b] p-8 text-center">
+          <div
+            class="w-20 h-20 rounded-2xl bg-white p-2 flex items-center justify-center mx-auto mb-4 shadow-xl ring-4 ring-white/20">
+            <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
+              class="w-full h-full object-contain" />
           </div>
-          <p class="text-[11px] text-slate-400">Access is granted strictly based on the Google Sheet Whitelist.</p>
+          <h1
+            class="text-2xl font-extrabold text-white tracking-tight">WWF-Pakistan</h1>
+          <p class="text-sm font-semibold text-emerald-200 mt-1">Forestry
+            Interventions Portal</p>
+          <p class="text-xs text-emerald-100/70 mt-1">2023 – 2026 Analytics &
+            Data Management</p>
+          <div
+            class="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[11px] font-medium">
+            <span
+              class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="login-status-badge">Syncing Google Sheet Whitelist…</span>
+          </div>
         </div>
-        <button onclick="doEmailLogin()" id="email-login-btn"
-          class="w-full py-2.5 bg-[#17563A] hover:bg-[#0D3824] text-white font-bold text-sm rounded-xl transition shadow flex items-center justify-center gap-2">
-          <span id="email-login-spinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
-          <span>Sign In with Email</span>
-        </button>
+
+        <!-- Login Body -->
+        <div class="p-8 space-y-5">
+
+          <!-- Error Alert -->
+          <div id="login-error-alert"
+            class="hidden p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2">
+            <div class="flex items-start gap-2">
+              <span class="text-rose-500 mt-0.5">⚠</span>
+              <span id="login-error-text" class="font-semibold flex-1"></span>
+            </div>
+            <div id="login-request-cta"
+              class="hidden flex flex-wrap gap-2 pt-1 border-t border-rose-200/50">
+              <button onclick="handleRequestAccess()"
+                class="px-3 py-1 text-[11px] font-bold rounded-lg bg-rose-600 text-white hover:bg-rose-700">📩
+                Request Access</button>
+              <button onclick="switchLoginTab('admin')"
+                class="px-3 py-1 text-[11px] font-semibold rounded-lg border border-rose-300 text-rose-700 hover:bg-rose-50">🔑
+                Admin Sign In</button>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div
+            class="flex rounded-xl bg-slate-100 p-1 text-xs font-semibold gap-1">
+            <button id="login-tab-email-btn" onclick="switchLoginTab('email')"
+              class="flex-1 py-2 rounded-lg bg-white shadow text-slate-800 transition">
+              User Sign‑In
+            </button>
+            <button id="login-tab-admin-btn" onclick="switchLoginTab('admin')"
+              class="flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-800 transition">
+              Admin Portal
+            </button>
+          </div>
+
+          <!-- TAB: Email only (viewer / editor) -->
+          <div id="login-tab-email" class="space-y-4">
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-slate-700">Enter Whitelisted
+                Email</label>
+              <div class="relative">
+                <span
+                  class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">✉</span>
+                <input type="email" id="login-email"
+                  placeholder="e.g. officer@wwf.org"
+                  class="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-600"
+                  onkeydown="if(event.key==='Enter') doEmailLogin()">
+              </div>
+              <p class="text-[11px] text-slate-400">Access is granted strictly
+                based on the Google Sheet Whitelist.</p>
+            </div>
+            <button onclick="doEmailLogin()" id="email-login-btn"
+              class="w-full py-2.5 bg-[#17563A] hover:bg-[#0D3824] text-white font-bold text-sm rounded-xl transition shadow flex items-center justify-center gap-2">
+              <span id="email-login-spinner"
+                class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
+              <span>Sign In with Email</span>
+            </button>
+          </div>
+
+          <!-- TAB: Admin (email + password) -->
+          <div id="login-tab-admin" class="hidden space-y-4">
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-slate-700">Admin
+                Email</label>
+              <input type="email" id="admin-email" placeholder="admin@wwf.org"
+                class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-500">
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-slate-700">Master
+                Password</label>
+              <input type="password" id="admin-password" placeholder="••••••••"
+                class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-500"
+                onkeydown="if(event.key==='Enter') doAdminLogin()">
+            </div>
+            <button onclick="doAdminLogin()" id="admin-login-btn"
+              class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl transition shadow flex items-center justify-center gap-2">
+              <span id="admin-login-spinner"
+                class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
+              <span>Sign In as Administrator</span>
+            </button>
+          </div>
+
+        </div>
       </div>
 
-      <!-- TAB: Admin (email + password) -->
-      <div id="login-tab-admin" class="hidden space-y-4">
-        <div class="space-y-1">
-          <label class="text-xs font-bold text-slate-700">Admin Email</label>
-          <input type="email" id="admin-email" placeholder="admin@wwf.org"
-            class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-500">
-        </div>
-        <div class="space-y-1">
-          <label class="text-xs font-bold text-slate-700">Master Password</label>
-          <input type="password" id="admin-password" placeholder="••••••••"
-            class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-500"
-            onkeydown="if(event.key==='Enter') doAdminLogin()">
-        </div>
-        <button onclick="doAdminLogin()" id="admin-login-btn"
-          class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl transition shadow flex items-center justify-center gap-2">
-          <span id="admin-login-spinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
-          <span>Sign In as Administrator</span>
-        </button>
-      </div>
-
+      <p class="mt-6 text-xs text-emerald-100/50 text-center">WWF-Pakistan ©
+        2024 · Session Persisted</p>
     </div>
-  </div>
 
-  <p class="mt-6 text-xs text-emerald-100/50 text-center">WWF-Pakistan © 2024 · Session Persisted</p>
-</div>
-
-<!-- ========================================================
+    <!-- ========================================================
      PAGE 2: DASHBOARD (hidden until login)
      ======================================================== -->
-<div id="dashboard-page" class="page-hidden flex flex-col min-h-screen">
+    <div id="dashboard-page" class="page-hidden flex flex-col min-h-screen">
 
-  <!-- TOP HEADER -->
-  <header class="bg-gradient-to-r from-[#0D3824] via-[#17563A] to-[#1e6f4b] text-white shadow-lg sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center space-x-3.5">
-        <div class="w-11 h-11 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md border border-white/20 shrink-0 overflow-hidden">
-          <img src="WWF%20LOGO.jpeg" alt="WWF Logo" class="w-full h-full object-contain" />
-        </div>
-        <div>
-          <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">WWF-Pakistan Forestry Portal</h1>
-          <p class="text-xs text-emerald-100/80 font-medium">Live Google Sheets Sync (Read/Write) · Session Remembered</p>
-        </div>
-      </div>
-      <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
-        <button onclick="openDataEntryModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-400 text-brand-900 hover:bg-emerald-300 shadow transition">
-          <i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Entry</span>
-        </button>
-        <button id="admin-wl-btn" onclick="openWhitelistModal()" class="hidden inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-500 hover:bg-amber-400 text-white shadow transition">
-          <i data-lucide="shield-check" class="w-4 h-4 text-amber-100"></i>
-          <span>Manage Whitelist</span>
-          <span id="pending-badge" class="hidden ml-1 px-1.5 text-[10px] font-extrabold rounded-full bg-rose-600 text-white animate-pulse">0</span>
-        </button>
-        <button onclick="exportToCSV()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition shadow-sm">
-          <i data-lucide="download" class="w-4 h-4 text-emerald-300"></i><span>Export CSV</span>
-        </button>
-        <!-- User badge -->
-        <div class="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-xl border border-white/20">
-          <div class="text-right">
-            <span id="hdr-email" class="text-xs font-bold block leading-none truncate max-w-[140px]">user@wwf.org</span>
-            <span id="hdr-role" class="text-[10px] font-extrabold uppercase tracking-wider px-1.5 rounded inline-block mt-0.5"></span>
+      <!-- TOP HEADER -->
+      <header
+        class="bg-gradient-to-r from-[#0D3824] via-[#17563A] to-[#1e6f4b] text-white shadow-lg sticky top-0 z-40">
+        <div
+          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div
+              class="w-11 h-11 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md border border-white/20 shrink-0 overflow-hidden">
+              <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
+                class="w-full h-full object-contain" />
+            </div>
+            <div>
+              <h1
+                class="text-lg sm:text-xl font-bold tracking-tight text-white">WWF-Pakistan
+                Forestry Portal</h1>
+              <p class="text-xs text-emerald-100/80 font-medium">Live Google
+                Sheets Sync (Read/Write) · Session Remembered</p>
+            </div>
           </div>
-          <button onclick="logoutUser()" class="text-xs text-rose-200 hover:text-white px-1.5 py-1 rounded hover:bg-rose-500/20 transition" title="Sign Out">
-            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- MAIN -->
-  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-
-    <!-- Loading bar -->
-    <div id="data-loading-bar" class="rounded-xl p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-3">
-      <span class="w-5 h-5 border-2 border-emerald-300 border-t-emerald-700 rounded-full spin shrink-0"></span>
-      <span>Fetching live dataset from Google Sheets API…</span>
-    </div>
-
-    <!-- Data error bar -->
-    <div id="data-error-bar" class="hidden rounded-xl p-4 bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-3">
-      <span>⚠</span>
-      <span id="data-error-text">Could not load Google Sheets API data.</span>
-      <button onclick="loadAllFromGoogleSheet()" class="ml-auto px-3 py-1 text-xs font-bold rounded-lg bg-rose-600 text-white hover:bg-rose-700">Retry</button>
-    </div>
-
-    <!-- FILTER BAR -->
-    <div id="filter-section" class="hidden bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 space-y-4">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-        <div class="flex items-center gap-2">
-          <i data-lucide="sliders-horizontal" class="w-4 h-4 text-brand-800"></i>
-          <span class="text-sm font-bold text-slate-800">Interactive Filter Panel</span>
-          <span id="active-filter-badge" class="hidden px-2 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-100 text-emerald-800">Filtered</span>
-        </div>
-        <button onclick="resetFilters()" class="text-xs font-semibold text-brand-800 hover:underline flex items-center gap-1">
-          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset All Filters
-        </button>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <div class="space-y-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Search</label>
-          <div class="relative"><i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400"></i>
-            <input id="search-input" type="text" placeholder="Project, code..." class="w-full pl-8 pr-2 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-800/20 focus:outline-none">
+          <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <button onclick="openDataEntryModal()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-400 text-brand-900 hover:bg-emerald-300 shadow transition">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i><span>New
+                Entry</span>
+            </button>
+            <button id="admin-wl-btn" onclick="openWhitelistModal()"
+              class="hidden inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-500 hover:bg-amber-400 text-white shadow transition">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-100"></i>
+              <span>Manage Whitelist</span>
+              <span id="pending-badge"
+                class="hidden ml-1 px-1.5 text-[10px] font-extrabold rounded-full bg-rose-600 text-white animate-pulse">0</span>
+            </button>
+            <button onclick="exportToCSV()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition shadow-sm">
+              <i data-lucide="download"
+                class="w-4 h-4 text-emerald-300"></i><span>Export CSV</span>
+            </button>
+            <!-- User badge -->
+            <div
+              class="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-xl border border-white/20">
+              <div class="text-right">
+                <span id="hdr-email"
+                  class="text-xs font-bold block leading-none truncate max-w-[140px]">user@wwf.org</span>
+                <span id="hdr-role"
+                  class="text-[10px] font-extrabold uppercase tracking-wider px-1.5 rounded inline-block mt-0.5"></span>
+              </div>
+              <button onclick="logoutUser()"
+                class="text-xs text-rose-200 hover:text-white px-1.5 py-1 rounded hover:bg-rose-500/20 transition"
+                title="Sign Out">
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
           </div>
         </div>
-        <div class="space-y-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Year</label>
-          <select id="year-select" class="w-full px-2.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none">
-            <option value="ALL">All Years</option>
-            <option>2023</option><option>2024</option><option>2025</option><option>2026</option>
-          </select>
+      </header>
+
+      <!-- MAIN -->
+      <main
+        class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- Loading bar -->
+        <div id="data-loading-bar"
+          class="rounded-xl p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-3">
+          <span
+            class="w-5 h-5 border-2 border-emerald-300 border-t-emerald-700 rounded-full spin shrink-0"></span>
+          <span>Fetching live dataset from Google Sheets API…</span>
         </div>
-        <div class="space-y-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Practice</label>
-          <select id="practice-select" class="w-full px-2.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none">
-            <option value="ALL">All Practices</option>
-            <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
-          </select>
+
+        <!-- Data error bar -->
+        <div id="data-error-bar"
+          class="hidden rounded-xl p-4 bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-3">
+          <span>⚠</span>
+          <span id="data-error-text">Could not load Google Sheets API
+            data.</span>
+          <button onclick="loadAllFromGoogleSheet()"
+            class="ml-auto px-3 py-1 text-xs font-bold rounded-lg bg-rose-600 text-white hover:bg-rose-700">Retry</button>
         </div>
-        <div class="space-y-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Province</label>
-          <select id="province-select" class="w-full px-2.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none">
-            <option value="ALL">All Provinces</option>
-            <option>Khyber Pakhtunkhwa</option><option>Punjab</option><option>Sindh</option>
-            <option>Balochistan</option><option>Sindh &amp; Balochistan</option>
-            <option>Gilgit-Baltistan</option><option>Azad Jammu &amp; Kashmir</option>
-            <option>Federal / National</option><option>National</option>
-          </select>
+
+        <!-- FILTER BAR -->
+        <div id="filter-section"
+          class="hidden bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 space-y-4">
+          <div
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <i data-lucide="sliders-horizontal"
+                class="w-4 h-4 text-brand-800"></i>
+              <span class="text-sm font-bold text-slate-800">Interactive Filter
+                Panel</span>
+              <span id="active-filter-badge"
+                class="hidden px-2 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-100 text-emerald-800">Filtered</span>
+            </div>
+            <button onclick="resetFilters()"
+              class="text-xs font-semibold text-brand-800 hover:underline flex items-center gap-1">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset All
+              Filters
+            </button>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div class="space-y-1">
+              <label
+                class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Search</label>
+              <div class="relative"><i data-lucide="search"
+                  class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400"></i>
+                <input id="search-input" type="text"
+                  placeholder="Project, code..."
+                  class="w-full pl-8 pr-2 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-800/20 focus:outline-none">
+              </div>
+            </div>
+            <div class="space-y-1">
+              <label
+                class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Year</label>
+              <select id="year-select"
+                class="w-full px-2.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none">
+                <option value="ALL">All Years</option>
+                <option>2023</option><option>2024</option><option>2025</option><option>2026</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label
+                class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Project
+                Tab</label>
+              <select id="tab-select"
+                class="w-full px-2.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none">
+                <option value="ALL">All Tabs</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label
+                class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Practice</label>
+              <select id="practice-select"
+                class="w-full px-2.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none">
+                <option value="ALL">All Practices</option>
+                <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label
+                class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Category</label>
+              <select id="category-select"
+                class="w-full px-2.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none">
+                <option value="ALL">All Categories</option>
+                <option
+                  value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A.
+                  Afforestation</option>
+                <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B.
+                  Rangeland</option>
+                <option
+                  value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C.
+                  Watershed</option>
+                <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other
+                  Measures</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div class="space-y-1">
-          <label class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Category</label>
-          <select id="category-select" class="w-full px-2.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none">
-            <option value="ALL">All Categories</option>
-            <option value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A. Afforestation</option>
-            <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B. Rangeland</option>
-            <option value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C. Watershed</option>
-            <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other Measures</option>
-          </select>
+
+        <!-- KPI CARDS -->
+        <div id="kpi-section"
+          class="hidden grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div
+            class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+            <div class="flex items-center gap-2 mb-3"><div
+                class="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center"><i
+                  data-lucide="sprout"
+                  class="w-4 h-4 text-emerald-600"></i></div><span
+                class="text-xs font-semibold text-slate-500">Total
+                Plants</span></div>
+            <div class="text-2xl font-extrabold text-slate-800"
+              id="kpi-plants">—</div>
+            <div class="text-[11px] text-slate-400 mt-1"
+              id="kpi-plants-sub"></div>
+          </div>
+          <div
+            class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+            <div class="flex items-center gap-2 mb-3"><div
+                class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center"><i
+                  data-lucide="map"
+                  class="w-4 h-4 text-blue-600"></i></div><span
+                class="text-xs font-semibold text-slate-500">Total Area
+                (ha)</span></div>
+            <div class="text-2xl font-extrabold text-slate-800"
+              id="kpi-area">—</div>
+            <div class="text-[11px] text-slate-400 mt-1"
+              id="kpi-area-sub"></div>
+          </div>
+          <div
+            class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+            <div class="flex items-center gap-2 mb-3"><div
+                class="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center"><i
+                  data-lucide="trending-up"
+                  class="w-4 h-4 text-amber-600"></i></div><span
+                class="text-xs font-semibold text-slate-500">Avg
+                Survival</span></div>
+            <div class="text-2xl font-extrabold text-slate-800"
+              id="kpi-survival">—</div>
+            <div class="text-[11px] text-slate-400 mt-1"
+              id="kpi-survival-sub"></div>
+          </div>
+          <div
+            class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+            <div class="flex items-center gap-2 mb-3"><div
+                class="w-8 h-8 rounded-xl bg-purple-50 flex items-center justify-center"><i
+                  data-lucide="database"
+                  class="w-4 h-4 text-purple-600"></i></div><span
+                class="text-xs font-semibold text-slate-500">Records</span></div>
+            <div class="text-2xl font-extrabold text-slate-800"
+              id="kpi-records">—</div>
+            <div class="text-[11px] text-slate-400 mt-1"
+              id="kpi-records-sub"></div>
+          </div>
         </div>
-      </div>
+
+        <!-- 4 DYNAMIC CONNECTED CHARTS GRID -->
+        <div id="charts-section"
+          class="hidden grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+          <!-- Chart 1: Plants & Area Trajectory by Year -->
+          <div
+            class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+            <h3
+              class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-800"></i>1.
+              Plants Planted by Year
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-3">Annual distribution of
+              planted seedlings across filtered records</p>
+            <div class="h-56"><canvas id="chart-year"></canvas></div>
+          </div>
+
+          <!-- Chart 2: Land Area by Global Practice -->
+          <div
+            class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+            <h3
+              class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+              <i data-lucide="pie-chart" class="w-4 h-4 text-brand-800"></i>2.
+              Area Share by WWF Practice (ha)
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-3">Hectares restored across
+              Forests, Freshwater, Food &amp; Marine pillars</p>
+            <div class="h-56"><canvas id="chart-practice"></canvas></div>
+          </div>
+
+          <!-- Chart 3: Project Tab Distribution -->
+          <div
+            class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+            <h3
+              class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-brand-800"></i>3.
+              Total Plants by Project Tab
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-3">Plantation achievements
+              split across the 9 source workbook tabs</p>
+            <div class="h-60"><canvas id="chart-province"></canvas></div>
+          </div>
+
+          <!-- Chart 4: Average Survival Rate by Intervention Category -->
+          <div
+            class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+            <h3
+              class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
+              <i data-lucide="activity" class="w-4 h-4 text-brand-800"></i>4.
+              Average Survival Rate by Category (%)
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-3">Ecological survival
+              success across Afforestation, Rangeland, Watershed &amp; Other</p>
+            <div class="h-60"><canvas id="chart-category"></canvas></div>
+          </div>
+
+        </div>
+
+        <!-- CATEGORY MATRIX -->
+        <div id="matrix-section"
+          class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex items-center gap-2">
+            <i data-lucide="table-2" class="w-4 h-4 text-brand-800"></i>
+            <span class="text-sm font-bold text-slate-800">Category Performance
+              Matrix</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-semibold">
+                <tr>
+                  <th class="py-3 px-4 text-left">Category</th>
+                  <th class="py-3 px-4 text-right">Plants</th>
+                  <th class="py-3 px-4 text-right">Area (ha)</th>
+                  <th class="py-3 px-4 text-right">Avg Survival</th>
+                  <th class="py-3 px-4 text-center">Records</th>
+                </tr>
+              </thead>
+              <tbody id="category-matrix-body"
+                class="divide-y divide-slate-100"></tbody>
+              <tfoot class="bg-slate-800 text-white font-bold text-xs">
+                <tr id="category-matrix-total"></tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- DATA TABLE (COLLAPSED BY DEFAULT) -->
+        <div id="table-section"
+          class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+          <div
+            class="p-4 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4 text-brand-800"></i>
+              <span class="text-sm font-bold text-slate-800">Observation
+                Records</span>
+              <span id="table-row-count"
+                class="text-xs text-slate-500 font-medium"></span>
+            </div>
+            <button id="table-toggle-btn" onclick="toggleTableExpand()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-brand-800 text-white hover:bg-brand-900 shadow transition">
+              <i id="table-toggle-icon" data-lucide="chevron-down"
+                class="w-4 h-4"></i>
+              <span id="table-toggle-text">Expand Observation Records</span>
+            </button>
+          </div>
+
+          <!-- Collapsible Container (hidden by default) -->
+          <div id="table-collapsible-wrapper" class="hidden">
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-xs whitespace-nowrap">
+                <thead
+                  class="bg-gradient-to-r from-[#0D3824] to-[#17563A] text-white text-left">
+                  <tr>
+                    <th class="py-3 px-3.5">ID</th>
+                    <th class="py-3 px-3.5">Code</th>
+                    <th class="py-3 px-3.5">Intervention</th>
+                    <th class="py-3 px-3.5">Practice</th>
+                    <th class="py-3 px-3.5">Tab</th>
+                    <th class="py-3 px-3.5">Project</th>
+                    <th class="py-3 px-3.5 text-center">Year</th>
+                    <th class="py-3 px-3.5 text-right">Plants</th>
+                    <th class="py-3 px-3.5 text-right">Area (ha)</th>
+                    <th class="py-3 px-3.5 text-right">Survival %</th>
+                    <th class="py-3 px-3.5">Remarks</th>
+                    <th class="py-3 px-3.5 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="data-table-body"
+                  class="divide-y divide-slate-100 bg-white"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      <footer class="bg-white border-t border-slate-200 mt-auto py-4">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
+          WWF-Pakistan Forestry Portal · 100% Google Sheet Driven · Session
+          Remembered
+        </div>
+      </footer>
     </div>
 
-    <!-- KPI CARDS -->
-    <div id="kpi-section" class="hidden grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <div class="flex items-center gap-2 mb-3"><div class="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center"><i data-lucide="sprout" class="w-4 h-4 text-emerald-600"></i></div><span class="text-xs font-semibold text-slate-500">Total Plants</span></div>
-        <div class="text-2xl font-extrabold text-slate-800" id="kpi-plants">—</div>
-        <div class="text-[11px] text-slate-400 mt-1" id="kpi-plants-sub"></div>
-      </div>
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <div class="flex items-center gap-2 mb-3"><div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center"><i data-lucide="map" class="w-4 h-4 text-blue-600"></i></div><span class="text-xs font-semibold text-slate-500">Total Area (ha)</span></div>
-        <div class="text-2xl font-extrabold text-slate-800" id="kpi-area">—</div>
-        <div class="text-[11px] text-slate-400 mt-1" id="kpi-area-sub"></div>
-      </div>
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <div class="flex items-center gap-2 mb-3"><div class="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center"><i data-lucide="trending-up" class="w-4 h-4 text-amber-600"></i></div><span class="text-xs font-semibold text-slate-500">Avg Survival</span></div>
-        <div class="text-2xl font-extrabold text-slate-800" id="kpi-survival">—</div>
-        <div class="text-[11px] text-slate-400 mt-1" id="kpi-survival-sub"></div>
-      </div>
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <div class="flex items-center gap-2 mb-3"><div class="w-8 h-8 rounded-xl bg-purple-50 flex items-center justify-center"><i data-lucide="database" class="w-4 h-4 text-purple-600"></i></div><span class="text-xs font-semibold text-slate-500">Records</span></div>
-        <div class="text-2xl font-extrabold text-slate-800" id="kpi-records">—</div>
-        <div class="text-[11px] text-slate-400 mt-1" id="kpi-records-sub"></div>
-      </div>
-    </div>
-
-    <!-- 4 DYNAMIC CONNECTED CHARTS GRID -->
-    <div id="charts-section" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-5">
-      
-      <!-- Chart 1: Plants & Area Trajectory by Year -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
-          <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-800"></i>1. Plants Planted by Year
-        </h3>
-        <p class="text-[11px] text-slate-400 mb-3">Annual distribution of planted seedlings across filtered records</p>
-        <div class="h-56"><canvas id="chart-year"></canvas></div>
-      </div>
-
-      <!-- Chart 2: Land Area by Global Practice -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
-          <i data-lucide="pie-chart" class="w-4 h-4 text-brand-800"></i>2. Area Share by WWF Practice (ha)
-        </h3>
-        <p class="text-[11px] text-slate-400 mb-3">Hectares restored across Forests, Freshwater, Food &amp; Marine pillars</p>
-        <div class="h-56"><canvas id="chart-practice"></canvas></div>
-      </div>
-
-      <!-- Chart 3: Province/Region Distribution -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
-          <i data-lucide="map-pin" class="w-4 h-4 text-brand-800"></i>3. Total Plants by Province / Region
-        </h3>
-        <p class="text-[11px] text-slate-400 mb-3">Regional breakdown of plantation achievements across Pakistan</p>
-        <div class="h-60"><canvas id="chart-province"></canvas></div>
-      </div>
-
-      <!-- Chart 4: Average Survival Rate by Intervention Category -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
-        <h3 class="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2">
-          <i data-lucide="activity" class="w-4 h-4 text-brand-800"></i>4. Average Survival Rate by Category (%)
-        </h3>
-        <p class="text-[11px] text-slate-400 mb-3">Ecological survival success across Afforestation, Rangeland, Watershed &amp; Other</p>
-        <div class="h-60"><canvas id="chart-category"></canvas></div>
-      </div>
-
-    </div>
-
-    <!-- CATEGORY MATRIX -->
-    <div id="matrix-section" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-      <div class="p-4 border-b border-slate-100 flex items-center gap-2">
-        <i data-lucide="table-2" class="w-4 h-4 text-brand-800"></i>
-        <span class="text-sm font-bold text-slate-800">Category Performance Matrix</span>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-xs">
-          <thead class="bg-slate-50 text-slate-600 font-semibold">
-            <tr>
-              <th class="py-3 px-4 text-left">Category</th>
-              <th class="py-3 px-4 text-right">Plants</th>
-              <th class="py-3 px-4 text-right">Area (ha)</th>
-              <th class="py-3 px-4 text-right">Avg Survival</th>
-              <th class="py-3 px-4 text-center">Records</th>
-            </tr>
-          </thead>
-          <tbody id="category-matrix-body" class="divide-y divide-slate-100"></tbody>
-          <tfoot class="bg-slate-800 text-white font-bold text-xs">
-            <tr id="category-matrix-total"></tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-
-    <!-- DATA TABLE (COLLAPSED BY DEFAULT) -->
-    <div id="table-section" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <i data-lucide="list" class="w-4 h-4 text-brand-800"></i>
-          <span class="text-sm font-bold text-slate-800">Observation Records</span>
-          <span id="table-row-count" class="text-xs text-slate-500 font-medium"></span>
-        </div>
-        <button id="table-toggle-btn" onclick="toggleTableExpand()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-brand-800 text-white hover:bg-brand-900 shadow transition">
-          <i id="table-toggle-icon" data-lucide="chevron-down" class="w-4 h-4"></i>
-          <span id="table-toggle-text">Expand Observation Records</span>
-        </button>
-      </div>
-
-      <!-- Collapsible Container (hidden by default) -->
-      <div id="table-collapsible-wrapper" class="hidden">
-        <div class="overflow-x-auto custom-scrollbar">
-          <table class="w-full text-xs whitespace-nowrap">
-            <thead class="bg-gradient-to-r from-[#0D3824] to-[#17563A] text-white text-left">
-              <tr>
-                <th class="py-3 px-3.5">ID</th>
-                <th class="py-3 px-3.5">Code</th>
-                <th class="py-3 px-3.5">Intervention</th>
-                <th class="py-3 px-3.5">Practice</th>
-                <th class="py-3 px-3.5">Province</th>
-                <th class="py-3 px-3.5">Project</th>
-                <th class="py-3 px-3.5 text-center">Year</th>
-                <th class="py-3 px-3.5 text-right">Plants</th>
-                <th class="py-3 px-3.5 text-right">Area (ha)</th>
-                <th class="py-3 px-3.5 text-right">Survival %</th>
-                <th class="py-3 px-3.5">Remarks</th>
-                <th class="py-3 px-3.5 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody id="data-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <footer class="bg-white border-t border-slate-200 mt-auto py-4">
-    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
-      WWF-Pakistan Forestry Portal · 100% Google Sheet Driven · Session Remembered
-    </div>
-  </footer>
-</div>
-
-<!-- ========================================================
+    <!-- ========================================================
      MODAL: WHITELIST MANAGER (Admin only)
      ======================================================== -->
-<div id="whitelist-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[88vh] flex flex-col">
-    <div class="bg-gradient-to-r from-[#0D3824] to-[#17563A] p-4 text-white flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <i data-lucide="shield-check" class="w-5 h-5 text-emerald-300"></i>
-        <div>
-          <h3 class="text-sm font-bold leading-none">Access Control &amp; Whitelist Manager</h3>
-          <p class="text-[11px] text-emerald-100/70 mt-0.5">Manage users, domains, and access requests · Google Sheet Live</p>
-        </div>
-      </div>
-      <button onclick="closeWhitelistModal()" class="text-white/70 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-    </div>
-    <!-- Tabs -->
-    <div class="flex border-b border-slate-200 bg-slate-50 px-4 pt-2 gap-1 text-xs font-semibold overflow-x-auto">
-      <button id="wl-tab-users-btn" onclick="switchWlTab('users')" class="px-3 py-2 border-b-2 border-brand-800 text-brand-900 flex items-center gap-1.5 whitespace-nowrap">
-        <i data-lucide="users" class="w-3.5 h-3.5"></i>Users
-        <span id="wl-users-count" class="px-1.5 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
-      </button>
-      <button id="wl-tab-domains-btn" onclick="switchWlTab('domains')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
-        <i data-lucide="globe" class="w-3.5 h-3.5"></i>Domains
-        <span id="wl-domains-count" class="px-1.5 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
-      </button>
-      <button id="wl-tab-requests-btn" onclick="switchWlTab('requests')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
-        <i data-lucide="inbox" class="w-3.5 h-3.5"></i>Pending
-        <span id="wl-requests-count" class="px-1.5 text-[10px] rounded-full bg-rose-100 text-rose-700 font-bold">0</span>
-      </button>
-    </div>
-    <div class="p-5 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-      <!-- Users tab -->
-      <div id="wl-section-users" class="space-y-4">
-        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
-          <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5"><i data-lucide="user-plus" class="w-3.5 h-3.5 text-brand-800"></i>Add Whitelisted User</span>
-          <div class="grid grid-cols-12 gap-2">
-            <input type="email" id="wl-new-email" placeholder="email@wwf.org" class="col-span-5 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
-            <input type="text" id="wl-new-name" placeholder="Full Name" class="col-span-3 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
-            <select id="wl-new-role" class="col-span-2 px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none">
-              <option value="editor">Editor</option>
-              <option value="viewer">Viewer</option>
-              <option value="admin">Admin</option>
-            </select>
-            <button onclick="wlAddUser()" class="col-span-2 py-1.5 bg-[#17563A] text-white text-xs font-bold rounded-lg hover:bg-[#0D3824] transition">Add</button>
+    <div id="whitelist-modal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div
+        class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[88vh] flex flex-col">
+        <div
+          class="bg-gradient-to-r from-[#0D3824] to-[#17563A] p-4 text-white flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-300"></i>
+            <div>
+              <h3 class="text-sm font-bold leading-none">Access Control &amp;
+                Whitelist Manager</h3>
+              <p class="text-[11px] text-emerald-100/70 mt-0.5">Manage users,
+                domains, and access requests · Google Sheet Live</p>
+            </div>
           </div>
+          <button onclick="closeWhitelistModal()"
+            class="text-white/70 hover:text-white"><i data-lucide="x"
+              class="w-5 h-5"></i></button>
         </div>
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-800">Whitelisted Users (from Google Sheet)</span>
-            <input type="text" id="wl-search" oninput="renderWlUsers()" placeholder="Filter..." class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 w-48 focus:outline-none focus:ring-1 focus:ring-brand-800">
-          </div>
-          <div id="wl-users-list" class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar"></div>
-        </div>
-      </div>
-      <!-- Domains tab -->
-      <div id="wl-section-domains" class="hidden space-y-4">
-        <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs text-emerald-900 flex items-start gap-2">
-          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-700 shrink-0 mt-0.5"></i>
-          <div><strong>Domain Auto-Approval:</strong> Any email from these domains gets instant access.</div>
-        </div>
-        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
-          <span class="text-xs font-bold text-slate-800">Add Domain</span>
-          <div class="grid grid-cols-12 gap-2">
-            <input type="text" id="wl-new-domain" placeholder="wwf.org" class="col-span-6 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
-            <select id="wl-new-domain-role" class="col-span-3 px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-white">
-              <option value="editor">Editor</option><option value="viewer">Viewer</option>
-            </select>
-            <button onclick="wlAddDomain()" class="col-span-3 py-1.5 bg-[#17563A] text-white text-xs font-bold rounded-lg hover:bg-[#0D3824] transition">Add Domain</button>
-          </div>
-        </div>
-        <div id="wl-domains-list" class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar"></div>
-      </div>
-      <!-- Pending tab -->
-      <div id="wl-section-requests" class="hidden space-y-4">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-800">Pending Access Requests</span>
-          <div class="flex gap-2">
-            <button onclick="approveAllPending()" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">Approve All</button>
-            <button onclick="clearAllPending()" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">Clear All</button>
-          </div>
-        </div>
-        <div id="wl-requests-list" class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-72 overflow-y-auto custom-scrollbar"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========================================================
-     MODAL: DATA ENTRY / EDIT
-     ======================================================== -->
-<div id="data-entry-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col">
-    <div class="bg-gradient-to-r from-[#0D3824] to-[#17563A] p-4 text-white flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-300"></i>
-        <h3 id="entry-modal-title" class="text-sm font-bold">New Forestry Record</h3>
-      </div>
-      <button onclick="closeDataEntryModal()" class="text-white/70 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-    </div>
-    <div class="p-6 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-      <div id="entry-perm-alert" class="hidden p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
-        <span>You need <strong>Editor</strong> or <strong>Admin</strong> access to submit records.</span>
-        <button onclick="closeDataEntryModal()" class="px-2.5 py-1 rounded-lg bg-amber-600 text-white font-bold hover:bg-amber-700 ml-2">OK</button>
-      </div>
-      <form id="entry-form" onsubmit="handleRecordSubmit(event)" class="space-y-4">
-        <input type="hidden" id="entry-record-id">
-        <div class="grid grid-cols-2 gap-3">
-          <div class="space-y-1">
-            <label class="text-[11px] font-semibold text-slate-600">Category *</label>
-            <select id="entry-category" onchange="onCategoryChange()" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
-              <option value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A. Afforestation &amp; Revegetation</option>
-              <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B. Rangeland &amp; Grassland</option>
-              <option value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C. Watershed Management</option>
-              <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other Forestry</option>
-            </select>
-          </div>
-          <div class="space-y-1">
-            <label class="text-[11px] font-semibold text-slate-600">Code *</label>
-            <select id="entry-code" onchange="onCodeChange()" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200"></select>
-          </div>
-        </div>
-        <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-          <span id="entry-name-preview" class="text-xs font-bold text-slate-800 block"></span>
-          <p id="entry-desc-preview" class="text-[11px] text-slate-500"></p>
-        </div>
-        <div class="grid grid-cols-3 gap-3">
-          <div class="space-y-1">
-            <label class="text-[11px] font-semibold text-slate-600">Practice *</label>
-            <select id="entry-practice" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
-              <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
-            </select>
-          </div>
-          <div class="space-y-1">
-            <label class="text-[11px] font-semibold text-slate-600">Province *</label>
-            <select id="entry-province" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
-              <option>Khyber Pakhtunkhwa</option><option>Punjab</option><option>Sindh</option>
-              <option>Balochistan</option><option>Sindh &amp; Balochistan</option>
-              <option>Gilgit-Baltistan</option><option>Azad Jammu &amp; Kashmir</option>
-              <option>Federal / National</option><option>National</option>
-            </select>
-          </div>
-          <div class="space-y-1">
-            <label class="text-[11px] font-semibold text-slate-600">Year *</label>
-            <select id="entry-year" class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
-              <option>2023</option><option selected>2024</option><option>2025</option><option>2026</option>
-            </select>
-          </div>
-        </div>
-        <div class="space-y-1">
-          <label class="text-[11px] font-semibold text-slate-600">Project Title *</label>
-          <input type="text" id="entry-project" placeholder="e.g. Billion Tree Tsunami - KP Phase II" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200" required>
-        </div>
-        <div class="grid grid-cols-3 gap-3">
-          <div class="space-y-1"><label class="text-[11px] font-semibold text-slate-600">Plants Count</label>
-            <input type="number" id="entry-plants" placeholder="e.g. 50000" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200" min="0">
-          </div>
-          <div class="space-y-1"><label class="text-[11px] font-semibold text-slate-600">Area (ha)</label>
-            <input type="number" step="0.1" id="entry-area" placeholder="e.g. 75.5" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200" min="0">
-          </div>
-          <div class="space-y-1"><label class="text-[11px] font-semibold text-slate-600">Survival (%)</label>
-            <input type="number" step="0.1" id="entry-survival" placeholder="e.g. 80.0" class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200" min="0" max="100">
-          </div>
-        </div>
-        <div class="space-y-1">
-          <label class="text-[11px] font-semibold text-slate-600">Remarks / Evidence</label>
-          <textarea id="entry-remarks" placeholder="GPS survey notes, monitoring reports..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 min-h-[60px]"></textarea>
-        </div>
-        <div class="flex items-center justify-end gap-2 pt-1">
-          <button type="button" onclick="closeDataEntryModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Cancel</button>
-          <button type="submit" id="entry-submit-btn" class="px-5 py-2 text-xs font-bold text-white bg-[#17563A] hover:bg-[#0D3824] rounded-xl shadow flex items-center gap-2">
-            <span id="entry-submit-label">Save Record to Google Sheet</span>
+        <!-- Tabs -->
+        <div
+          class="flex border-b border-slate-200 bg-slate-50 px-4 pt-2 gap-1 text-xs font-semibold overflow-x-auto">
+          <button id="wl-tab-users-btn" onclick="switchWlTab('users')"
+            class="px-3 py-2 border-b-2 border-brand-800 text-brand-900 flex items-center gap-1.5 whitespace-nowrap">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>Users
+            <span id="wl-users-count"
+              class="px-1.5 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
+          </button>
+          <button id="wl-tab-domains-btn" onclick="switchWlTab('domains')"
+            class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+            <i data-lucide="globe" class="w-3.5 h-3.5"></i>Domains
+            <span id="wl-domains-count"
+              class="px-1.5 text-[10px] rounded-full bg-slate-200 text-slate-700">0</span>
+          </button>
+          <button id="wl-tab-requests-btn" onclick="switchWlTab('requests')"
+            class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+            <i data-lucide="inbox" class="w-3.5 h-3.5"></i>Pending
+            <span id="wl-requests-count"
+              class="px-1.5 text-[10px] rounded-full bg-rose-100 text-rose-700 font-bold">0</span>
           </button>
         </div>
-      </form>
+        <div class="p-5 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+          <!-- Users tab -->
+          <div id="wl-section-users" class="space-y-4">
+            <div
+              class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+              <span
+                class="text-xs font-bold text-slate-800 flex items-center gap-1.5"><i
+                  data-lucide="user-plus"
+                  class="w-3.5 h-3.5 text-brand-800"></i>Add Whitelisted
+                User</span>
+              <div class="grid grid-cols-12 gap-2">
+                <input type="email" id="wl-new-email"
+                  placeholder="email@wwf.org"
+                  class="col-span-5 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+                <input type="text" id="wl-new-name" placeholder="Full Name"
+                  class="col-span-3 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+                <select id="wl-new-role"
+                  class="col-span-2 px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none">
+                  <option value="editor">Editor</option>
+                  <option value="viewer">Viewer</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <button onclick="wlAddUser()"
+                  class="col-span-2 py-1.5 bg-[#17563A] text-white text-xs font-bold rounded-lg hover:bg-[#0D3824] transition">Add</button>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Whitelisted Users
+                  (from Google Sheet)</span>
+                <input type="text" id="wl-search" oninput="renderWlUsers()"
+                  placeholder="Filter..."
+                  class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 w-48 focus:outline-none focus:ring-1 focus:ring-brand-800">
+              </div>
+              <div id="wl-users-list"
+                class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar"></div>
+            </div>
+          </div>
+          <!-- Domains tab -->
+          <div id="wl-section-domains" class="hidden space-y-4">
+            <div
+              class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs text-emerald-900 flex items-start gap-2">
+              <i data-lucide="check-circle"
+                class="w-4 h-4 text-emerald-700 shrink-0 mt-0.5"></i>
+              <div><strong>Domain Auto-Approval:</strong> Any email from these
+                domains gets instant access.</div>
+            </div>
+            <div
+              class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+              <span class="text-xs font-bold text-slate-800">Add Domain</span>
+              <div class="grid grid-cols-12 gap-2">
+                <input type="text" id="wl-new-domain" placeholder="wwf.org"
+                  class="col-span-6 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-brand-800">
+                <select id="wl-new-domain-role"
+                  class="col-span-3 px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-white">
+                  <option value="editor">Editor</option><option
+                    value="viewer">Viewer</option>
+                </select>
+                <button onclick="wlAddDomain()"
+                  class="col-span-3 py-1.5 bg-[#17563A] text-white text-xs font-bold rounded-lg hover:bg-[#0D3824] transition">Add
+                  Domain</button>
+              </div>
+            </div>
+            <div id="wl-domains-list"
+              class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar"></div>
+          </div>
+          <!-- Pending tab -->
+          <div id="wl-section-requests" class="hidden space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-800">Pending Access
+                Requests</span>
+              <div class="flex gap-2">
+                <button onclick="approveAllPending()"
+                  class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">Approve
+                  All</button>
+                <button onclick="clearAllPending()"
+                  class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">Clear
+                  All</button>
+              </div>
+            </div>
+            <div id="wl-requests-list"
+              class="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-72 overflow-y-auto custom-scrollbar"></div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- ================================================================
+    <!-- ========================================================
+     MODAL: DATA ENTRY / EDIT
+     ======================================================== -->
+    <div id="data-entry-modal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div
+        class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col">
+        <div
+          class="bg-gradient-to-r from-[#0D3824] to-[#17563A] p-4 text-white flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-300"></i>
+            <h3 id="entry-modal-title" class="text-sm font-bold">New Forestry
+              Record</h3>
+          </div>
+          <button onclick="closeDataEntryModal()"
+            class="text-white/70 hover:text-white"><i data-lucide="x"
+              class="w-5 h-5"></i></button>
+        </div>
+        <div class="p-6 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+          <div id="entry-perm-alert"
+            class="hidden p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
+            <span>You need <strong>Editor</strong> or <strong>Admin</strong>
+              access to submit records.</span>
+            <button onclick="closeDataEntryModal()"
+              class="px-2.5 py-1 rounded-lg bg-amber-600 text-white font-bold hover:bg-amber-700 ml-2">OK</button>
+          </div>
+          <form id="entry-form" onsubmit="handleRecordSubmit(event)"
+            class="space-y-4">
+            <input type="hidden" id="entry-record-id">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-slate-600">Category
+                  *</label>
+                <select id="entry-category" onchange="onCategoryChange()"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
+                  <option
+                    value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A.
+                    Afforestation &amp; Revegetation</option>
+                  <option value="B. RANGELAND AND GRASSLAND MANAGEMENT">B.
+                    Rangeland &amp; Grassland</option>
+                  <option
+                    value="C. WATERSHED MANAGEMENT AND FLOOD-CONTROL MEASURES">C.
+                    Watershed Management</option>
+                  <option value="D. OTHER FORESTRY-RELATED MEASURES">D. Other
+                    Forestry</option>
+                </select>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-slate-600">Code
+                  *</label>
+                <select id="entry-code" onchange="onCodeChange()"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200"></select>
+              </div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <span id="entry-name-preview"
+                class="text-xs font-bold text-slate-800 block"></span>
+              <p id="entry-desc-preview" class="text-[11px] text-slate-500"></p>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-slate-600">Practice
+                  *</label>
+                <select id="entry-practice"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
+                  <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
+                </select>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-slate-600">Tab Name
+                  *</label>
+                <input type="text" id="entry-tab"
+                  placeholder="e.g. WRAP Project"
+                  class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200">
+              </div>
+              <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-slate-600">Year
+                  *</label>
+                <select id="entry-year"
+                  class="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200">
+                  <option>2023</option><option
+                    selected>2024</option><option>2025</option><option>2026</option>
+                </select>
+              </div>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Project
+                Title *</label>
+              <input type="text" id="entry-project"
+                placeholder="e.g. Billion Tree Tsunami - KP Phase II"
+                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200"
+                required>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="space-y-1"><label
+                  class="text-[11px] font-semibold text-slate-600">Plants
+                  Count</label>
+                <input type="number" id="entry-plants" placeholder="e.g. 50000"
+                  class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200"
+                  min="0">
+              </div>
+              <div class="space-y-1"><label
+                  class="text-[11px] font-semibold text-slate-600">Area
+                  (ha)</label>
+                <input type="number" step="0.1" id="entry-area"
+                  placeholder="e.g. 75.5"
+                  class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200"
+                  min="0">
+              </div>
+              <div class="space-y-1"><label
+                  class="text-[11px] font-semibold text-slate-600">Survival
+                  (%)</label>
+                <input type="number" step="0.1" id="entry-survival"
+                  placeholder="e.g. 80.0"
+                  class="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-200"
+                  min="0" max="100">
+              </div>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[11px] font-semibold text-slate-600">Remarks /
+                Evidence</label>
+              <textarea id="entry-remarks"
+                placeholder="GPS survey notes, monitoring reports..."
+                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 min-h-[60px]"></textarea>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-1">
+              <button type="button" onclick="closeDataEntryModal()"
+                class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Cancel</button>
+              <button type="submit" id="entry-submit-btn"
+                class="px-5 py-2 text-xs font-bold text-white bg-[#17563A] hover:bg-[#0D3824] rounded-xl shadow flex items-center gap-2">
+                <span id="entry-submit-label">Save Record to Google Sheet</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================
      JAVASCRIPT ENGINE
      ================================================================ -->
-<script>
+    <script>
 // ── Constants & Configuration ──────────────────────────────────────────────────
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1G_xYK6NMLM1mg9UghumjvAs4FUr1KJdZmYXES-zxBKgOs6PQ5NfCkXleYWU2YaRk/exec";
 
@@ -749,15 +975,21 @@ async function handleRequestAccess() {
 async function loadAllFromGoogleSheet() {
   showSection('loading');
   try {
-    const res = await fetch(APPS_SCRIPT_URL);
-    if (!res.ok) throw new Error('HTTP status ' + res.status);
-    const data = await res.json();
+    const res = await fetch('/api/records');
+    let data;
+    if (res.ok) {
+      data = await res.json();
+    } else {
+      // Fallback to local JSON if API fails (offline/dev support)
+      const fallback = await fetch('forestry_data.json');
+      if (fallback.ok) data = await fallback.json(); else throw new Error('HTTP status ' + res.status);
+    }
 
-    if (data.records && Array.isArray(data.records)) {
-      records = data.records.map(r => ({
+    if (Array.isArray(data)) {
+      records = data.map(r => ({
         Record_ID: r.Record_ID != null ? Number(r.Record_ID) : null,
         Practice: r.Practice || 'Forests',
-        Province_Region: r.Province_Region || '',
+        Tab_Name: r.Tab_Name || '',
         Project_Name: r.Project_Name || '',
         Intervention_Category: r.Intervention_Category || '',
         Intervention_Code: r.Intervention_Code || '',
@@ -771,11 +1003,24 @@ async function loadAllFromGoogleSheet() {
       }));
     }
 
-    if (data.whitelist) {
-      whitelist.users   = data.whitelist.users || [];
-      whitelist.domains = data.whitelist.domains || [];
-      whitelist.pending = data.whitelist.pending || [];
+    // Populate Tab_Name filter dropdown dynamically
+    const tabs = [...new Set(records.map(d => d.Tab_Name).filter(Boolean))].sort();
+    const tabSel = document.getElementById('tab-select');
+    if (tabSel && tabs.length) {
+      const current = tabSel.value;
+      tabSel.innerHTML = '<option value="ALL">All Tabs</option>' + tabs.map(t => `<option>${t}</option>`).join('');
+      tabSel.value = current || 'ALL';
     }
+
+    try {
+      const wlRes = await fetch('/api/whitelist');
+      if (wlRes.ok) {
+        const wl = await wlRes.json();
+        whitelist.users   = wl.users || [];
+        whitelist.domains = wl.domains || [];
+        whitelist.pending = wl.pending || [];
+      }
+    } catch (e) { /* whitelist optional for offline view */ }
     updatePendingBadge();
 
     document.getElementById('login-status-badge').textContent = `Google Sheet Synced (${whitelist.users.length} Whitelisted Users)`;
@@ -783,8 +1028,8 @@ async function loadAllFromGoogleSheet() {
     showSection('data');
     if (currentUser) renderDashboard();
   } catch (err) {
-    showSection('error', 'Failed to fetch from Google Sheets API: ' + err.message);
-    document.getElementById('login-status-badge').textContent = 'Google Sheet Sync Error';
+    showSection('error', 'Failed to load records from Excel API: ' + err.message);
+    document.getElementById('login-status-badge').textContent = 'Data Sync Error';
   }
 }
 
@@ -812,16 +1057,16 @@ function getFilteredData() {
   const q    = (document.getElementById('search-input').value||'').toLowerCase();
   const yr   = document.getElementById('year-select').value;
   const prac = document.getElementById('practice-select').value;
-  const prov = document.getElementById('province-select').value;
+  const tab  = document.getElementById('tab-select').value;
   const cat  = document.getElementById('category-select').value;
 
-  const hasFilter = q||yr!=='ALL'||prac!=='ALL'||prov!=='ALL'||cat!=='ALL';
+  const hasFilter = q||yr!=='ALL'||prac!=='ALL'||tab!=='ALL'||cat!=='ALL';
   document.getElementById('active-filter-badge').classList.toggle('hidden', !hasFilter);
 
   return records.filter(d => {
     if (yr   !=='ALL' && String(d.Year)!==yr)                                      return false;
     if (prac !=='ALL' && d.Practice!==prac)                                        return false;
-    if (prov !=='ALL' && d.Province_Region!==prov)                                 return false;
+    if (tab  !=='ALL' && d.Tab_Name!==tab)                                         return false;
     if (cat  !=='ALL' && d.Intervention_Category!==cat)                            return false;
     if (q && !JSON.stringify(d).toLowerCase().includes(q))                         return false;
     return true;
@@ -832,8 +1077,11 @@ function getFilteredData() {
 function updateKPIs(data) {
   const plants   = data.reduce((s,d)=>s+(d.Plants_Count||0),0);
   const area     = data.reduce((s,d)=>s+(d.Area_Covered_ha||0),0);
-  const survArr  = data.filter(d=>d.Survival_Rate_pct!=null).map(d=>Number(d.Survival_Rate_pct));
-  const avgSurv  = survArr.length ? (survArr.reduce((a,b)=>a+b,0)/survArr.length*100).toFixed(1) : null;
+  const survArr  = data.filter(d=>d.Survival_Rate_pct!=null && d.Survival_Rate_pct!=='').map(d=>{
+    const n = Number(d.Survival_Rate_pct);
+    return (n > 0 && n <= 1) ? n * 100 : n; // handle decimals (0.8) or raw % (80)
+  });
+  const avgSurv  = survArr.length ? (survArr.reduce((a,b)=>a+b,0)/survArr.length).toFixed(1) : null;
   document.getElementById('kpi-plants').textContent    = numFmt(plants);
   document.getElementById('kpi-plants-sub').textContent= `across ${data.filter(d=>d.Plants_Count).length} records with plant data`;
   document.getElementById('kpi-area').textContent      = floatFmt(area);
@@ -878,14 +1126,14 @@ function updateCharts(data) {
     }
   });
 
-  const provinces = [...new Set(records.map(d => d.Province_Region).filter(Boolean))];
-  const plantsByProv = provinces.map(pr => data.filter(d => d.Province_Region===pr).reduce((s,d) => s + (d.Plants_Count||0), 0));
+  const tabs = [...new Set(records.map(d => d.Tab_Name).filter(Boolean))];
+  const plantsByTab = tabs.map(tb => data.filter(d => d.Tab_Name===tb).reduce((s,d) => s + (d.Plants_Count||0), 0));
   if (charts.province) charts.province.destroy();
   charts.province = new Chart(document.getElementById('chart-province'), {
     type: 'bar',
     data: {
-      labels: provinces.map(p => p.length > 18 ? p.slice(0,16)+'…' : p),
-      datasets: [{ label: 'Plants Count', data: plantsByProv, backgroundColor: '#2a9d8f', borderRadius: 4 }]
+      labels: tabs.map(p => p.length > 20 ? p.slice(0,18)+'…' : p),
+      datasets: [{ label: 'Plants Count', data: plantsByTab, backgroundColor: '#2a9d8f', borderRadius: 4 }]
     },
     options: {
       indexAxis: 'y',
@@ -903,10 +1151,13 @@ function updateCharts(data) {
   ];
   const shortCats = ['A. Afforestation', 'B. Rangeland', 'C. Watershed', 'D. Other'];
   const survByCategory = categories.map(cat => {
-    const rows = data.filter(d => d.Intervention_Category === cat && d.Survival_Rate_pct != null);
+    const rows = data.filter(d => d.Intervention_Category === cat && d.Survival_Rate_pct != null && d.Survival_Rate_pct !== '');
     if (!rows.length) return 0;
-    const avg = rows.reduce((s,d) => s + Number(d.Survival_Rate_pct), 0) / rows.length;
-    return (avg * 100).toFixed(1);
+    const avg = rows.reduce((s,d) => {
+      const n = Number(d.Survival_Rate_pct);
+      return s + ((n > 0 && n <= 1) ? n * 100 : n);
+    }, 0) / rows.length;
+    return avg.toFixed(1);
   });
   if (charts.category) charts.category.destroy();
   charts.category = new Chart(document.getElementById('chart-category'), {
@@ -965,7 +1216,7 @@ function updateTable(data) {
       : '<span class="text-slate-300 text-center block">—</span>';
     const tr = document.createElement('tr');
     tr.className = i%2===0?'bg-white hover:bg-emerald-50/40 transition':'bg-slate-50/60 hover:bg-emerald-50/40 transition';
-    tr.innerHTML=`<td class="py-2.5 px-3.5 font-mono text-slate-400 text-[11px]">${d.Record_ID}</td><td class="py-2.5 px-3.5 font-bold text-brand-800">${d.Intervention_Code}</td><td class="py-2.5 px-3.5 font-medium text-slate-800 max-w-xs truncate" title="${(d.Intervention_Description||'').replace(/"/g,"'")}">${d.Intervention_Name}</td><td class="py-2.5 px-3.5"><span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-100 text-slate-700">${d.Practice||'—'}</span></td><td class="py-2.5 px-3.5 text-slate-600">${d.Province_Region||'—'}</td><td class="py-2.5 px-3.5 text-slate-600 max-w-xs truncate" title="${(d.Project_Name||'').replace(/"/g,"'")}">${d.Project_Name}</td><td class="py-2.5 px-3.5 text-center font-bold text-slate-800">${d.Year}</td><td class="py-2.5 px-3.5 text-right font-semibold text-emerald-700">${numFmt(d.Plants_Count)}</td><td class="py-2.5 px-3.5 text-right font-semibold text-blue-700">${floatFmt(d.Area_Covered_ha)}</td><td class="py-2.5 px-3.5 text-right">${survBadge}</td><td class="py-2.5 px-3.5 text-slate-500 max-w-sm truncate" title="${(d.Remarks_Evidence||'').replace(/"/g,"'")}">${d.Remarks_Evidence||'—'}</td><td class="py-2.5 px-3.5">${actions}</td>`;
+    tr.innerHTML=`<td class="py-2.5 px-3.5 font-mono text-slate-400 text-[11px]">${d.Record_ID}</td><td class="py-2.5 px-3.5 font-bold text-brand-800">${d.Intervention_Code}</td><td class="py-2.5 px-3.5 font-medium text-slate-800 max-w-xs truncate" title="${(d.Intervention_Description||'').replace(/"/g,"'")}">${d.Intervention_Name}</td><td class="py-2.5 px-3.5"><span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-100 text-slate-700">${d.Practice||'—'}</span></td><td class="py-2.5 px-3.5 text-slate-600">${d.Tab_Name||'—'}</td><td class="py-2.5 px-3.5 text-slate-600 max-w-xs truncate" title="${(d.Project_Name||'').replace(/"/g,"'")}">${d.Project_Name}</td><td class="py-2.5 px-3.5 text-center font-bold text-slate-800">${d.Year}</td><td class="py-2.5 px-3.5 text-right font-semibold text-emerald-700">${numFmt(d.Plants_Count)}</td><td class="py-2.5 px-3.5 text-right font-semibold text-blue-700">${floatFmt(d.Area_Covered_ha)}</td><td class="py-2.5 px-3.5 text-right">${survBadge}</td><td class="py-2.5 px-3.5 text-slate-500 max-w-sm truncate" title="${(d.Remarks_Evidence||'').replace(/"/g,"'")}">${d.Remarks_Evidence||'—'}</td><td class="py-2.5 px-3.5">${actions}</td>`;
     tbody.appendChild(tr);
   });
   if (window.lucide) lucide.createIcons();
@@ -982,7 +1233,7 @@ function renderDashboard() {
 }
 
 function resetFilters() {
-  ['search-input','year-select','practice-select','province-select','category-select'].forEach(id=>{
+  ['search-input','year-select','practice-select','tab-select','category-select'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value = el.tagName==='SELECT'?el.options[0].value:'';
   });
   renderDashboard();
@@ -1017,12 +1268,12 @@ function openEditModal(id) {
   onCodeChange();
 
   document.getElementById('entry-practice').value  = rec.Practice||'Forests';
-  document.getElementById('entry-province').value  = rec.Province_Region;
+  document.getElementById('entry-tab').value       = rec.Tab_Name||'';
   document.getElementById('entry-year').value      = String(rec.Year);
   document.getElementById('entry-project').value   = rec.Project_Name||'';
   document.getElementById('entry-plants').value    = rec.Plants_Count!=null?rec.Plants_Count:'';
   document.getElementById('entry-area').value      = rec.Area_Covered_ha!=null?rec.Area_Covered_ha:'';
-  document.getElementById('entry-survival').value  = rec.Survival_Rate_pct!=null?(rec.Survival_Rate_pct*100):'';
+  document.getElementById('entry-survival').value  = rec.Survival_Rate_pct!=null?(rec.Survival_Rate_pct > 1 ? rec.Survival_Rate_pct : rec.Survival_Rate_pct*100):'';
   document.getElementById('entry-remarks').value   = rec.Remarks_Evidence||'';
   if (window.lucide) lucide.createIcons();
 }
@@ -1061,7 +1312,7 @@ async function handleRecordSubmit(e) {
   const newRec = {
     Record_ID        : editId ? Number(editId) : Math.max(0,...records.map(r=>r.Record_ID||0))+1,
     Practice         : document.getElementById('entry-practice').value,
-    Province_Region  : document.getElementById('entry-province').value,
+    Tab_Name         : document.getElementById('entry-tab').value,
     Project_Name     : document.getElementById('entry-project').value,
     Intervention_Category: document.getElementById('entry-category').value,
     Intervention_Code: code,
@@ -1076,46 +1327,55 @@ async function handleRecordSubmit(e) {
 
   try {
     const actionType = editId ? 'updateRecord' : 'addRecord';
-    fetch(APPS_SCRIPT_URL, {
+    // Save via local Express Excel API
+    const saveAll = records.slice();
+    if (editId) {
+      const idx = saveAll.findIndex(r=>r.Record_ID===Number(editId));
+      if (idx>=0) saveAll[idx]=newRec;
+    } else {
+      saveAll.push(newRec);
+    }
+    const res = await fetch('/api/records', {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: actionType, record: newRec })
+      body: JSON.stringify(saveAll)
     });
-    
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    showToast(editId ? `Record #${editId} saved.` : `Record #${newRec.Record_ID} added.`, 'success');
     if (editId) {
       const idx = records.findIndex(r=>r.Record_ID===Number(editId));
       if (idx>=0) records[idx]=newRec;
-      showToast(`Record #${editId} updated in Google Sheets!`, 'success');
     } else {
       records.push(newRec);
-      showToast(`Record #${newRec.Record_ID} saved to Google Sheets!`, 'success');
     }
-  } catch(err) {
-    showToast('Error saving to Google Sheets: '+err.message, 'error');
-  }
 
   closeDataEntryModal();
   renderDashboard();
+  } catch(err) {
+    showToast('Error saving record: '+err.message, 'error');
+  }
 }
 
-function deleteRecord(id) {
+async function deleteRecord(id) {
   if (!currentUser || currentUser.role==='viewer') return;
-  if (!confirm(`Delete record #${id} from Google Sheets?`)) return;
+  if (!confirm(`Delete record #${id}?`)) return;
 
   try {
-    fetch(APPS_SCRIPT_URL, {
+    const remaining = records.filter(r=>r.Record_ID!==id);
+    // Reassign sequential IDs
+    remaining.forEach((r,i) => { r.Record_ID = i + 1; });
+    const res = await fetch('/api/records', {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'deleteRecord', recordId: Number(id) })
+      body: JSON.stringify(remaining)
     });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    records = remaining;
+    showToast(`Record #${id} deleted.`, 'info');
   } catch(err) {
-    console.error('Delete request error:', err);
+    showToast('Error deleting record: '+err.message, 'error');
+    return;
   }
-
-  records = records.filter(r=>r.Record_ID!==id);
-  showToast(`Record #${id} deleted from Google Sheets.`, 'info');
   renderDashboard();
 }
 
@@ -1307,5 +1567,5 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (window.lucide) lucide.createIcons();
 });
 </script>
-</body>
+  </body>
 </html>

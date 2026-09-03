@@ -5,12 +5,12 @@ const path = require('path');
 
 const app = express();
 const PORT = 3000;
-const EXCEL_FILE = path.join(__dirname, 'WWF-Pakistan_Forestry_Achievements_Redesigned.xlsx');
+const EXCEL_FILE = path.join(__dirname, 'MAIN DATA TRANSFORMATION', 'WWF Template.xlsx');
 const DATA_SHEET = 'Fact_Forestry_Data';
 const WHITELIST_SHEET = 'Whitelist';
 
 const RECORD_COLS = [
-  'Record_ID','Practice','Province_Region','Project_Name',
+  'Record_ID','Practice','Tab_Name','Project_Name',
   'Intervention_Category','Intervention_Code','Intervention_Name',
   'Intervention_Description','Year','Plants_Count','Area_Covered_ha',
   'Survival_Rate_pct','Remarks_Evidence'
@@ -67,7 +67,7 @@ app.post('/api/records', (req, res) => {
     if (!Array.isArray(records)) return res.status(400).json({ error: 'Expected JSON array' });
     const wb = readWorkbook();
     const ws = xlsx.utils.json_to_sheet(records, { header: RECORD_COLS });
-    const colWidths = [8,10,22,40,45,12,45,55,8,14,14,14,55];
+    const colWidths = [8,20,30,45,50,12,42,60,8,18,18,18,60];
     ws['!cols'] = colWidths.map(w => ({ wch: w }));
     wb.Sheets[DATA_SHEET] = ws;
     if (!wb.SheetNames.includes(DATA_SHEET)) wb.SheetNames.push(DATA_SHEET);
