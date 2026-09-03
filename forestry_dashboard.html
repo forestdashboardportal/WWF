@@ -52,8 +52,26 @@
     };
     </script>
 
+    <script>
+    // Immediate pre-render authentication check to prevent FOUC (Flash of Login)
+    (function() {
+      try {
+        if (localStorage.getItem('wwf_logged_user')) {
+          document.documentElement.classList.add('user-logged-in');
+        }
+      } catch (_) {}
+    })();
+    </script>
+
     <style>
     body { font-family: 'Inter', sans-serif; }
+    
+    /* Zero-FOUC instant layout switcher */
+    html.user-logged-in #login-page { display: none !important; }
+    html.user-logged-in #dashboard-page { display: flex !important; }
+    html:not(.user-logged-in) #dashboard-page { display: none !important; }
+    html:not(.user-logged-in) #login-page { display: flex !important; }
+
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; border-radius: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
@@ -67,8 +85,26 @@
     
     .page-hidden { display: none !important; }
     
+    /* Strict viewport and overflow containment — prevents page horizontal scrolling */
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+    
+    #dashboard-page {
+      width: 100vw;
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
     #app-sidebar { transition: width .25s cubic-bezier(0.4, 0, 0.2, 1); }
-    #app-main { transition: margin-left .25s cubic-bezier(0.4, 0, 0.2, 1); }
+    #app-main {
+      width: calc(100vw - 16rem);
+      max-width: calc(100vw - 16rem);
+      min-width: 0;
+      overflow-x: hidden;
+      transition: width .25s cubic-bezier(0.4, 0, 0.2, 1), margin-left .25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
     #app-sidebar.sidebar-collapsed { width: 4.75rem; }
     #app-sidebar.sidebar-collapsed .sidebar-label,
     #app-sidebar.sidebar-collapsed .sidebar-brand,
@@ -79,7 +115,19 @@
     #app-sidebar.sidebar-collapsed .sidebar-user-card { justify-content: center; padding: 0.5rem; }
     #app-sidebar.sidebar-collapsed .sidebar-logout { justify-content: center; padding: 0.5rem; }
     #app-sidebar.sidebar-collapsed .sidebar-logout span { display: none; }
-    #app-main.sidebar-main-collapsed { margin-left: 4.75rem; }
+    #app-main.sidebar-main-collapsed {
+      margin-left: 4.75rem;
+      width: calc(100vw - 4.75rem);
+      max-width: calc(100vw - 4.75rem);
+    }
+
+    @media (max-width: 640px) {
+      #app-main {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: 0;
+      }
+    }
 
     /* Wide table styling */
     #wide-table { table-layout: fixed; border-collapse: separate; border-spacing: 0; }
@@ -90,17 +138,75 @@
     #wide-table .col-remarks { width: 250px; }
     #wide-table .col-actions { width: 84px; }
     #wide-table th, #wide-table td { border-bottom: 1px solid #f1f5f9; border-right: 1px solid #f1f5f9; }
+
+    /* Sticky headers with solid opaque backgrounds (prevents vertical scroll bleed-through) */
     #wide-table thead th { position: sticky; z-index: 10; }
-    #wide-table thead tr:first-child th { top: 0; }
-    #wide-table thead tr:nth-child(2) th { top: 40px; }
-    #wide-table tfoot td { position: sticky; bottom: 0; z-index: 8; }
-    #wide-table th:nth-child(1), #wide-table td:nth-child(1) { position: sticky; left: 0; z-index: 7; width: 115px; background: inherit; }
-    #wide-table th:nth-child(2), #wide-table td:nth-child(2) { position: sticky; left: 115px; z-index: 7; width: 200px; background: inherit; }
-    #wide-table th:nth-child(3), #wide-table td:nth-child(3) { position: sticky; left: 315px; z-index: 7; width: 330px; background: inherit; }
-    #wide-table thead th:nth-child(-n+3) { z-index: 12; }
-    #wide-table tbody tr:nth-child(odd) td:nth-child(-n+3) { background: #ffffff; }
-    #wide-table tbody tr:nth-child(even) td:nth-child(-n+3) { background: #f8fafc; }
-    #wide-table tbody tr:hover td:nth-child(-n+3) { background: #f0fdf4; }
+    #wide-table thead tr:first-child th { top: 0; height: 44px; background-color: #062115; }
+    #wide-table thead tr:nth-child(2) th { top: 44px; height: 34px; background-color: #0D3824; }
+
+    /* Sticky footer */
+    #wide-table tfoot td { position: sticky; bottom: 0; z-index: 15; background-color: #0f172a; }
+
+    /* Frozen left columns (Practice, Project, Type) */
+    #wide-table thead th:nth-child(1),
+    #wide-table tbody tr:not(.category-row) td:nth-child(1),
+    #wide-table tfoot td:nth-child(1) { position: sticky; left: 0; z-index: 7; width: 115px; }
+
+    #wide-table thead th:nth-child(2),
+    #wide-table tbody tr:not(.category-row) td:nth-child(2),
+    #wide-table tfoot td:nth-child(2) { position: sticky; left: 115px; z-index: 7; width: 200px; }
+
+    #wide-table thead th:nth-child(3),
+    #wide-table tbody tr:not(.category-row) td:nth-child(3),
+    #wide-table tfoot td:nth-child(3) { 
+      position: sticky; 
+      left: 315px; 
+      z-index: 7; 
+      width: 330px; 
+      box-shadow: 4px 0 8px -2px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Opaque backgrounds for frozen headers to eliminate bleed-through */
+    #wide-table thead tr:first-child th:nth-child(1),
+    #wide-table thead tr:first-child th:nth-child(2),
+    #wide-table thead tr:first-child th:nth-child(3) {
+      z-index: 20;
+      background-color: #062115;
+    }
+    #wide-table thead tr:nth-child(2) th:nth-child(1),
+    #wide-table thead tr:nth-child(2) th:nth-child(2),
+    #wide-table thead tr:nth-child(2) th:nth-child(3) {
+      z-index: 20;
+      background-color: #0D3824;
+    }
+
+    /* Opaque backgrounds for frozen body cells */
+    #wide-table tbody tr:nth-child(odd):not(.category-row) td:nth-child(1),
+    #wide-table tbody tr:nth-child(odd):not(.category-row) td:nth-child(2),
+    #wide-table tbody tr:nth-child(odd):not(.category-row) td:nth-child(3) { background-color: #ffffff; }
+
+    #wide-table tbody tr:nth-child(even):not(.category-row) td:nth-child(1),
+    #wide-table tbody tr:nth-child(even):not(.category-row) td:nth-child(2),
+    #wide-table tbody tr:nth-child(even):not(.category-row) td:nth-child(3) { background-color: #f8fafc; }
+
+    #wide-table tbody tr:hover:not(.category-row) td:nth-child(1),
+    #wide-table tbody tr:hover:not(.category-row) td:nth-child(2),
+    #wide-table tbody tr:hover:not(.category-row) td:nth-child(3) { background-color: #ecfdf5; }
+
+    /* Frozen footer cells */
+    #wide-table tfoot td:nth-child(1),
+    #wide-table tfoot td:nth-child(2),
+    #wide-table tfoot td:nth-child(3) {
+      z-index: 25;
+      background-color: #0f172a;
+    }
+
+    /* Category banner rows */
+    #wide-table tbody tr.category-row td {
+      width: auto !important;
+      position: static !important;
+      background-color: #f1f5f9;
+    }
 
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
@@ -224,7 +330,7 @@
     <!-- ========================================================
      PAGE 2: DASHBOARD APPLICATION SHELL
      ======================================================== -->
-    <div id="dashboard-page" class="page-hidden flex min-h-screen">
+    <div id="dashboard-page" class="page-hidden flex min-h-screen w-full max-w-full overflow-x-hidden">
 
       <!-- LEFT SIDEBAR -->
       <aside id="app-sidebar" class="fixed left-0 top-0 h-screen w-64 z-40 bg-gradient-to-b from-brand-950 via-brand-900 to-brand-800 text-white shadow-2xl flex flex-col border-r border-white/10">
@@ -281,7 +387,7 @@
       </aside>
 
       <!-- MAIN CONTENT AREA -->
-      <div id="app-main" class="flex-1 ml-64 flex flex-col min-h-screen">
+      <div id="app-main" class="flex-1 ml-64 flex flex-col min-h-screen min-w-0 max-w-full overflow-x-hidden">
 
         <!-- TOP APPLICATION HEADER -->
         <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
@@ -625,18 +731,18 @@
         <!-- ========================================================
          VIEW 2: PROJECT WORKSHEETS (WIDE FORMAT SPREADSHEET VIEW)
          ======================================================== -->
-        <main id="data-page" class="page-hidden flex-1 w-full px-5 sm:px-8 py-6 space-y-5">
+        <main id="data-page" class="page-hidden flex-1 w-full min-w-0 max-w-full px-5 sm:px-8 py-6 space-y-5 overflow-x-hidden">
 
           <!-- Header & New Tab Actions -->
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full min-w-0">
+            <div class="min-w-0">
               <h2 class="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2">
                 <i data-lucide="sheet" class="w-5 h-5 text-brand-800"></i>
                 Project Worksheets
               </h2>
               <p class="text-xs text-slate-500 mt-0.5">Live multi-year worksheet view with editable reporting columns (2023–2026)</p>
             </div>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap gap-2 shrink-0">
               <button onclick="openNewTabModal()"
                 class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-brand-800 text-white hover:bg-brand-900 shadow-sm transition">
                 <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-300"></i>
@@ -646,38 +752,45 @@
           </div>
 
           <!-- TOP WORKSHEET TAB SWITCHER RAIL -->
-          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-card p-2 flex items-center gap-2 overflow-hidden">
+          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-card p-2 flex items-center gap-2 w-full min-w-0 max-w-full overflow-hidden">
             <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 px-2 shrink-0 flex items-center gap-1.5">
               <i data-lucide="folder" class="w-3.5 h-3.5"></i> Tabs:
             </div>
-            <div id="data-tab-switcher" class="flex flex-nowrap gap-1.5 overflow-x-auto custom-scrollbar py-1">
+            <div id="data-tab-switcher" class="flex flex-nowrap items-center gap-1.5 overflow-x-auto custom-scrollbar py-1 flex-1 min-w-0">
               <!-- Injected by JS -->
             </div>
           </div>
 
           <!-- Worksheet Action Controls Toolbar -->
-          <div id="wide-table-controls" class="flex items-center justify-between gap-3 px-5 py-3.5 bg-white rounded-2xl border border-slate-200/80 shadow-card page-hidden">
-            <div class="min-w-0">
+          <div id="wide-table-controls" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3.5 bg-white rounded-2xl border border-slate-200/80 shadow-card w-full min-w-0 max-w-full page-hidden">
+            <div class="min-w-0 flex-1">
               <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selected Worksheet</div>
-              <div id="selected-data-tab" class="text-sm font-extrabold text-slate-800 truncate">No project selected</div>
+              <div id="selected-data-tab" class="text-sm font-extrabold text-brand-900 truncate">No project selected</div>
             </div>
-            <div class="flex items-center justify-end gap-2.5 shrink-0">
+            
+            <!-- Quick Filter in Worksheet -->
+            <div class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+              <div class="relative w-full sm:w-60">
+                <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="wide-search-input" oninput="filterWideTable(this.value)" placeholder="Search interventions..."
+                  class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
+              </div>
               <button id="wide-edit-toggle-btn" onclick="toggleWideEditMode()"
-                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-700 text-white hover:bg-slate-800 shadow-sm transition">
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-700 text-white hover:bg-slate-800 shadow-sm transition whitespace-nowrap shrink-0">
                 <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                 <span>Edit Entire Tab</span>
               </button>
               <button id="wide-save-btn" onclick="saveWideTabChanges()"
-                class="hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm transition">
+                class="hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm transition whitespace-nowrap shrink-0">
                 <i data-lucide="save" class="w-3.5 h-3.5"></i>
                 <span>Save Tab Changes</span>
               </button>
             </div>
           </div>
 
-          <!-- Wide Table Container -->
-          <div id="wide-table-wrapper" class="bg-white rounded-3xl shadow-card border border-slate-200/80 overflow-hidden page-hidden">
-            <div class="overflow-x-auto custom-scrollbar max-h-[600px]">
+          <!-- Wide Table Container (Strictly isolated horizontal scroll) -->
+          <div id="wide-table-wrapper" class="bg-white rounded-3xl shadow-card border border-slate-200/80 w-full min-w-0 max-w-full overflow-hidden page-hidden">
+            <div class="w-full min-w-0 overflow-x-auto custom-scrollbar max-h-[600px]">
               <table id="wide-table" class="w-full text-xs min-w-[1780px]">
                 <colgroup>
                   <col class="col-practice"><col class="col-project"><col class="col-type">
@@ -685,36 +798,36 @@
                 </colgroup>
                 <thead>
                   <!-- Header Row 1: Spans -->
-                  <tr class="bg-gradient-to-r from-brand-950 to-brand-800 text-white">
-                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15">Practice</th>
-                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15">Project</th>
-                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15">Type of Intervention</th>
-                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-white/5">2023</th>
-                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15">2024</th>
-                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-white/5">2025</th>
-                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15">2026</th>
-                    <th colspan="1" class="py-3 px-3.5 text-left font-bold">Remarks</th>
-                    <th colspan="1" class="py-3 px-3 text-center font-bold bg-white/10">Actions</th>
+                  <tr class="text-white">
+                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Practice</th>
+                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Project</th>
+                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Type of Intervention</th>
+                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2023 Reporting</th>
+                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2024 Reporting</th>
+                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2025 Reporting</th>
+                    <th colspan="3" class="py-3 px-3 text-center font-bold border-r border-white/15 bg-[#062115]">2026 Reporting</th>
+                    <th colspan="1" class="py-3 px-3.5 text-left font-bold border-r border-white/15 bg-[#062115]">Documentation</th>
+                    <th colspan="1" class="py-3 px-3 text-center font-bold bg-[#062115]">Actions</th>
                   </tr>
-                  <!-- Header Row 2: Sub-columns -->
-                  <tr class="bg-gradient-to-r from-brand-900 to-brand-800 text-white/90">
-                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px]">Pillar</th>
-                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px]">Project Title</th>
-                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px]">Code &amp; Description</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px]">Plants</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px]">Area (ha)</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 bg-white/5 text-[10px]">Surv %</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px]">Plants</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px]">Area (ha)</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 bg-white/5 text-[10px]">Surv %</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px]">Plants</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px]">Area (ha)</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 bg-white/5 text-[10px]">Surv %</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px]">Plants</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px]">Area (ha)</th>
-                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 bg-white/5 text-[10px]">Surv %</th>
-                    <th class="py-2 px-3.5 text-left font-semibold text-[10px]">Evidence / Notes</th>
-                    <th class="py-2 px-3 text-center font-semibold bg-white/5 w-20 text-[10px]">Controls</th>
+                  <!-- Header Row 2: Sub-columns with Year Context -->
+                  <tr class="text-white/90">
+                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Pillar</th>
+                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Project Title</th>
+                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Code &amp; Description</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'23 Plants</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'23 Area (ha)</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'23 Surv %</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'24 Plants</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'24 Area (ha)</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'24 Surv %</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'25 Plants</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'25 Area (ha)</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'25 Surv %</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-emerald-200">'26 Plants</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-sky-200">'26 Area (ha)</th>
+                    <th class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'26 Surv %</th>
+                    <th class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Remarks / Notes</th>
+                    <th class="py-2 px-3 text-center font-semibold bg-[#0D3824] w-20 text-[10px]">Controls</th>
                   </tr>
                 </thead>
                 <tbody id="wide-table-body" class="divide-y divide-slate-100"></tbody>
@@ -1454,8 +1567,17 @@ function toggleTableExpand() {
 }
 
 // ── Page & View Navigation ────────────────────────────────────────────────────
-function showLoginPage()    { document.getElementById('login-page').classList.remove('page-hidden'); document.getElementById('dashboard-page').classList.add('page-hidden'); }
-function showDashboardPage(){ document.getElementById('login-page').classList.add('page-hidden');    document.getElementById('dashboard-page').classList.remove('page-hidden'); }
+function showLoginPage() {
+  document.documentElement.classList.remove('user-logged-in');
+  document.getElementById('login-page').classList.remove('page-hidden');
+  document.getElementById('dashboard-page').classList.add('page-hidden');
+}
+
+function showDashboardPage() {
+  document.documentElement.classList.add('user-logged-in');
+  document.getElementById('login-page').classList.add('page-hidden');
+  document.getElementById('dashboard-page').classList.remove('page-hidden');
+}
 
 function toggleSidebar() {
   const sidebar = document.getElementById('app-sidebar');
@@ -1565,6 +1687,7 @@ async function doAdminLogin() {
 function loginSuccess(email, role, name) {
   currentUser = { email, role, name: name||email };
   localStorage.setItem('wwf_logged_user', JSON.stringify(currentUser));
+  document.documentElement.classList.add('user-logged-in');
   showToast(`Welcome, ${name||email}! (${role.toUpperCase()})`, 'success');
   syncHeaderUI();
   showDashboardPage();
@@ -1575,6 +1698,7 @@ function loginSuccess(email, role, name) {
 function logoutUser() {
   currentUser = null;
   localStorage.removeItem('wwf_logged_user');
+  document.documentElement.classList.remove('user-logged-in');
   showLoginPage();
   showToast('Signed out successfully.', 'info');
 }
@@ -2052,7 +2176,7 @@ function renderDataPage() {
     const count = records.filter(r => (r.Tab_Name || '').trim() === t).length;
     return `
       <button onclick="selectDataTab('${t.replace(/'/g,"\\'")}')"
-        class="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-xl border transition whitespace-nowrap ${
+        class="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-xl border transition whitespace-nowrap shrink-0 ${
           isActive
             ? 'bg-brand-800 text-white border-brand-800 shadow-sm'
             : 'bg-white text-slate-700 border-slate-200 hover:border-brand-800 hover:text-brand-800'
@@ -2089,6 +2213,9 @@ function renderDataPage() {
 function selectDataTab(tab) {
   activeDataTab = tab;
   isWideEditMode = false;
+  wideSearchQuery = '';
+  const searchInput = document.getElementById('wide-search-input');
+  if (searchInput) searchInput.value = '';
   document.getElementById('wide-save-btn').classList.add('hidden');
   document.getElementById('wide-edit-toggle-btn').innerHTML = `<i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>Edit Entire Tab</span>`;
   renderDataPage();
@@ -2112,23 +2239,62 @@ function toggleWideEditMode() {
   if (window.lucide) lucide.createIcons();
 }
 
+let wideSearchQuery = '';
+
+function filterWideTable(q) {
+  wideSearchQuery = (q || '').toLowerCase().trim();
+  renderWideTableBody();
+}
+
 function renderWideTableBody() {
   const tbody = document.getElementById('wide-table-body');
   tbody.innerHTML = '';
   let lastCat = null;
   const canEdit = currentUser && currentUser.role !== 'viewer';
 
-  wideCurrentRows.forEach((row, idx) => {
+  let filteredRows = wideCurrentRows;
+  if (wideSearchQuery) {
+    filteredRows = wideCurrentRows.filter(r => {
+      const p = (r.Practice || '').toLowerCase();
+      const pr = (r.Project_Name || '').toLowerCase();
+      const comp = (r.compositeType || '').toLowerCase();
+      const rem = (r.Remarks_Evidence || '').toLowerCase();
+      const cat = (r.Intervention_Category || '').toLowerCase();
+      return p.includes(wideSearchQuery) || pr.includes(wideSearchQuery) || comp.includes(wideSearchQuery) || rem.includes(wideSearchQuery) || cat.includes(wideSearchQuery);
+    });
+  }
+
+  if (filteredRows.length === 0) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="17" class="py-12 text-center text-slate-400 text-xs font-medium bg-white">
+      <div class="flex flex-col items-center justify-center gap-1.5">
+        <i data-lucide="search-x" class="w-6 h-6 text-slate-300"></i>
+        <span>${wideSearchQuery ? `No interventions matching "${wideSearchQuery}" in this worksheet.` : 'No intervention records found in this worksheet.'}</span>
+      </div>
+    </td>`;
+    tbody.appendChild(tr);
+    renderWideFooter(filteredRows);
+    if (window.lucide) lucide.createIcons();
+    return;
+  }
+
+  filteredRows.forEach((row, idx) => {
     if (row.Intervention_Category && row.Intervention_Category !== lastCat) {
       const spacer = document.createElement('tr');
-      spacer.className = 'bg-slate-100/80';
-      spacer.innerHTML = `<td colspan="17" class="py-2.5 px-4 text-xs font-extrabold uppercase tracking-wide text-brand-900 border-b border-slate-200">${row.Intervention_Category}</td>`;
+      spacer.className = 'category-row';
+      spacer.innerHTML = `
+        <td colspan="17" class="py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider text-brand-900 border-b border-slate-200">
+          <div class="sticky left-4 inline-flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-brand-800"></span>
+            <span>${row.Intervention_Category}</span>
+          </div>
+        </td>`;
       tbody.appendChild(spacer);
       lastCat = row.Intervention_Category;
     }
     const tr = document.createElement('tr');
-    tr.className = idx % 2 === 0 ? 'bg-white hover:bg-emerald-50/30 transition' : 'bg-slate-50/50 hover:bg-emerald-50/30 transition';
-    if (row._isNew) tr.classList.add('bg-amber-50/60');
+    tr.className = idx % 2 === 0 ? 'bg-white hover:bg-emerald-50/40 transition' : 'bg-slate-50/50 hover:bg-emerald-50/40 transition';
+    if (row._isNew) tr.classList.add('bg-amber-50/70');
 
     const newBadge = row._isNew ? `<span class="ml-1 px-1.5 py-0.5 text-[9px] font-extrabold uppercase rounded-md bg-amber-200 text-amber-900 align-middle">New Row</span>` : '';
 
@@ -2142,10 +2308,17 @@ function renderWideTableBody() {
     };
 
     const numCell = (val, cls='') => cell(`<div class="text-right font-extrabold ${cls}">${numFmt(val)}</div>`);
-    const inputNum = (field, val, step='1', min='') => `<input type="number" data-field="${field}" step="${step}" ${min!==''?`min="${min}"`:''} value="${val==null||val===''?'':val}" class="w-full px-2 py-1 text-xs rounded-lg border border-slate-200 text-right focus:outline-none focus:ring-1 focus:ring-emerald-500" oninput="updateWideRowFromInput(${idx}, this)">`;
+    const inputNum = (field, val, step='1', min='') => {
+      let displayVal = val == null || val === '' ? '' : val;
+      if (field.startsWith('s_') && displayVal !== '') {
+        const sn = Number(displayVal);
+        displayVal = (sn > 0 && sn <= 1) ? (sn * 100).toFixed(1) : sn;
+      }
+      return `<input type="number" data-field="${field}" step="${step}" ${min!==''?`min="${min}"`:''} value="${displayVal}" class="w-full px-2 py-1 text-xs rounded-lg border border-slate-200 text-right focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white" oninput="updateWideRowFromInput(${idx}, this)">`;
+    };
     const inputText = (field, val, textarea=false) => textarea
-      ? `<textarea data-field="${field}" rows="2" class="w-full px-2 py-1 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono" oninput="updateWideRowFromInput(${idx}, this)">${val||''}</textarea>`
-      : `<input type="text" data-field="${field}" value="${val==null?'':String(val).replace(/"/g,'&quot;')}" class="w-full px-2 py-1 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500" oninput="updateWideRowFromInput(${idx}, this)">`;
+      ? `<textarea data-field="${field}" rows="2" class="w-full px-2 py-1 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono bg-white" oninput="updateWideRowFromInput(${idx}, this)">${val||''}</textarea>`
+      : `<input type="text" data-field="${field}" value="${val==null?'':String(val).replace(/"/g,'&quot;')}" class="w-full px-2 py-1 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white" oninput="updateWideRowFromInput(${idx}, this)">`;
     const inputSel = (field, val) => `<select data-field="${field}" class="w-full px-2 py-1 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white" onchange="updateWideRowFromInput(${idx}, this)"><option${val==='Forests'?' selected':''}>Forests</option><option${val==='Freshwater'?' selected':''}>Freshwater</option><option${val==='Food'?' selected':''}>Food</option><option${val==='Marine'?' selected':''}>Marine</option></select>`;
 
     let c1, c2, c3;
@@ -2165,7 +2338,7 @@ function renderWideTableBody() {
       if (isWideEditMode) {
         yearCells.push(cell(inputNum(`p_${y}`, row['p_'+y], '1', '0')));
         yearCells.push(cell(inputNum(`a_${y}`, row['a_'+y], '0.1', '0')));
-        yearCells.push(cell(inputNum(`s_${y}`, row['s_'+y], '0.1')));
+        yearCells.push(cell(inputNum(`s_${y}`, row['s_'+y], '0.1', '0')));
       } else {
         yearCells.push(numCell(row['p_'+y], 'text-emerald-700'));
         yearCells.push(numCell(row['a_'+y], 'text-sky-700'));
@@ -2198,30 +2371,48 @@ function renderWideTableBody() {
     tbody.appendChild(tr);
   });
 
-  renderWideFooter();
+  renderWideFooter(filteredRows);
 }
 
-function renderWideFooter() {
+function renderWideFooter(rows) {
+  const targetRows = rows || wideCurrentRows;
   const footer = document.getElementById('wide-table-footer');
   const totals = {};
   YEAR_RANGE.forEach(y => {
     totals['p_'+y] = 0;
     totals['a_'+y] = 0;
   });
-  wideCurrentRows.forEach(r => {
+  targetRows.forEach(r => {
     YEAR_RANGE.forEach(y => {
       if (r['p_'+y] != null && r['p_'+y] !== '') totals['p_'+y] += Number(r['p_'+y]) || 0;
       if (r['a_'+y] != null && r['a_'+y] !== '') totals['a_'+y] += Number(r['a_'+y]) || 0;
     });
   });
 
-  let html = `<tr><td colspan="3" class="py-3 px-4 border-r border-slate-700 font-extrabold uppercase tracking-wide">Grand Totals</td>`;
+  let html = `<tr>
+    <td class="py-3 px-3.5 text-left font-extrabold uppercase tracking-wide border-r border-slate-700 bg-slate-900 text-white">Grand Totals</td>
+    <td class="py-3 px-3.5 text-left font-semibold border-r border-slate-700 bg-slate-900 text-slate-400 text-[11px]">All Projects</td>
+    <td class="py-3 px-3.5 text-left font-mono font-bold border-r border-slate-700 bg-slate-900 text-emerald-400 text-[11px]">${targetRows.length} Interventions</td>`;
+
   YEAR_RANGE.forEach(y => {
-    html += `<td class="py-3 px-3 text-right font-extrabold text-emerald-300 border-r border-slate-700">${numFmt(totals['p_'+y]||0)}</td>`;
-    html += `<td class="py-3 px-3 text-right font-extrabold text-sky-300 border-r border-slate-700">${floatFmt(totals['a_'+y]||0)}</td>`;
-    html += `<td class="py-3 px-3 border-r border-slate-700"></td>`;
+    const survRows = targetRows.filter(r => r['s_'+y] != null && r['s_'+y] !== '');
+    let avgSurvHtml = '<span class="text-slate-500">—</span>';
+    if (survRows.length > 0) {
+      const sum = survRows.reduce((s, r) => {
+        const raw = Number(r['s_'+y]);
+        return s + ((raw > 0 && raw <= 1) ? raw * 100 : raw);
+      }, 0);
+      const avg = sum / survRows.length;
+      const cls = avg >= 80 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : avg >= 70 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+      avgSurvHtml = `<span class="px-1.5 py-0.5 text-[10px] font-bold rounded border ${cls}">${avg.toFixed(1)}%</span>`;
+    }
+
+    html += `<td class="py-3 px-3 text-right font-extrabold text-emerald-300 border-r border-slate-700 bg-slate-900">${numFmt(totals['p_'+y]||0)}</td>`;
+    html += `<td class="py-3 px-3 text-right font-extrabold text-sky-300 border-r border-slate-700 bg-slate-900">${floatFmt(totals['a_'+y]||0)}</td>`;
+    html += `<td class="py-3 px-3 text-right border-r border-slate-700 bg-slate-900">${avgSurvHtml}</td>`;
   });
-  html += `<td class="py-3 px-3"></td><td class="py-3 px-3 bg-slate-800/80"></td></tr>`;
+
+  html += `<td class="py-3 px-3 border-r border-slate-700 bg-slate-900"></td><td class="py-3 px-3 text-center bg-slate-950 text-slate-500 text-[10px] font-semibold">Summary</td></tr>`;
   footer.innerHTML = html;
 }
 
@@ -2230,10 +2421,15 @@ function updateWideRowFromInput(idx, el) {
   const field = el.dataset.field;
   if (!field) return;
   if (el.tagName === 'INPUT' && el.type === 'number') {
-    wideCurrentRows[idx][field] = el.value === '' ? '' : Number(el.value);
+    let val = el.value === '' ? '' : Number(el.value);
+    if (field.startsWith('s_') && val !== '' && val > 1) {
+      val = val / 100;
+    }
+    wideCurrentRows[idx][field] = val;
   } else {
     wideCurrentRows[idx][field] = el.value;
   }
+  renderWideFooter();
 }
 
 function openWideEditModal(idx) {
@@ -2404,6 +2600,10 @@ async function commitWideToRecords(overrideTab, renameOpt='cascade') {
 
 function addWideRow() {
   if (!currentUser || currentUser.role === 'viewer') { showToast('Editor or Admin access required.','error'); return; }
+  wideSearchQuery = '';
+  const searchInput = document.getElementById('wide-search-input');
+  if (searchInput) searchInput.value = '';
+
   const newRow = {
     Practice: 'Forests',
     Project_Name: '',
