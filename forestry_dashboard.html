@@ -11,7 +11,9 @@
     <!-- Google Fonts: Playfair Display (luxury headings) + Inter (UI/data) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
+      rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -406,165 +408,170 @@
     }
     </style>
   </head>
-    <body
-      class="bg-slate-50/50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-900">
+  <body
+    class="bg-slate-50/50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-900">
 
-      <!-- Skip to main content (accessibility) -->
-      <a href="#dashboard-view" class="skip-link">Skip to main content</a>
+    <!-- Skip to main content (accessibility) -->
+    <a href="#dashboard-view" class="skip-link">Skip to main content</a>
 
-      <!-- TOAST CONTAINER -->
-      <div id="toast-container"
-        class="fixed top-4 right-4 z-[999] flex flex-col gap-2 max-w-sm w-full pointer-events-none"
-        aria-live="polite" aria-atomic="true"></div>
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"
+      class="fixed top-4 right-4 z-[999] flex flex-col gap-2 max-w-sm w-full pointer-events-none"
+      aria-live="polite" aria-atomic="true"></div>
 
-      <!-- Screen reader announcements -->
-      <div id="sr-announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <!-- Screen reader announcements -->
+    <div id="sr-announcements" class="sr-only" aria-live="polite"
+      aria-atomic="true"></div>
 
-      <!-- ========================================================
+    <!-- ========================================================
        PAGE 1: LOGIN LANDING (Cinematic Forest Luxury)
        ======================================================== -->
-      <div id="login-page"
-        class="min-h-screen flex flex-col items-center justify-center forest-bg p-4 relative overflow-hidden">
-        <!-- Ambient light orbs -->
-        <div class="absolute -top-40 -left-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
-        <div class="absolute -bottom-40 -right-40 w-[28rem] h-[28rem] rounded-full bg-gold-500/10 blur-[100px] pointer-events-none"></div>
+    <div id="login-page"
+      class="min-h-screen flex flex-col items-center justify-center forest-bg p-4 relative overflow-hidden">
+      <!-- Ambient light orbs -->
+      <div
+        class="absolute -top-40 -left-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
+      <div
+        class="absolute -bottom-40 -right-40 w-[28rem] h-[28rem] rounded-full bg-gold-500/10 blur-[100px] pointer-events-none"></div>
 
-        <!-- Login Card -->
+      <!-- Login Card -->
+      <div
+        class="w-full max-w-md bg-white/95 rounded-[2rem] shadow-luxury overflow-hidden border border-white/30 backdrop-blur-xl relative z-10 animate-scaleIn silk-texture">
+
+        <!-- Header Brand Banner -->
         <div
-          class="w-full max-w-md bg-white/95 rounded-[2rem] shadow-luxury overflow-hidden border border-white/30 backdrop-blur-xl relative z-10 animate-scaleIn silk-texture">
+          class="relative p-8 text-center overflow-hidden border-b border-emerald-700/30"
+          style="background: linear-gradient(135deg, #062115 0%, #0D3824 60%, #17563A 100%);">
+          <!-- Inner shimmer -->
+          <div class="absolute inset-0 shimmer pointer-events-none"></div>
 
-          <!-- Header Brand Banner -->
           <div
-            class="relative p-8 text-center overflow-hidden border-b border-emerald-700/30"
-            style="background: linear-gradient(135deg, #062115 0%, #0D3824 60%, #17563A 100%);">
-            <!-- Inner shimmer -->
-            <div class="absolute inset-0 shimmer pointer-events-none"></div>
-
-            <div
-              class="w-20 h-20 rounded-2xl bg-white p-2.5 flex items-center justify-center mx-auto mb-4 shadow-xl ring-4 ring-white/15 relative z-10">
-              <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
-                class="w-full h-full object-contain" />
-            </div>
-            <h1
-              class="text-2xl font-extrabold text-white tracking-tight relative z-10 font-display">WWF-Pakistan</h1>
-            <p class="text-sm font-semibold text-emerald-200 mt-1 relative z-10">Forestry
-              Interventions Portal</p>
-            <p class="text-xs text-emerald-100/70 mt-0.5 relative z-10">2023 – 2026 Analytics &
-              Data Management</p>
-
-            <div
-              class="relative z-10 inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/25 text-xs font-medium backdrop-blur-sm">
-              <span
-                class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span id="login-status-badge">Syncing Google Sheet Whitelist…</span>
-            </div>
+            class="w-20 h-20 rounded-2xl bg-white p-2.5 flex items-center justify-center mx-auto mb-4 shadow-xl ring-4 ring-white/15 relative z-10">
+            <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
+              class="w-full h-full object-contain" />
           </div>
+          <h1
+            class="text-2xl font-extrabold text-white tracking-tight relative z-10 font-display">WWF-Pakistan</h1>
+          <p
+            class="text-sm font-semibold text-emerald-200 mt-1 relative z-10">Forestry
+            Interventions Portal</p>
+          <p class="text-xs text-emerald-100/70 mt-0.5 relative z-10">2023 –
+            2026 Analytics &
+            Data Management</p>
 
-          <!-- Login Body -->
-          <div class="p-8 space-y-5">
-
-            <!-- Error Alert -->
-            <div id="login-error-alert"
-              class="hidden p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2.5 animate-fadeIn">
-              <div class="flex items-start gap-2.5">
-                <i data-lucide="alert-circle"
-                  class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
-                <span id="login-error-text"
-                  class="font-medium leading-relaxed flex-1"></span>
-              </div>
-              <div id="login-request-cta"
-                class="hidden flex flex-wrap gap-2 pt-2 border-t border-rose-200/60">
-                <button onclick="handleRequestAccess()"
-                  class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm flex items-center gap-1.5">
-                  <i data-lucide="mail-plus" class="w-3.5 h-3.5"></i> Request
-                  Access
-                </button>
-                <button onclick="switchLoginTab('admin')"
-                  class="px-3 py-1.5 text-xs font-semibold rounded-xl border border-rose-300 text-rose-700 hover:bg-rose-100/50 transition flex items-center gap-1.5">
-                  <i data-lucide="key-round" class="w-3.5 h-3.5"></i> Admin Sign
-                  In
-                </button>
-              </div>
-            </div>
-
-            <!-- Tab Selector -->
-            <div
-              class="flex rounded-2xl bg-slate-100 p-1 text-xs font-semibold gap-1">
-              <button id="login-tab-email-btn" onclick="switchLoginTab('email')"
-                class="flex-1 py-2.5 rounded-xl bg-white shadow-sm text-slate-800 font-bold transition">
-                User Sign‑In
-              </button>
-              <button id="login-tab-admin-btn" onclick="switchLoginTab('admin')"
-                class="flex-1 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 transition">
-                Admin Portal
-              </button>
-            </div>
-
-            <!-- TAB: User Email -->
-            <div id="login-tab-email" class="space-y-4">
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-700">Whitelisted Email
-                  Address</label>
-                <div class="relative">
-                  <i data-lucide="mail"
-                    class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                  <input type="email" id="login-email"
-                    placeholder="e.g. officer@wwf.org"
-                    class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition input-luxury"
-                    onkeydown="if(event.key==='Enter') doEmailLogin()">
-                </div>
-                <p class="text-[11px] text-slate-400">Instant access for
-                  authorized team members & whitelisted domains.</p>
-              </div>
-              <button onclick="doEmailLogin()" id="email-login-btn"
-                class="w-full py-3 bg-brand-800 hover:bg-brand-900 text-white font-bold text-sm rounded-xl transition shadow-md shadow-brand-800/20 hover:shadow-lg flex items-center justify-center gap-2">
-                <span id="email-login-spinner"
-                  class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
-                <span>Sign In with Email</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-            </div>
-
-            <!-- TAB: Admin Portal -->
-            <div id="login-tab-admin" class="hidden space-y-4">
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-700">Admin
-                  Email</label>
-                <div class="relative">
-                  <i data-lucide="shield"
-                    class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                  <input type="email" id="admin-email" placeholder="admin@wwf.org"
-                    class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition input-luxury">
-                </div>
-              </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-700">Admin
-                  Password</label>
-                <div class="relative">
-                  <i data-lucide="key-round"
-                    class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                  <input type="password" id="admin-password"
-                    placeholder="Enter password" autocomplete="current-password"
-                    class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition input-luxury"
-                    onkeydown="if(event.key==='Enter') doAdminLogin()">
-                </div>
-              </div>
-              <button onclick="doAdminLogin()" id="admin-login-btn"
-                class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl transition shadow-md shadow-amber-500/20 hover:shadow-lg flex items-center justify-center gap-2">
-                <span id="admin-login-spinner"
-                  class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
-                <span>Sign In as Administrator</span>
-                <i data-lucide="lock" class="w-4 h-4"></i>
-              </button>
-            </div>
-
+          <div
+            class="relative z-10 inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/25 text-xs font-medium backdrop-blur-sm">
+            <span
+              class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="login-status-badge">Syncing Google Sheet Whitelist…</span>
           </div>
         </div>
 
-        <p
-          class="mt-6 text-xs text-emerald-100/50 text-center font-medium relative z-10">WWF-Pakistan
-          © 2024 · All Rights Reserved · Secure Session</p>
+        <!-- Login Body -->
+        <div class="p-8 space-y-5">
+
+          <!-- Error Alert -->
+          <div id="login-error-alert"
+            class="hidden p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2.5 animate-fadeIn">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="alert-circle"
+                class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
+              <span id="login-error-text"
+                class="font-medium leading-relaxed flex-1"></span>
+            </div>
+            <div id="login-request-cta"
+              class="hidden flex flex-wrap gap-2 pt-2 border-t border-rose-200/60">
+              <button onclick="handleRequestAccess()"
+                class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm flex items-center gap-1.5">
+                <i data-lucide="mail-plus" class="w-3.5 h-3.5"></i> Request
+                Access
+              </button>
+              <button onclick="switchLoginTab('admin')"
+                class="px-3 py-1.5 text-xs font-semibold rounded-xl border border-rose-300 text-rose-700 hover:bg-rose-100/50 transition flex items-center gap-1.5">
+                <i data-lucide="key-round" class="w-3.5 h-3.5"></i> Admin Sign
+                In
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab Selector -->
+          <div
+            class="flex rounded-2xl bg-slate-100 p-1 text-xs font-semibold gap-1">
+            <button id="login-tab-email-btn" onclick="switchLoginTab('email')"
+              class="flex-1 py-2.5 rounded-xl bg-white shadow-sm text-slate-800 font-bold transition">
+              User Sign‑In
+            </button>
+            <button id="login-tab-admin-btn" onclick="switchLoginTab('admin')"
+              class="flex-1 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 transition">
+              Admin Portal
+            </button>
+          </div>
+
+          <!-- TAB: User Email -->
+          <div id="login-tab-email" class="space-y-4">
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-slate-700">Whitelisted Email
+                Address</label>
+              <div class="relative">
+                <i data-lucide="mail"
+                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="email" id="login-email"
+                  placeholder="e.g. officer@wwf.org"
+                  class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition input-luxury"
+                  onkeydown="if(event.key==='Enter') doEmailLogin()">
+              </div>
+              <p class="text-[11px] text-slate-400">Instant access for
+                authorized team members & whitelisted domains.</p>
+            </div>
+            <button onclick="doEmailLogin()" id="email-login-btn"
+              class="w-full py-3 bg-brand-800 hover:bg-brand-900 text-white font-bold text-sm rounded-xl transition shadow-md shadow-brand-800/20 hover:shadow-lg flex items-center justify-center gap-2">
+              <span id="email-login-spinner"
+                class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
+              <span>Sign In with Email</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- TAB: Admin Portal -->
+          <div id="login-tab-admin" class="hidden space-y-4">
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-slate-700">Admin
+                Email</label>
+              <div class="relative">
+                <i data-lucide="shield"
+                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="email" id="admin-email" placeholder="admin@wwf.org"
+                  class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition input-luxury">
+              </div>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-slate-700">Admin
+                Password</label>
+              <div class="relative">
+                <i data-lucide="key-round"
+                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="password" id="admin-password"
+                  placeholder="Enter password" autocomplete="current-password"
+                  class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition input-luxury"
+                  onkeydown="if(event.key==='Enter') doAdminLogin()">
+              </div>
+            </div>
+            <button onclick="doAdminLogin()" id="admin-login-btn"
+              class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl transition shadow-md shadow-amber-500/20 hover:shadow-lg flex items-center justify-center gap-2">
+              <span id="admin-login-spinner"
+                class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
+              <span>Sign In as Administrator</span>
+              <i data-lucide="lock" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+        </div>
       </div>
+
+      <p
+        class="mt-6 text-xs text-emerald-100/50 text-center font-medium relative z-10">WWF-Pakistan
+        © 2024 · All Rights Reserved · Secure Session</p>
+    </div>
 
     <!-- ========================================================
      PAGE 2: DASHBOARD APPLICATION SHELL
@@ -601,7 +608,8 @@
         </div>
 
         <!-- Navigation Links -->
-        <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto custom-scrollbar" aria-label="Main navigation">
+        <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto custom-scrollbar"
+          aria-label="Main navigation">
           <div
             class="sidebar-tag px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-gold-300/60">Views
             &amp; Intelligence</div>
@@ -712,23 +720,35 @@
 
         <!-- HERO NARRATIVE STRIP (Storytelling) -->
         <section id="hero-summary" class="hidden px-5 sm:px-8 py-4">
-          <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 p-6 sm:p-8 shadow-luxury border border-white/10">
+          <div
+            class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 p-6 sm:p-8 shadow-luxury border border-white/10">
             <div class="absolute inset-0 shimmer pointer-events-none"></div>
-            <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div
+              class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <p class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-300 mb-1">Portfolio Impact</p>
-                <p id="hero-text" class="text-sm sm:text-base text-white/90 font-medium leading-relaxed max-w-2xl">
+                <p
+                  class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-300 mb-1">Portfolio
+                  Impact</p>
+                <p id="hero-text"
+                  class="text-sm sm:text-base text-white/90 font-medium leading-relaxed max-w-2xl">
                   Loading portfolio narrative…
                 </p>
               </div>
               <div class="flex items-center gap-4 shrink-0">
-                <div class="text-center px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
-                  <div id="hero-year" class="text-lg font-extrabold text-gold-300 font-display">—</div>
-                  <div class="text-[9px] uppercase tracking-wider text-white/60 font-bold">Year</div>
+                <div
+                  class="text-center px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
+                  <div id="hero-year"
+                    class="text-lg font-extrabold text-gold-300 font-display">—</div>
+                  <div
+                    class="text-[9px] uppercase tracking-wider text-white/60 font-bold">Year</div>
                 </div>
-                <div class="text-center px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
-                  <div id="hero-change" class="text-lg font-extrabold text-emerald-300">—</div>
-                  <div class="text-[9px] uppercase tracking-wider text-white/60 font-bold">vs Prior</div>
+                <div
+                  class="text-center px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
+                  <div id="hero-change"
+                    class="text-lg font-extrabold text-emerald-300">—</div>
+                  <div
+                    class="text-[9px] uppercase tracking-wider text-white/60 font-bold">vs
+                    Prior</div>
                 </div>
               </div>
             </div>
@@ -962,8 +982,11 @@
                   class="text-[11px] text-emerald-700 font-medium mt-1.5 truncate"
                   id="kpi-plants-sub">Loading…</div>
               </div>
-              <div class="mt-3 h-1 w-full bg-emerald-100 rounded-full overflow-hidden">
-                <div id="kpi-plants-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-700" style="width:0%"></div>
+              <div
+                class="mt-3 h-1 w-full bg-emerald-100 rounded-full overflow-hidden">
+                <div id="kpi-plants-bar"
+                  class="h-full bg-emerald-500 rounded-full transition-all duration-700"
+                  style="width:0%"></div>
               </div>
             </div>
 
@@ -983,11 +1006,15 @@
                 <div
                   class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight animate-count"
                   id="kpi-area">—</div>
-                <div class="text-[11px] text-sky-700 font-medium mt-1.5 truncate"
+                <div
+                  class="text-[11px] text-sky-700 font-medium mt-1.5 truncate"
                   id="kpi-area-sub">Loading…</div>
               </div>
-              <div class="mt-3 h-1 w-full bg-sky-100 rounded-full overflow-hidden">
-                <div id="kpi-area-bar" class="h-full bg-sky-500 rounded-full transition-all duration-700" style="width:0%"></div>
+              <div
+                class="mt-3 h-1 w-full bg-sky-100 rounded-full overflow-hidden">
+                <div id="kpi-area-bar"
+                  class="h-full bg-sky-500 rounded-full transition-all duration-700"
+                  style="width:0%"></div>
               </div>
             </div>
 
@@ -1011,8 +1038,11 @@
                   class="text-[11px] text-amber-700 font-medium mt-1.5 truncate"
                   id="kpi-survival-sub">Loading…</div>
               </div>
-              <div class="mt-3 h-1 w-full bg-amber-100 rounded-full overflow-hidden">
-                <div id="kpi-survival-bar" class="h-full bg-amber-500 rounded-full transition-all duration-700" style="width:0%"></div>
+              <div
+                class="mt-3 h-1 w-full bg-amber-100 rounded-full overflow-hidden">
+                <div id="kpi-survival-bar"
+                  class="h-full bg-amber-500 rounded-full transition-all duration-700"
+                  style="width:0%"></div>
               </div>
             </div>
 
@@ -1036,8 +1066,11 @@
                   class="text-[11px] text-purple-700 font-medium mt-1.5 truncate"
                   id="kpi-records-sub">Loading…</div>
               </div>
-              <div class="mt-3 h-1 w-full bg-purple-100 rounded-full overflow-hidden">
-                <div id="kpi-records-bar" class="h-full bg-purple-500 rounded-full transition-all duration-700" style="width:0%"></div>
+              <div
+                class="mt-3 h-1 w-full bg-purple-100 rounded-full overflow-hidden">
+                <div id="kpi-records-bar"
+                  class="h-full bg-purple-500 rounded-full transition-all duration-700"
+                  style="width:0%"></div>
               </div>
             </div>
 
@@ -1050,11 +1083,13 @@
             <!-- Chart 1: Plants by Year (large) -->
             <div
               class="bento-span-8 chart-glow bg-slate-950 rounded-[1.5rem] p-5 sm:p-6 shadow-card overflow-hidden relative">
-              <div class="absolute right-0 top-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div
+                class="absolute right-0 top-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
               <div class="relative flex items-start justify-between mb-4">
                 <div>
                   <h3
-                    class="text-sm font-bold text-white">Plants Planted by Year</h3>
+                    class="text-sm font-bold text-white">Plants Planted by
+                    Year</h3>
                   <p class="text-[11px] text-slate-400 mt-1">Annual distribution
                     of planted seedlings across filtered dataset</p>
                 </div>
@@ -1088,7 +1123,8 @@
               <div class="flex items-start justify-between mb-4">
                 <div>
                   <h3
-                    class="text-sm font-bold text-slate-800">Plants by Project Tab</h3>
+                    class="text-sm font-bold text-slate-800">Plants by Project
+                    Tab</h3>
                   <p class="text-[11px] text-slate-400 mt-1">Plantation
                     achievements distributed across workbook project tabs</p>
                 </div>
@@ -1105,7 +1141,8 @@
               <div class="flex items-start justify-between mb-4">
                 <div>
                   <h3
-                    class="text-sm font-bold text-slate-800">Survival by Category</h3>
+                    class="text-sm font-bold text-slate-800">Survival by
+                    Category</h3>
                   <p class="text-[11px] text-slate-400 mt-1">Ecological survival
                     success across intervention categories</p>
                 </div>
@@ -1134,15 +1171,21 @@
               </div>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-xs" role="table" aria-label="Category performance matrix">
+              <table class="w-full text-xs" role="table"
+                aria-label="Category performance matrix">
                 <thead
                   class="bg-slate-50/80 text-slate-600 font-bold border-b border-slate-100">
                   <tr>
-                    <th class="py-3.5 px-5 text-left font-semibold">Category</th>
-                    <th class="py-3.5 px-5 text-right font-semibold">Plants Planted</th>
-                    <th class="py-3.5 px-5 text-right font-semibold">Area Covered (ha)</th>
-                    <th class="py-3.5 px-5 text-right font-semibold">Avg Survival</th>
-                    <th class="py-3.5 px-5 text-center font-semibold">Records</th>
+                    <th
+                      class="py-3.5 px-5 text-left font-semibold">Category</th>
+                    <th class="py-3.5 px-5 text-right font-semibold">Plants
+                      Planted</th>
+                    <th class="py-3.5 px-5 text-right font-semibold">Area
+                      Covered (ha)</th>
+                    <th class="py-3.5 px-5 text-right font-semibold">Avg
+                      Survival</th>
+                    <th
+                      class="py-3.5 px-5 text-center font-semibold">Records</th>
                   </tr>
                 </thead>
                 <tbody id="category-matrix-body"
@@ -1183,7 +1226,8 @@
             <!-- Collapsible Container (hidden by default) -->
             <div id="table-collapsible-wrapper" class="hidden">
               <div class="overflow-x-auto custom-scrollbar max-h-[500px]">
-                <table class="w-full text-xs whitespace-nowrap" role="table" aria-label="Observation records">
+                <table class="w-full text-xs whitespace-nowrap" role="table"
+                  aria-label="Observation records">
                   <thead
                     class="bg-gradient-to-r from-brand-950 to-brand-800 text-white text-left sticky top-0 z-10">
                     <tr>
@@ -1759,7 +1803,8 @@
           class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <i data-lucide="folder-plus" class="w-5 h-5 text-emerald-300"></i>
-            <h3 id="new-tab-modal-title" class="text-sm font-bold">Add New Project Tab</h3>
+            <h3 id="new-tab-modal-title" class="text-sm font-bold">Add New
+              Project Tab</h3>
           </div>
           <button onclick="closeNewTabModal()"
             class="text-white/70 hover:text-white transition"><i data-lucide="x"
@@ -1868,8 +1913,8 @@
                 placeholder="A-1. Planting of seedlings — Establishing trees by planting nursery-raised seedlings."
                 class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono input-luxury"></textarea>
               <p class="text-[10px] text-slate-400">Format: <code
-                class="bg-slate-100 px-1 rounded">CODE. Name —
-                Description</code></p>
+                  class="bg-slate-100 px-1 rounded">CODE. Name —
+                  Description</code></p>
             </div>
 
             <!-- Year Blocks: 4 Side-by-Side Cards -->
@@ -2007,7 +2052,7 @@
      ================================================================ -->
     <script>
 // ── Constants & Configuration ──────────────────────────────────────────────────
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1G_xYK6NMLM1mg9UghumjvAs4FUr1KJdZmYXES-zxBKgOs6PQ5NfCkXleYWU2YaRk/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwu9qP959cjUM7h303nyJxiyTdpnHhDF1r2wFPs-My22peV8yv0Ph1hEgWRg-6KAIB-/exec";
 const ADMIN_PASSWORD = "admin@wwf.org";
 
 const CATALOG = [
@@ -2084,34 +2129,180 @@ function showToast(msg, type='success') {
   }
 }
 
-// ── Google Sheets API Adapters ────────────────────────────────────────────────
-async function apiGetRecords() {
-  const res = await fetch(APPS_SCRIPT_URL, { headers: { Accept: 'application/json' } });
-  if (!res.ok) throw new Error('Google Sheets API HTTP ' + res.status);
-  const data = await res.json();
-  if (data.ok === false) throw new Error(data.error || 'Google Sheets API request failed');
-  return Array.isArray(data) ? data : (Array.isArray(data.records) ? data.records : []);
+// ── Practice normalization (singular/plural consistency) ─────────────────────
+const PRACTICE_ALIASES = {
+  'Forest': 'Forests', 'forest': 'Forests', 'FOREST': 'Forests',
+  'Freshwater': 'Freshwater', 'freshwater': 'Freshwater',
+  'Food': 'Food', 'food': 'Food',
+  'Marine': 'Marine', 'marine': 'Marine',
+  'Forests': 'Forests'
+};
+function normalizePractice(p) {
+  if (!p) return 'Forests';
+  const s = String(p).trim();
+  return PRACTICE_ALIASES[s] || s;
 }
 
-async function apiGetWhitelist() {
-  const res = await fetch(APPS_SCRIPT_URL + '?action=whitelist', { headers: { Accept: 'application/json' } });
-  if (!res.ok) throw new Error('Google Sheets whitelist HTTP ' + res.status);
-  const data = await res.json();
-  const source = data.whitelist || data;
+// ── Data normalizer (record ↔ canonical shape) ────────────────────────────────
+function normalizeRecord(r) {
   return {
-    users: Array.isArray(source.users) ? source.users : [],
-    domains: Array.isArray(source.domains) ? source.domains : [],
-    pending: Array.isArray(source.pending) ? source.pending : []
+    Record_ID: r.Record_ID != null ? Number(r.Record_ID) : null,
+    Practice: normalizePractice(r.Practice),
+    Tab_Name: r.Tab_Name || '',
+    Project_Name: r.Project_Name || '',
+    Intervention_Category: r.Intervention_Category || '',
+    Intervention_Code: r.Intervention_Code || '',
+    Intervention_Name: r.Intervention_Name || '',
+    Intervention_Description: r.Intervention_Description || '',
+    Year: r.Year != null ? Number(r.Year) : 2024,
+    Plants_Count: (r.Plants_Count != null && r.Plants_Count !== '' && !isNaN(Number(r.Plants_Count))) ? Number(r.Plants_Count) : null,
+    Area_Covered_ha: (r.Area_Covered_ha != null && r.Area_Covered_ha !== '' && !isNaN(Number(r.Area_Covered_ha))) ? Number(r.Area_Covered_ha) : null,
+    Survival_Rate_pct: (r.Survival_Rate_pct != null && r.Survival_Rate_pct !== '' && !isNaN(Number(r.Survival_Rate_pct))) ? Number(r.Survival_Rate_pct) : null,
+    Remarks_Evidence: r.Remarks_Evidence || ''
   };
 }
 
+// ── Google Sheets API Adapters with Multi-Source Fallback ────────────────────
+async function fetchJSON(url, opts) {
+  const res = await fetch(url, opts || {});
+  if (!res.ok) throw new Error('HTTP ' + res.status + ' fetching ' + url.substring(0, 60));
+  return await res.json();
+}
+
+function raceWithTimeout(promise, ms, fallbackValue) {
+  return Promise.race([
+    promise,
+    new Promise(resolve => setTimeout(() => resolve(fallbackValue), ms))
+  ]);
+}
+
+async function fetchFullFromAppsScript(timeoutMs) {
+  const start = Date.now();
+  const ac = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = ac ? setTimeout(() => ac.abort(), timeoutMs) : null;
+  try {
+    const opts = { headers: { Accept: 'application/json' } };
+    if (ac) opts.signal = ac.signal;
+    const data = await fetchJSON(APPS_SCRIPT_URL, opts);
+    clearTimeout(timer);
+    const records = (Array.isArray(data) ? data : (Array.isArray(data.records) ? data.records : [])).map(normalizeRecord);
+    const wl = data.whitelist || {};
+    const whitelist = {
+      users: Array.isArray(wl.users) ? wl.users : [],
+      domains: Array.isArray(wl.domains) ? wl.domains : [],
+      pending: Array.isArray(wl.pending) ? wl.pending : []
+    };
+    console.log('[GAS] Fetched ' + records.length + ' records in ' + (Date.now() - start) + 'ms');
+    return { ok: true, records, whitelist, source: 'gas' };
+  } catch (e) {
+    clearTimeout(timer);
+    return { ok: false, error: e.message, source: 'gas' };
+  }
+}
+
+async function fetchFullFromLocalAPI() {
+  try {
+    const [recordsRaw, wlRaw] = await Promise.all([
+      fetchJSON('/api/records').catch(() => null),
+      fetchJSON('/api/whitelist').catch(() => null)
+    ]);
+    if (recordsRaw) {
+      const records = recordsRaw.map(normalizeRecord);
+      const whitelist = wlRaw ? {
+        users: Array.isArray(wlRaw.users) ? wlRaw.users : [],
+        domains: Array.isArray(wlRaw.domains) ? wlRaw.domains : [],
+        pending: Array.isArray(wlRaw.pending) ? wlRaw.pending : []
+      } : { users: [], domains: [], pending: [] };
+      return { ok: true, records, whitelist, source: 'local-api' };
+    }
+  } catch (_) {}
+  return { ok: false, error: 'local-api unavailable', source: 'local-api' };
+}
+
+async function fetchFullFromJSONFile() {
+  try {
+    const recordsRaw = await fetchJSON('forestry_data.json');
+    const records = (Array.isArray(recordsRaw) ? recordsRaw : (recordsRaw && recordsRaw.records ? recordsRaw.records : [])).map(normalizeRecord);
+    const DEFAULT_WHITELIST = {
+      users: [
+        { email: 'admin@wwf.org', name: 'WWF Admin', role: 'admin', addedAt: '2024-01-01' },
+        { email: 'field.officer@wwf.org', name: 'KP Field Officer', role: 'editor', addedAt: '2024-01-15' },
+        { email: 'mne.manager@wwf.org', name: 'M&E Coordinator', role: 'editor', addedAt: '2024-02-01' },
+        { email: 'tayyab@wwf.org', name: 'Tayyab - Project Lead', role: 'editor', addedAt: '2024-02-10' },
+        { email: 'viewer@wwf.org', name: 'Observer Viewer', role: 'viewer', addedAt: '2024-03-01' }
+      ],
+      domains: [
+        { domain: 'wwf.org', role: 'editor', addedAt: '2024-01-01' },
+        { domain: 'wwfpak.org', role: 'editor', addedAt: '2024-01-01' },
+        { domain: 'wwf-pakistan.org', role: 'editor', addedAt: '2024-01-01' },
+        { domain: 'panda.org', role: 'viewer', addedAt: '2024-01-01' }
+      ],
+      pending: []
+    };
+    return { ok: true, records, whitelist: DEFAULT_WHITELIST, source: 'json-file' };
+  } catch (e) {
+    return { ok: false, error: e.message, source: 'json-file' };
+  }
+}
+
+// Save records back (always use bulk saveRecords — GAS & local API both support it)
+async function saveAllRecords() {
+  const normalized = records.map(normalizeRecord);
+  // Fire & forget with parallel backends for reliability
+  try {
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveRecords', records: normalized })
+    }).catch(() => {});
+  } catch (_) {}
+  try {
+    fetch('/api/records', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(normalized)
+    }).catch(() => {});
+  } catch (_) {}
+}
+
 async function apiPost(action, payload = {}) {
-  const res = await fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, ...payload })
-  });
+  // Normalize legacy missing actions to bulk record-based saves
+  if (action === 'addRecord' || action === 'updateRecord') {
+    const rec = payload.record;
+    if (rec) {
+      if (action === 'addRecord') records.push(normalizeRecord(rec));
+      else {
+        const idx = records.findIndex(r => r.Record_ID === Number(rec.Record_ID));
+        if (idx >= 0) records[idx] = normalizeRecord(rec);
+      }
+      saveAllRecords();
+    }
+    return { success: true };
+  }
+  if (action === 'deleteRecord') {
+    const id = Number(payload.recordId);
+    records = records.filter(r => r.Record_ID !== id);
+    saveAllRecords();
+    return { success: true };
+  }
+  try {
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...payload })
+    }).catch(() => {});
+  } catch (_) {}
+  try {
+    if (action === 'saveRecords' && payload.records) {
+      fetch('/api/records', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload.records.map(normalizeRecord))
+      }).catch(() => {});
+    }
+  } catch (_) {}
   return { success: true };
 }
 
@@ -2477,73 +2668,22 @@ async function handleRequestAccess() {
   }
 }
 
-// ── Google Sheets Data Loader with Stale-While-Revalidate Caching ──────────────
+// ── Google Sheets Data Loader (Fast: Cache → Race → Fallback Chain) ────────────
+//   Priority: localStorage (0ms) → parallel race (local-API vs GAS vs JSON)
+//   Speed target: <200ms with cache, <2s with local server, GAS in background
 async function loadAllFromGoogleSheet() {
-  // 1. Instant Cache Hydration (0ms initial render from browser cache)
-  const cachedDataset = localStorage.getItem('wwf_cached_dataset');
-  if (cachedDataset) {
-    try {
-      const parsed = JSON.parse(cachedDataset);
-      if (Array.isArray(parsed.records) && parsed.records.length) {
-        records = parsed.records;
-      }
-      if (parsed.whitelist) {
-        whitelist = parsed.whitelist;
-        updatePendingBadge();
-      }
-      const tabs = getProjectTabs();
-      const tabSel = document.getElementById('tab-select');
-      if (tabSel) {
-        const current = tabSel.value;
-        tabSel.innerHTML = '<option value="ALL">All Project Tabs</option>' + tabs.map(t => `<option value="${t.replace(/"/g, '&quot;')}">${t}</option>`).join('');
-        if (current && (current === 'ALL' || tabs.includes(current))) tabSel.value = current;
-      }
-      document.getElementById('login-status-badge').textContent = `Google Sheet Cached (${(whitelist.users||[]).length} Whitelisted Users)`;
-      showSection('data');
-      if (currentUser) {
-        renderDashboard();
-        if (activeNav === 'data') renderDataPage();
-      }
-    } catch (_) {}
-  } else {
-    showSection('loading');
-  }
+  const statusBadge = document.getElementById('login-status-badge');
 
-  // 2. Parallel Background Fetch (Promise.all for 2x faster network speed)
-  try {
-    const dataPromise = apiGetRecords();
-    const wlPromise = apiGetWhitelist();
-    const [data, wl] = await Promise.all([dataPromise, wlPromise]);
-
-    if (Array.isArray(data) && data.length) {
-      records = data.map(r => ({
-        Record_ID: r.Record_ID != null ? Number(r.Record_ID) : null,
-        Practice: r.Practice || 'Forests',
-        Province_Region: r.Province_Region || '',
-        Tab_Name: r.Tab_Name || '',
-        Project_Name: r.Project_Name || '',
-        Intervention_Category: r.Intervention_Category || '',
-        Intervention_Code: r.Intervention_Code || '',
-        Intervention_Name: r.Intervention_Name || '',
-        Intervention_Description: r.Intervention_Description || '',
-        Year: r.Year != null ? Number(r.Year) : 2024,
-        Plants_Count: r.Plants_Count != null && r.Plants_Count !== '' ? Number(r.Plants_Count) : null,
-        Area_Covered_ha: r.Area_Covered_ha != null && r.Area_Covered_ha !== '' ? Number(r.Area_Covered_ha) : null,
-        Survival_Rate_pct: r.Survival_Rate_pct != null && r.Survival_Rate_pct !== '' ? Number(r.Survival_Rate_pct) : null,
-        Remarks_Evidence: r.Remarks_Evidence || ''
-      }));
+  function applyData(recs, wl, sourceLabel) {
+    if (Array.isArray(recs) && recs.length) {
+      records = recs.map(normalizeRecord);
     }
-
     if (wl) {
       whitelist.users   = Array.isArray(wl.users) ? wl.users : [];
       whitelist.domains = Array.isArray(wl.domains) ? wl.domains : [];
       whitelist.pending = Array.isArray(wl.pending) ? wl.pending : [];
       updatePendingBadge();
     }
-
-    // Persist latest dataset to local storage
-    localStorage.setItem('wwf_cached_dataset', JSON.stringify({ records, whitelist, timestamp: Date.now() }));
-
     const tabs = getProjectTabs();
     const tabSel = document.getElementById('tab-select');
     if (tabSel) {
@@ -2551,20 +2691,100 @@ async function loadAllFromGoogleSheet() {
       tabSel.innerHTML = '<option value="ALL">All Project Tabs</option>' + tabs.map(t => `<option value="${t.replace(/"/g, '&quot;')}">${t}</option>`).join('');
       if (current && (current === 'ALL' || tabs.includes(current))) tabSel.value = current;
     }
-
-    document.getElementById('login-status-badge').textContent = `Google Sheet Synced (${whitelist.users.length} Whitelisted Users)`;
+    if (statusBadge) {
+      statusBadge.textContent = `${sourceLabel} (${records.length.toLocaleString()} records · ${(whitelist.users||[]).length} users)`;
+    }
     showSection('data');
     if (currentUser) {
       renderDashboard();
       if (activeNav === 'data') renderDataPage();
     }
-  } catch (err) {
-    if (!cachedDataset) {
-      showSection('error', 'Failed to load Google Sheets data: ' + err.message);
-      document.getElementById('login-status-badge').textContent = 'Data Sync Error';
-    } else {
-      console.warn('Background sync warning:', err);
+  }
+
+  function persistCache() {
+    try {
+      localStorage.setItem('wwf_cached_dataset', JSON.stringify({ records, whitelist, timestamp: Date.now() }));
+    } catch (_) {}
+  }
+
+  // 1. INSTANT: localStorage cache (0ms paint)
+  let hadCache = false;
+  const cachedDataset = localStorage.getItem('wwf_cached_dataset');
+  if (cachedDataset) {
+    try {
+      const parsed = JSON.parse(cachedDataset);
+      if (Array.isArray(parsed.records) && parsed.records.length) {
+        applyData(parsed.records, parsed.whitelist, 'Cached');
+        hadCache = true;
+      }
+    } catch (_) {}
+  }
+
+  if (!hadCache) showSection('loading');
+
+  // 2. PARALLEL RACE: Fastest of (local-API / JSON-file) wins for UI; GAS refreshes in background
+  const pLocalAPI = fetchFullFromLocalAPI();
+  const pJSON     = fetchFullFromJSONFile();
+  const pGAS      = fetchFullFromAppsScript(45000);
+
+  // Quick winner (<500ms) between local API and static JSON file
+  const quickRace = Promise.race([
+    pLocalAPI,
+    pJSON,
+    new Promise(resolve => setTimeout(() => resolve({ ok: false }), 800))
+  ]);
+
+  let usedQuickWinner = false;
+  quickRace.then(quick => {
+    if (quick && quick.ok) {
+      if (!hadCache || (quick.records && quick.records.length > records.length)) {
+        applyData(quick.records, quick.whitelist, quick.source === 'local-api' ? 'Local API' : 'Offline File');
+        if (window.lucide) lucide.createIcons();
+        persistCache();
+        usedQuickWinner = true;
+      }
     }
+  });
+
+  // 3. GAS result: always sync in (authoritative) and save to cache
+  try {
+    const gasResult = await pGAS;
+    if (gasResult.ok) {
+      applyData(gasResult.records, gasResult.whitelist, '✓ Google Sheets Live');
+      if (window.lucide) lucide.createIcons();
+      persistCache();
+      return;
+    }
+  } catch (err) {
+    console.warn('GAS background sync failed:', err);
+  }
+
+  // 4. If GAS failed, ensure we at least have local-api data (wait for it if not used yet)
+  if (!usedQuickWinner) {
+    try {
+      const local = await pLocalAPI;
+      if (local.ok) {
+        applyData(local.records, local.whitelist, 'Local API');
+        if (window.lucide) lucide.createIcons();
+        persistCache();
+        return;
+      }
+    } catch (_) {}
+    try {
+      const json = await pJSON;
+      if (json.ok) {
+        applyData(json.records, json.whitelist, 'Offline File');
+        if (window.lucide) lucide.createIcons();
+        persistCache();
+        return;
+      }
+    } catch (_) {}
+  }
+
+  // All failed
+  if (!records.length) {
+    showSection('error', 'Could not load data from any source (Google Sheets, Local API, Offline file). Retry or check network.');
+    if (statusBadge) statusBadge.textContent = '⚠ Data Unavailable';
   }
 }
 
@@ -2674,7 +2894,7 @@ function updateHeroNarrative(data) {
 function updateKPIs(data) {
   const plants   = data.reduce((s,d)=>s+(d.Plants_Count||0),0);
   const area     = data.reduce((s,d)=>s+(d.Area_Covered_ha||0),0);
-  const survArr  = data.filter(d=>d.Survival_Rate_pct!=null && d.Survival_Rate_pct!=='').map(d)=>{
+  const survArr  = data.filter(d=>d.Survival_Rate_pct!=null && d.Survival_Rate_pct!=='').map(d=>{
     const n = Number(d.Survival_Rate_pct);
     return (n > 0 && n <= 1) ? n * 100 : n;
   });
@@ -3765,29 +3985,23 @@ async function handleRecordSubmit(e) {
     Year             : Number(document.getElementById('entry-year').value),
     Plants_Count     : plantsNum,
     Area_Covered_ha  : areaNum,
-    Survival_Rate_pct: survivalRaw!==''?Number(survivalRaw)/100:null,
+    Survival_Rate_pct: survivalRaw!==''?Number(survivalRaw):null,
     Remarks_Evidence : document.getElementById('entry-remarks').value||null,
   };
 
   try {
     const actionType = editId ? 'updateRecord' : 'addRecord';
-    fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: actionType, record: newRec })
-    });
-    
     if (editId) {
-      const idx = records.findIndex(r=>r.Record_ID===Number(editId));
-      if (idx>=0) records[idx]=newRec;
-      showToast(`Record #${editId} updated in Google Sheets!`, 'success');
+      const idx = records.findIndex(r => r.Record_ID === Number(editId));
+      if (idx >= 0) records[idx] = normalizeRecord(newRec);
+      showToast(`Record #${editId} updated.`, 'success');
     } else {
-      records.push(newRec);
-      showToast(`Record #${newRec.Record_ID} saved to Google Sheets!`, 'success');
+      records.push(normalizeRecord(newRec));
+      showToast(`Record #${newRec.Record_ID} saved.`, 'success');
     }
+    saveAllRecords();
   } catch(err) {
-    showToast('Error saving to Google Sheets: '+err.message, 'error');
+    showToast('Error saving: ' + err.message, 'error');
   }
 
   closeDataEntryModal();
@@ -3804,18 +4018,13 @@ async function deleteRecord(id) {
     okClass: 'bg-rose-600 hover:bg-rose-700',
     onOk: async () => {
       try {
-        fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'deleteRecord', recordId: Number(id) })
-        });
-        records = records.filter(r=>r.Record_ID!==id);
-        showToast(`Record #${id} deleted from Google Sheets.`, 'info');
+        records = records.filter(r => r.Record_ID !== Number(id));
+        saveAllRecords();
+        showToast(`Record #${id} deleted.`, 'info');
         renderDashboard();
         if (activeNav === 'data') renderDataPage();
       } catch(err) {
-        showToast('Error deleting record: '+err.message, 'error');
+        showToast('Error deleting record: ' + err.message, 'error');
       }
     }
   });

@@ -205,6 +205,12 @@ function handlePost(p) {
   switch (action) {
     case "saveRecords":
       return saveRecords(p.records);
+    case "addRecord":
+      return addRecord(p.record);
+    case "updateRecord":
+      return updateRecord(p.record);
+    case "deleteRecord":
+      return deleteRecord(p.recordId);
     case "addUser":
       return addUser(p.user);
     case "removeUser":
@@ -224,6 +230,44 @@ function handlePost(p) {
     default:
       throw new Error("Unknown action: " + action);
   }
+}
+
+function addRecord(record) {
+  const rows = sheetToArrayOfObjects(SHEET.DATA, DATA_COLS);
+  const nextId = rows.reduce((m, r) => Math.max(m, Number(r.Record_ID) || 0), 0) + 1;
+  const clean = {};
+  DATA_COLS.forEach((c) => { clean[c] = (record && record[c] != null) ? record[c] : ""; });
+  clean.Record_ID = nextId;
+  rows.push(clean);
+  writeArrayOfObjects(SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET.DATA), DATA_COLS, rows);
+  return { added: 1, Record_ID: nextId, total: rows.length };
+}
+
+function updateRecord(record) {
+  if (!record || record.Record_ID == null) throw new Error("updateRecord requires Record_ID");
+  const rows = sheetToArrayOfObjects(SHEET.DATA, DATA_COLS);
+  const targetId = Number(record.Record_ID);
+  const idx = rows.findIndex((r) => Number(r.Record_ID) === targetId);
+  if (idx < 0) throw new Error("Record not found: " + targetId);
+  DATA_COLS.forEach((c) => {
+    if (c !== "Record_ID" && record[c] !== undefined) {
+      rows[idx][c] = (record[c] != null) ? record[c] : "";
+    }
+  });
+  writeArrayOfObjects(SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET.DATA), DATA_COLS, rows);
+  return { updated: 1, Record_ID: targetId };
+}
+
+function deleteRecord(recordId) {
+  if (recordId == null) throw new Error("deleteRecord requires recordId");
+  let rows = sheetToArrayOfObjects(SHEET.DATA, DATA_COLS);
+  const before = rows.length;
+  const targetId = Number(recordId);
+  rows = rows.filter((r) => Number(r.Record_ID) !== targetId);
+  // Re-sequence
+  rows.forEach((r, i) => { r.Record_ID = i + 1; });
+  writeArrayOfObjects(SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET.DATA), DATA_COLS, rows);
+  return { deleted: before - rows.length, remaining: rows.length };
 }
 
 // ============== DATA: CRUD on flat table ==============
