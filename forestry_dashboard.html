@@ -8,12 +8,10 @@
     <link rel="shortcut icon" type="image/png" href="Favicon.png" />
     <link rel="apple-touch-icon" href="Favicon.png" />
 
-    <!-- Google Font: Inter -->
+    <!-- Google Fonts: Playfair Display (luxury headings) + Inter (UI/data) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,26 +27,41 @@
         extend: {
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
+            display: ['Playfair Display', 'serif'],
           },
           colors: {
             brand: {
-              50:  '#f0fdf4',
-              100: '#dcfce7',
-              200: '#bbf7d0',
-              300: '#86efac',
-              400: '#4ade80',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              800: '#17563A', // Classic WWF Pine Green
-              900: '#0D3824', // Deep Forest
-              950: '#062115', // Midnight Pine
-            }
+               50:  '#f0fdf4',
+               100: '#dcfce7',
+               200: '#bbf7d0',
+               300: '#86efac',
+               400: '#4ade80',
+               500: '#22c55e',
+               600: '#16a34a',
+               700: '#15803d',
+               800: '#17563A', // Classic WWF Pine Green
+               900: '#0D3824', // Deep Forest
+               950: '#062115', // Midnight Pine
+             },
+             gold: {
+               50:  '#fdf8f0',
+               100: '#f9efdb',
+               200: '#f3dbc0',
+               300: '#e8c48a',
+               400: '#d4a956',
+               500: '#C5A059', // Luxury Bronze
+               600: '#b08d3e',
+               700: '#8c6d2f',
+               800: '#6b5526',
+               900: '#4a3b1c',
+             }
           },
           boxShadow: {
             'glow': '0 0 25px -5px rgba(23, 86, 58, 0.25)',
             'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
             'card-hover': '0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
+            'luxury': '0 20px 40px -10px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0,0,0,0.04)',
+            'inner-glow': 'inset 0 1px 0 0 rgba(255,255,255,0.08)',
           }
         }
       }
@@ -68,7 +81,32 @@
 
     <style>
     body { font-family: 'Inter', sans-serif; }
-    
+
+    /* Luxury focus rings */
+    *:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.35);
+      border-radius: 0.5rem;
+    }
+
+    /* Mesh gradient backgrounds */
+    .mesh-gradient-login {
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(23,86,58,0.35) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(13,56,36,0.45) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(6,33,21,0.6) 0%, transparent 70%),
+        linear-gradient(135deg, #062115 0%, #0D3824 50%, #17563A 100%);
+    }
+    .mesh-gradient-sidebar {
+      background:
+        radial-gradient(ellipse at 0% 0%, rgba(197,160,89,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 100% 100%, rgba(23,86,58,0.15) 0%, transparent 50%),
+        linear-gradient(180deg, #062115 0%, #0D3824 60%, #17563A 100%);
+    }
+    .silk-texture {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
     /* Zero-FOUC instant layout switcher */
     html.user-logged-in #login-page { display: none !important; }
     html.user-logged-in #dashboard-page { display: flex !important; }
@@ -79,34 +117,56 @@
     .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; border-radius: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    
+
     @keyframes slideInDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .animate-toast { animation: slideInDown 0.25s ease-out; }
-    
+    .animate-toast { animation: slideInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin { animation: spin 1s linear infinite; }
-    
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .animate-fadeIn { animation: fadeIn 0.35s ease-out; }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.94); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .animate-scaleIn { animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .shimmer {
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2.5s infinite;
+    }
+
+    @keyframes countUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-count { animation: countUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
     .page-hidden { display: none !important; }
-    
-    /* Strict viewport and overflow containment — prevents page horizontal scrolling */
+
+    /* Strict viewport and overflow containment */
     html, body {
       max-width: 100vw;
       overflow-x: hidden;
     }
-    
+
     #dashboard-page {
       width: 100vw;
       max-width: 100vw;
       overflow-x: hidden;
     }
 
-    #app-sidebar { transition: width .25s cubic-bezier(0.4, 0, 0.2, 1); }
+    #app-sidebar { transition: width .3s cubic-bezier(0.4, 0, 0.2, 1); }
     #app-main {
       width: calc(100vw - 16rem);
       max-width: calc(100vw - 16rem);
       min-width: 0;
       overflow-x: hidden;
-      transition: width .25s cubic-bezier(0.4, 0, 0.2, 1), margin-left .25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width .3s cubic-bezier(0.4, 0, 0.2, 1), margin-left .3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     #app-sidebar.sidebar-collapsed { width: 4.75rem; }
     #app-sidebar.sidebar-collapsed .sidebar-label,
@@ -142,7 +202,7 @@
     #wide-table .col-actions { width: 84px; }
     #wide-table th, #wide-table td { border-bottom: 1px solid #f1f5f9; border-right: 1px solid #f1f5f9; }
 
-    /* Sticky headers with solid opaque backgrounds (prevents vertical scroll bleed-through) */
+    /* Sticky headers with solid opaque backgrounds */
     #wide-table thead th { position: sticky; z-index: 10; }
     #wide-table thead tr:first-child th { top: 0; height: 44px; background-color: #062115; }
     #wide-table thead tr:nth-child(2) th { top: 44px; height: 34px; background-color: #0D3824; }
@@ -150,7 +210,7 @@
     /* Sticky footer */
     #wide-table tfoot td { position: sticky; bottom: 0; z-index: 15; background-color: #0f172a; }
 
-    /* Frozen left columns (Practice, Project, Type) */
+    /* Frozen left columns */
     #wide-table thead th:nth-child(1),
     #wide-table tbody tr:not(.category-row) td:nth-child(1),
     #wide-table tfoot td:nth-child(1) { position: sticky; left: 0; z-index: 7; width: 115px; }
@@ -161,15 +221,15 @@
 
     #wide-table thead th:nth-child(3),
     #wide-table tbody tr:not(.category-row) td:nth-child(3),
-    #wide-table tfoot td:nth-child(3) { 
-      position: sticky; 
-      left: 315px; 
-      z-index: 7; 
-      width: 330px; 
+    #wide-table tfoot td:nth-child(3) {
+      position: sticky;
+      left: 315px;
+      z-index: 7;
+      width: 330px;
       box-shadow: 4px 0 8px -2px rgba(0, 0, 0, 0.08);
     }
 
-    /* Opaque backgrounds for frozen headers to eliminate bleed-through */
+    /* Opaque backgrounds for frozen headers */
     #wide-table thead tr:first-child th:nth-child(1),
     #wide-table thead tr:first-child th:nth-child(2),
     #wide-table thead tr:first-child th:nth-child(3) {
@@ -211,165 +271,300 @@
       background-color: #f1f5f9;
     }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
-    @keyframes scaleIn { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .animate-scaleIn { animation: scaleIn 0.2s ease-out; }
     .dashboard-subtab-btn { color: #64748b; }
     .dashboard-subtab-btn:hover { color: #17563A; background: #ffffff; }
     .dashboard-subtab-btn.active { color: #ffffff; background: #17563A; box-shadow: 0 3px 10px rgba(23,86,58,.2); }
+
+    /* Luxury card hover lift */
+    .luxury-card {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    }
+    .luxury-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0,0,0,0.04);
+    }
+
+    /* Animated gold underline for nav */
+    .nav-link-luxury {
+      position: relative;
+    }
+    .nav-link-luxury::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #C5A059, transparent);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateX(-50%);
+    }
+    .nav-link-luxury:hover::after,
+    .nav-link-luxury.active::after {
+      width: 70%;
+    }
+
+    /* Hero summary gradient text */
+    .text-gradient-gold {
+      background: linear-gradient(135deg, #C5A059 0%, #e8c48a 50%, #C5A059 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Forest background image treatment */
+    .forest-bg {
+      background:
+        linear-gradient(180deg, rgba(6,33,21,0.55) 0%, rgba(13,56,36,0.65) 50%, rgba(6,33,21,0.85) 100%),
+        url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Input luxury focus */
+    .input-luxury {
+      transition: all 0.25s ease;
+      border: 1px solid #e2e8f0;
+    }
+    .input-luxury:focus {
+      border-color: #C5A059;
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.12);
+    }
+
+    /* Modal luxury */
+    .modal-luxury {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Tab luxury */
+    .tab-luxury {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .tab-luxury.active {
+      background: linear-gradient(135deg, #17563A 0%, #0D3824 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(23,86,58,0.25);
+    }
+
+    /* Chart container glow */
+    .chart-glow {
+      position: relative;
+    }
+    .chart-glow::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(197,160,89,0.15), transparent 50%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Bento grid responsive */
+    .bento-grid {
+      display: grid;
+      gap: 1.25rem;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .bento-span-8 { grid-column: span 8; }
+    .bento-span-4 { grid-column: span 4; }
+    .bento-span-6 { grid-column: span 6; }
+    .bento-span-12 { grid-column: span 12; }
+
+    @media (max-width: 1024px) {
+      .bento-span-8, .bento-span-4, .bento-span-6 { grid-column: span 12; }
+    }
+
+    /* Accessibility: skip link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #062115;
+      color: white;
+      padding: 8px 16px;
+      z-index: 100;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
     </style>
   </head>
-  <body
-    class="bg-slate-50/50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-900">
+    <body
+      class="bg-slate-50/50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-900">
 
-    <!-- TOAST CONTAINER -->
-    <div id="toast-container"
-      class="fixed top-4 right-4 z-[999] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+      <!-- Skip to main content (accessibility) -->
+      <a href="#dashboard-view" class="skip-link">Skip to main content</a>
 
-    <!-- ========================================================
-     PAGE 1: LOGIN LANDING (Redesigned Glassmorphism UI)
-     ======================================================== -->
-    <div id="login-page"
-      class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800 p-4 relative overflow-hidden">
-      <!-- Decorative Ambient Lights -->
-      <div
-        class="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none"></div>
-      <div
-        class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-teal-500/15 blur-3xl pointer-events-none"></div>
+      <!-- TOAST CONTAINER -->
+      <div id="toast-container"
+        class="fixed top-4 right-4 z-[999] flex flex-col gap-2 max-w-sm w-full pointer-events-none"
+        aria-live="polite" aria-atomic="true"></div>
 
-      <!-- Login Card -->
-      <div
-        class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/20 backdrop-blur-md relative z-10 animate-scaleIn">
+      <!-- Screen reader announcements -->
+      <div id="sr-announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-        <!-- Header Brand Banner -->
+      <!-- ========================================================
+       PAGE 1: LOGIN LANDING (Cinematic Forest Luxury)
+       ======================================================== -->
+      <div id="login-page"
+        class="min-h-screen flex flex-col items-center justify-center forest-bg p-4 relative overflow-hidden">
+        <!-- Ambient light orbs -->
+        <div class="absolute -top-40 -left-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none"></div>
+        <div class="absolute -bottom-40 -right-40 w-[28rem] h-[28rem] rounded-full bg-gold-500/10 blur-[100px] pointer-events-none"></div>
+
+        <!-- Login Card -->
         <div
-          class="bg-gradient-to-br from-brand-900 via-brand-800 to-emerald-900 p-8 text-center relative border-b border-emerald-700/30">
-          <div
-            class="w-20 h-20 rounded-2xl bg-white p-2.5 flex items-center justify-center mx-auto mb-4 shadow-xl ring-4 ring-white/15">
-            <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
-              class="w-full h-full object-contain" />
-          </div>
-          <h1
-            class="text-2xl font-extrabold text-white tracking-tight">WWF-Pakistan</h1>
-          <p class="text-sm font-semibold text-emerald-200 mt-1">Forestry
-            Interventions Portal</p>
-          <p class="text-xs text-emerald-100/70 mt-0.5">2023 – 2026 Analytics &
-            Data Management</p>
+          class="w-full max-w-md bg-white/95 rounded-[2rem] shadow-luxury overflow-hidden border border-white/30 backdrop-blur-xl relative z-10 animate-scaleIn silk-texture">
 
+          <!-- Header Brand Banner -->
           <div
-            class="inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/25 text-xs font-medium backdrop-blur-sm">
-            <span
-              class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="login-status-badge">Syncing Google Sheet Whitelist…</span>
+            class="relative p-8 text-center overflow-hidden border-b border-emerald-700/30"
+            style="background: linear-gradient(135deg, #062115 0%, #0D3824 60%, #17563A 100%);">
+            <!-- Inner shimmer -->
+            <div class="absolute inset-0 shimmer pointer-events-none"></div>
+
+            <div
+              class="w-20 h-20 rounded-2xl bg-white p-2.5 flex items-center justify-center mx-auto mb-4 shadow-xl ring-4 ring-white/15 relative z-10">
+              <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
+                class="w-full h-full object-contain" />
+            </div>
+            <h1
+              class="text-2xl font-extrabold text-white tracking-tight relative z-10 font-display">WWF-Pakistan</h1>
+            <p class="text-sm font-semibold text-emerald-200 mt-1 relative z-10">Forestry
+              Interventions Portal</p>
+            <p class="text-xs text-emerald-100/70 mt-0.5 relative z-10">2023 – 2026 Analytics &
+              Data Management</p>
+
+            <div
+              class="relative z-10 inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/25 text-xs font-medium backdrop-blur-sm">
+              <span
+                class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="login-status-badge">Syncing Google Sheet Whitelist…</span>
+            </div>
+          </div>
+
+          <!-- Login Body -->
+          <div class="p-8 space-y-5">
+
+            <!-- Error Alert -->
+            <div id="login-error-alert"
+              class="hidden p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2.5 animate-fadeIn">
+              <div class="flex items-start gap-2.5">
+                <i data-lucide="alert-circle"
+                  class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
+                <span id="login-error-text"
+                  class="font-medium leading-relaxed flex-1"></span>
+              </div>
+              <div id="login-request-cta"
+                class="hidden flex flex-wrap gap-2 pt-2 border-t border-rose-200/60">
+                <button onclick="handleRequestAccess()"
+                  class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm flex items-center gap-1.5">
+                  <i data-lucide="mail-plus" class="w-3.5 h-3.5"></i> Request
+                  Access
+                </button>
+                <button onclick="switchLoginTab('admin')"
+                  class="px-3 py-1.5 text-xs font-semibold rounded-xl border border-rose-300 text-rose-700 hover:bg-rose-100/50 transition flex items-center gap-1.5">
+                  <i data-lucide="key-round" class="w-3.5 h-3.5"></i> Admin Sign
+                  In
+                </button>
+              </div>
+            </div>
+
+            <!-- Tab Selector -->
+            <div
+              class="flex rounded-2xl bg-slate-100 p-1 text-xs font-semibold gap-1">
+              <button id="login-tab-email-btn" onclick="switchLoginTab('email')"
+                class="flex-1 py-2.5 rounded-xl bg-white shadow-sm text-slate-800 font-bold transition">
+                User Sign‑In
+              </button>
+              <button id="login-tab-admin-btn" onclick="switchLoginTab('admin')"
+                class="flex-1 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 transition">
+                Admin Portal
+              </button>
+            </div>
+
+            <!-- TAB: User Email -->
+            <div id="login-tab-email" class="space-y-4">
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-700">Whitelisted Email
+                  Address</label>
+                <div class="relative">
+                  <i data-lucide="mail"
+                    class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <input type="email" id="login-email"
+                    placeholder="e.g. officer@wwf.org"
+                    class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition input-luxury"
+                    onkeydown="if(event.key==='Enter') doEmailLogin()">
+                </div>
+                <p class="text-[11px] text-slate-400">Instant access for
+                  authorized team members & whitelisted domains.</p>
+              </div>
+              <button onclick="doEmailLogin()" id="email-login-btn"
+                class="w-full py-3 bg-brand-800 hover:bg-brand-900 text-white font-bold text-sm rounded-xl transition shadow-md shadow-brand-800/20 hover:shadow-lg flex items-center justify-center gap-2">
+                <span id="email-login-spinner"
+                  class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
+                <span>Sign In with Email</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- TAB: Admin Portal -->
+            <div id="login-tab-admin" class="hidden space-y-4">
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-700">Admin
+                  Email</label>
+                <div class="relative">
+                  <i data-lucide="shield"
+                    class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <input type="email" id="admin-email" placeholder="admin@wwf.org"
+                    class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition input-luxury">
+                </div>
+              </div>
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-slate-700">Admin
+                  Password</label>
+                <div class="relative">
+                  <i data-lucide="key-round"
+                    class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <input type="password" id="admin-password"
+                    placeholder="Enter password" autocomplete="current-password"
+                    class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition input-luxury"
+                    onkeydown="if(event.key==='Enter') doAdminLogin()">
+                </div>
+              </div>
+              <button onclick="doAdminLogin()" id="admin-login-btn"
+                class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl transition shadow-md shadow-amber-500/20 hover:shadow-lg flex items-center justify-center gap-2">
+                <span id="admin-login-spinner"
+                  class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
+                <span>Sign In as Administrator</span>
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </button>
+            </div>
+
           </div>
         </div>
 
-        <!-- Login Body -->
-        <div class="p-8 space-y-5">
-
-          <!-- Error Alert -->
-          <div id="login-error-alert"
-            class="hidden p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2.5 animate-fadeIn">
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="alert-circle"
-                class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
-              <span id="login-error-text"
-                class="font-medium leading-relaxed flex-1"></span>
-            </div>
-            <div id="login-request-cta"
-              class="hidden flex flex-wrap gap-2 pt-2 border-t border-rose-200/60">
-              <button onclick="handleRequestAccess()"
-                class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm flex items-center gap-1.5">
-                <i data-lucide="mail-plus" class="w-3.5 h-3.5"></i> Request
-                Access
-              </button>
-              <button onclick="switchLoginTab('admin')"
-                class="px-3 py-1.5 text-xs font-semibold rounded-xl border border-rose-300 text-rose-700 hover:bg-rose-100/50 transition flex items-center gap-1.5">
-                <i data-lucide="key-round" class="w-3.5 h-3.5"></i> Admin Sign
-                In
-              </button>
-            </div>
-          </div>
-
-          <!-- Tab Selector -->
-          <div
-            class="flex rounded-2xl bg-slate-100 p-1 text-xs font-semibold gap-1">
-            <button id="login-tab-email-btn" onclick="switchLoginTab('email')"
-              class="flex-1 py-2.5 rounded-xl bg-white shadow-sm text-slate-800 font-bold transition">
-              User Sign‑In
-            </button>
-            <button id="login-tab-admin-btn" onclick="switchLoginTab('admin')"
-              class="flex-1 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 transition">
-              Admin Portal
-            </button>
-          </div>
-
-          <!-- TAB: User Email -->
-          <div id="login-tab-email" class="space-y-4">
-            <div class="space-y-1.5">
-              <label class="text-xs font-bold text-slate-700">Whitelisted Email
-                Address</label>
-              <div class="relative">
-                <i data-lucide="mail"
-                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="email" id="login-email"
-                  placeholder="e.g. officer@wwf.org"
-                  class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
-                  onkeydown="if(event.key==='Enter') doEmailLogin()">
-              </div>
-              <p class="text-[11px] text-slate-400">Instant access for
-                authorized team members & whitelisted domains.</p>
-            </div>
-            <button onclick="doEmailLogin()" id="email-login-btn"
-              class="w-full py-3 bg-brand-800 hover:bg-brand-900 text-white font-bold text-sm rounded-xl transition shadow-md shadow-brand-800/20 hover:shadow-lg flex items-center justify-center gap-2">
-              <span id="email-login-spinner"
-                class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
-              <span>Sign In with Email</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
-          </div>
-
-          <!-- TAB: Admin Portal -->
-          <div id="login-tab-admin" class="hidden space-y-4">
-            <div class="space-y-1.5">
-              <label class="text-xs font-bold text-slate-700">Admin
-                Email</label>
-              <div class="relative">
-                <i data-lucide="shield"
-                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="email" id="admin-email" placeholder="admin@wwf.org"
-                  class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition">
-              </div>
-            </div>
-            <div class="space-y-1.5">
-              <label class="text-xs font-bold text-slate-700">Admin
-                Password</label>
-              <div class="relative">
-                <i data-lucide="key-round"
-                  class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="password" id="admin-password"
-                  placeholder="Enter password" autocomplete="current-password"
-                  class="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition"
-                  onkeydown="if(event.key==='Enter') doAdminLogin()">
-              </div>
-            </div>
-            <button onclick="doAdminLogin()" id="admin-login-btn"
-              class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl transition shadow-md shadow-amber-500/20 hover:shadow-lg flex items-center justify-center gap-2">
-              <span id="admin-login-spinner"
-                class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"></span>
-              <span>Sign In as Administrator</span>
-              <i data-lucide="lock" class="w-4 h-4"></i>
-            </button>
-          </div>
-
-        </div>
+        <p
+          class="mt-6 text-xs text-emerald-100/50 text-center font-medium relative z-10">WWF-Pakistan
+          © 2024 · All Rights Reserved · Secure Session</p>
       </div>
-
-      <p
-        class="mt-6 text-xs text-emerald-100/50 text-center font-medium">WWF-Pakistan
-        © 2024 · All Rights Reserved · Secure Session</p>
-    </div>
 
     <!-- ========================================================
      PAGE 2: DASHBOARD APPLICATION SHELL
@@ -377,9 +572,9 @@
     <div id="dashboard-page"
       class="page-hidden flex min-h-screen w-full max-w-full overflow-x-hidden">
 
-      <!-- LEFT SIDEBAR -->
+      <!-- LEFT SIDEBAR (Luxury Rail) -->
       <aside id="app-sidebar"
-        class="fixed left-0 top-0 h-screen w-64 z-40 bg-gradient-to-b from-brand-950 via-brand-900 to-brand-800 text-white shadow-2xl flex flex-col border-r border-white/10">
+        class="fixed left-0 top-0 h-screen w-64 z-40 mesh-gradient-sidebar text-white shadow-2xl flex flex-col border-r border-white/10">
 
         <!-- Sidebar Header -->
         <div
@@ -392,9 +587,9 @@
             </div>
             <div class="sidebar-brand min-w-0">
               <h2
-                class="text-sm font-extrabold leading-tight text-white truncate">WWF-Pakistan</h2>
+                class="text-sm font-extrabold leading-tight text-white truncate font-display">WWF-Pakistan</h2>
               <p
-                class="text-[10px] text-emerald-200/80 font-semibold uppercase tracking-wider">Forestry
+                class="text-[10px] text-gold-300/90 font-semibold uppercase tracking-wider">Forestry
                 Portal</p>
             </div>
           </div>
@@ -406,29 +601,29 @@
         </div>
 
         <!-- Navigation Links -->
-        <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto custom-scrollbar">
+        <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto custom-scrollbar" aria-label="Main navigation">
           <div
-            class="sidebar-tag px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300/60">Views
-            & Reporting</div>
+            class="sidebar-tag px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-gold-300/60">Views
+            &amp; Intelligence</div>
           <button id="nav-dashboard" onclick="switchNav('dashboard')"
-            class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition bg-white/15 text-white shadow-inner">
+            class="nav-link-luxury active w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition bg-white/10 text-white shadow-inner">
             <i data-lucide="layout-dashboard"
-              class="w-4 h-4 text-emerald-300"></i>
-            <span class="sidebar-label">Analytics Dashboard</span>
+              class="w-4 h-4 text-gold-300"></i>
+            <span class="sidebar-label">Intelligence</span>
           </button>
           <button id="nav-data" onclick="switchNav('data')"
-            class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition hover:bg-white/10 text-white/80">
-            <i data-lucide="sheet" class="w-4 h-4 text-emerald-300"></i>
-            <span class="sidebar-label">Project Worksheets</span>
+            class="nav-link-luxury w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition hover:bg-white/10 text-white/80">
+            <i data-lucide="sheet" class="w-4 h-4 text-gold-300"></i>
+            <span class="sidebar-label">Portfolio</span>
           </button>
         </nav>
 
         <!-- Sidebar User & Session -->
         <div class="p-3 border-t border-white/10 space-y-2">
           <div
-            class="sidebar-user-card bg-white/10 rounded-2xl p-3 border border-white/10 flex items-center gap-2.5">
+            class="sidebar-user-card bg-white/5 rounded-2xl p-3 border border-white/10 flex items-center gap-2.5">
             <div
-              class="w-9 h-9 rounded-xl bg-emerald-500/30 flex items-center justify-center shrink-0 text-sm font-extrabold text-emerald-100 border border-white/10">
+              class="w-9 h-9 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center shrink-0 text-sm font-extrabold text-white border border-white/10 shadow-lg">
               <span id="sidebar-user-initial">U</span>
             </div>
             <div class="sidebar-user-details flex-1 min-w-0">
@@ -458,7 +653,7 @@
             <div>
               <div class="flex items-center gap-2.5">
                 <h1 id="page-title"
-                  class="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight">Forestry
+                  class="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight font-display">Forestry
                   Dashboard</h1>
                 <span
                   class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold">
@@ -469,7 +664,7 @@
               </div>
               <p id="page-subtitle"
                 class="text-xs text-slate-500 font-medium mt-0.5">2023–2026
-                Interventions · Interactive Reporting & Filtering</p>
+                Interventions · Interactive Reporting &amp; Filtering</p>
             </div>
 
             <!-- Header Action Controls -->
@@ -515,6 +710,31 @@
           </div>
         </header>
 
+        <!-- HERO NARRATIVE STRIP (Storytelling) -->
+        <section id="hero-summary" class="hidden px-5 sm:px-8 py-4">
+          <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 p-6 sm:p-8 shadow-luxury border border-white/10">
+            <div class="absolute inset-0 shimmer pointer-events-none"></div>
+            <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <p class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-300 mb-1">Portfolio Impact</p>
+                <p id="hero-text" class="text-sm sm:text-base text-white/90 font-medium leading-relaxed max-w-2xl">
+                  Loading portfolio narrative…
+                </p>
+              </div>
+              <div class="flex items-center gap-4 shrink-0">
+                <div class="text-center px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
+                  <div id="hero-year" class="text-lg font-extrabold text-gold-300 font-display">—</div>
+                  <div class="text-[9px] uppercase tracking-wider text-white/60 font-bold">Year</div>
+                </div>
+                <div class="text-center px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
+                  <div id="hero-change" class="text-lg font-extrabold text-emerald-300">—</div>
+                  <div class="text-[9px] uppercase tracking-wider text-white/60 font-bold">vs Prior</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- ========================================================
          VIEW 1: ANALYTICS DASHBOARD
          ======================================================== -->
@@ -523,7 +743,7 @@
 
           <!-- Loading State Bar -->
           <div id="data-loading-bar"
-            class="rounded-2xl p-4 bg-emerald-50/80 border border-emerald-200 text-emerald-900 text-xs font-medium flex items-center gap-3 shadow-sm">
+            class="hidden rounded-2xl p-4 bg-emerald-50/80 border border-emerald-200 text-emerald-900 text-xs font-medium flex items-center gap-3 shadow-sm">
             <span
               class="w-4 h-4 border-2 border-emerald-400 border-t-emerald-800 rounded-full spin shrink-0"></span>
             <span>Fetching live dataset and whitelist from Google Sheets
@@ -545,41 +765,41 @@
             class="flex items-center gap-1.5 overflow-x-auto rounded-2xl bg-slate-100/80 border border-slate-200/80 p-1.5"
             aria-label="Dashboard views">
             <button
-              class="dashboard-subtab-btn active inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+              class="dashboard-subtab-btn active inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition"
               data-tab="overview" onclick="setDashboardSubtab('overview')"><i
                 data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
               Overview</button>
             <button
-              class="dashboard-subtab-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+              class="dashboard-subtab-btn inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition"
               data-tab="performance"
               onclick="setDashboardSubtab('performance')"><i
                 data-lucide="chart-no-axes-combined" class="w-3.5 h-3.5"></i>
               Performance</button>
             <button
-              class="dashboard-subtab-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+              class="dashboard-subtab-btn inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition"
               data-tab="insights" onclick="setDashboardSubtab('insights')"><i
                 data-lucide="sparkles" class="w-3.5 h-3.5"></i>
               Insights</button>
             <button
-              class="dashboard-subtab-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+              class="dashboard-subtab-btn inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold whitespace-nowrap transition"
               data-tab="records" onclick="setDashboardSubtab('records')"><i
                 data-lucide="rows-3" class="w-3.5 h-3.5"></i> Records</button>
           </nav>
 
           <!-- COMMAND FILTER SECTION -->
           <section id="filter-section"
-            class="hidden bg-white rounded-3xl p-5 shadow-card border border-slate-200/80 space-y-4">
+            class="hidden bg-white rounded-[1.5rem] p-6 shadow-card border border-slate-200/80 space-y-4">
             <div
               class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
               <div class="flex items-center gap-2.5">
                 <div
-                  class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
+                  class="w-8 h-8 rounded-xl bg-emerald-50 text-brand-800 flex items-center justify-center">
                   <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
                 </div>
                 <div>
                   <h3
                     class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Filter
-                    & Drill Down</h3>
+                    &amp; Drill Down</h3>
                 </div>
                 <span id="active-filter-badge"
                   class="hidden px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">Active
@@ -596,7 +816,7 @@
             <div
               class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
               <!-- Search -->
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label
                   class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Search</label>
                 <div class="relative">
@@ -604,51 +824,51 @@
                     class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                   <input id="search-input" type="text"
                     placeholder="Project, code, tab..."
-                    class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition">
+                    class="w-full pl-9 pr-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition input-luxury">
                 </div>
               </div>
 
               <!-- Year Filter -->
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label
                   class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Reporting
                   Year</label>
                 <select id="year-select"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white input-luxury">
                   <option value="ALL">All Years (2023–2026)</option>
                   <option>2023</option><option>2024</option><option>2025</option><option>2026</option>
                 </select>
               </div>
 
               <!-- Project Tab Filter -->
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label
                   class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Project
                   Tab</label>
                 <select id="tab-select"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white input-luxury">
                   <option value="ALL">All Project Tabs</option>
                 </select>
               </div>
 
               <!-- Practice Filter -->
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label
                   class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Global
                   Practice</label>
                 <select id="practice-select"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white input-luxury">
                   <option value="ALL">All Practices</option>
                   <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
                 </select>
               </div>
 
               <!-- Category Filter -->
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label
                   class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Category</label>
                 <select id="category-select"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 focus:outline-none transition bg-white input-luxury">
                   <option value="ALL">All Categories</option>
                   <option
                     value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A.
@@ -675,25 +895,25 @@
             <div class="flex items-end justify-between gap-3 px-1"><div><p
                   class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-700">Portfolio
                   intelligence</p><h2
-                  class="text-xl font-extrabold text-slate-900 tracking-tight">Where
+                  class="text-xl font-extrabold text-slate-900 tracking-tight font-display">Where
                   the work is landing</h2></div><span
                 class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400"><i
                   data-lucide="mouse-pointer-2" class="w-3.5 h-3.5"></i> Click a
                 chart to explore</span></div>
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
               <div
-                class="xl:col-span-2 bg-slate-950 rounded-3xl p-5 sm:p-6 shadow-card overflow-hidden relative"><div
+                class="xl:col-span-2 bg-slate-950 rounded-[1.5rem] p-5 sm:p-6 shadow-card overflow-hidden relative border border-white/5"><div
                   class="absolute right-0 top-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div><div
                   class="relative flex items-start justify-between mb-4"><div><h3
                       class="text-sm font-bold text-white">Coverage
                       momentum</h3><p
                       class="text-[11px] text-slate-400 mt-1">Area covered over
                       time, hectares</p></div><span
-                    class="text-[10px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-400/10 px-2 py-1 rounded-lg">Trend</span></div><div
+                    class="text-[10px] font-bold uppercase tracking-wider text-gold-300 bg-gold-500/10 px-2 py-1 rounded-lg border border-gold-500/20">Trend</span></div><div
                   class="relative h-64"><canvas
                     id="chart-area-trend"></canvas></div></div>
               <div
-                class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80"><div
+                class="bg-white rounded-[1.5rem] p-5 sm:p-6 shadow-card border border-slate-200/80"><div
                   class="flex items-start justify-between mb-4"><div><h3
                       class="text-sm font-bold text-slate-800">Monitoring
                       health</h3><p
@@ -707,7 +927,7 @@
             </div>
             <div class="grid grid-cols-1 gap-5">
               <div
-                class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80"><div
+                class="bg-white rounded-[1.5rem] p-5 sm:p-6 shadow-card border border-slate-200/80"><div
                   class="flex items-start justify-between mb-4"><div><h3
                       class="text-sm font-bold text-slate-800">Intervention
                       mix</h3><p class="text-[11px] text-slate-400 mt-1">Records
@@ -720,175 +940,177 @@
 
           <!-- KPI METRIC CARDS -->
           <section id="kpi-section" data-dashboard-tab="overview"
-            class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
             <!-- Card 1: Plants -->
             <div
-              class="bg-gradient-to-br from-white to-emerald-50/40 rounded-3xl p-5 shadow-card border border-emerald-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
-              <div class="flex items-center justify-between mb-2">
+              class="luxury-card bg-gradient-to-br from-white to-emerald-50/40 rounded-[1.5rem] p-6 shadow-card border border-emerald-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
+              <div class="flex items-center justify-between mb-3">
                 <span
-                  class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total
                   Plants</span>
                 <div
-                  class="w-9 h-9 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-                  <i data-lucide="sprout" class="w-4 h-4"></i>
+                  class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                  <i data-lucide="sprout" class="w-5 h-5"></i>
                 </div>
               </div>
               <div>
                 <div
-                  class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                  class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight animate-count"
                   id="kpi-plants">—</div>
                 <div
-                  class="text-[11px] text-emerald-700 font-medium mt-1 truncate"
+                  class="text-[11px] text-emerald-700 font-medium mt-1.5 truncate"
                   id="kpi-plants-sub">Loading…</div>
+              </div>
+              <div class="mt-3 h-1 w-full bg-emerald-100 rounded-full overflow-hidden">
+                <div id="kpi-plants-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-700" style="width:0%"></div>
               </div>
             </div>
 
             <!-- Card 2: Area -->
             <div
-              class="bg-gradient-to-br from-white to-sky-50/40 rounded-3xl p-5 shadow-card border border-sky-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
-              <div class="flex items-center justify-between mb-2">
+              class="luxury-card bg-gradient-to-br from-white to-sky-50/40 rounded-[1.5rem] p-6 shadow-card border border-sky-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
+              <div class="flex items-center justify-between mb-3">
                 <span
-                  class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total
                   Area (ha)</span>
                 <div
-                  class="w-9 h-9 rounded-2xl bg-sky-500/10 text-sky-600 flex items-center justify-center">
-                  <i data-lucide="map" class="w-4 h-4"></i>
+                  class="w-10 h-10 rounded-2xl bg-sky-500/10 text-sky-600 flex items-center justify-center">
+                  <i data-lucide="map" class="w-5 h-5"></i>
                 </div>
               </div>
               <div>
                 <div
-                  class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                  class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight animate-count"
                   id="kpi-area">—</div>
-                <div class="text-[11px] text-sky-700 font-medium mt-1 truncate"
+                <div class="text-[11px] text-sky-700 font-medium mt-1.5 truncate"
                   id="kpi-area-sub">Loading…</div>
+              </div>
+              <div class="mt-3 h-1 w-full bg-sky-100 rounded-full overflow-hidden">
+                <div id="kpi-area-bar" class="h-full bg-sky-500 rounded-full transition-all duration-700" style="width:0%"></div>
               </div>
             </div>
 
             <!-- Card 3: Survival -->
             <div
-              class="bg-gradient-to-br from-white to-amber-50/40 rounded-3xl p-5 shadow-card border border-amber-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
-              <div class="flex items-center justify-between mb-2">
+              class="luxury-card bg-gradient-to-br from-white to-amber-50/40 rounded-[1.5rem] p-6 shadow-card border border-amber-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
+              <div class="flex items-center justify-between mb-3">
                 <span
-                  class="text-xs font-bold text-slate-500 uppercase tracking-wider">Avg
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Avg
                   Survival Rate</span>
                 <div
-                  class="w-9 h-9 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
-                  <i data-lucide="activity" class="w-4 h-4"></i>
+                  class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                  <i data-lucide="activity" class="w-5 h-5"></i>
                 </div>
               </div>
               <div>
                 <div
-                  class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                  class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight animate-count"
                   id="kpi-survival">—</div>
                 <div
-                  class="text-[11px] text-amber-700 font-medium mt-1 truncate"
+                  class="text-[11px] text-amber-700 font-medium mt-1.5 truncate"
                   id="kpi-survival-sub">Loading…</div>
+              </div>
+              <div class="mt-3 h-1 w-full bg-amber-100 rounded-full overflow-hidden">
+                <div id="kpi-survival-bar" class="h-full bg-amber-500 rounded-full transition-all duration-700" style="width:0%"></div>
               </div>
             </div>
 
             <!-- Card 4: Records -->
             <div
-              class="bg-gradient-to-br from-white to-purple-50/40 rounded-3xl p-5 shadow-card border border-purple-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
-              <div class="flex items-center justify-between mb-2">
+              class="luxury-card bg-gradient-to-br from-white to-purple-50/40 rounded-[1.5rem] p-6 shadow-card border border-purple-100/80 flex flex-col justify-between hover:shadow-card-hover transition">
+              <div class="flex items-center justify-between mb-3">
                 <span
-                  class="text-xs font-bold text-slate-500 uppercase tracking-wider">Filtered
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Filtered
                   Records</span>
                 <div
-                  class="w-9 h-9 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center">
-                  <i data-lucide="database" class="w-4 h-4"></i>
+                  class="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center">
+                  <i data-lucide="database" class="w-5 h-5"></i>
                 </div>
               </div>
               <div>
                 <div
-                  class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                  class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight animate-count"
                   id="kpi-records">—</div>
                 <div
-                  class="text-[11px] text-purple-700 font-medium mt-1 truncate"
+                  class="text-[11px] text-purple-700 font-medium mt-1.5 truncate"
                   id="kpi-records-sub">Loading…</div>
+              </div>
+              <div class="mt-3 h-1 w-full bg-purple-100 rounded-full overflow-hidden">
+                <div id="kpi-records-bar" class="h-full bg-purple-500 rounded-full transition-all duration-700" style="width:0%"></div>
               </div>
             </div>
 
           </section>
 
-          <!-- 4 DYNAMIC CONNECTED CHARTS -->
+          <!-- 4 DYNAMIC CONNECTED CHARTS (Bento Grid Luxury) -->
           <section id="charts-section" data-dashboard-tab="performance"
-            class="hidden grid grid-cols-1 lg:grid-cols-2 gap-5">
+            class="hidden bento-grid">
 
-            <!-- Chart 1: Plants by Year -->
+            <!-- Chart 1: Plants by Year (large) -->
             <div
-              class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-1">
+              class="bento-span-8 chart-glow bg-slate-950 rounded-[1.5rem] p-5 sm:p-6 shadow-card overflow-hidden relative">
+              <div class="absolute right-0 top-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div class="relative flex items-start justify-between mb-4">
+                <div>
                   <h3
-                    class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-brand-800"></span>
-                    1. Plants Planted by Year
-                  </h3>
-                  <span
-                    class="text-[11px] font-semibold text-slate-400">2023–2026</span>
+                    class="text-sm font-bold text-white">Plants Planted by Year</h3>
+                  <p class="text-[11px] text-slate-400 mt-1">Annual distribution
+                    of planted seedlings across filtered dataset</p>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-4">Annual distribution
-                  of planted seedlings across filtered dataset</p>
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider text-gold-300 bg-gold-500/10 px-2 py-1 rounded-lg border border-gold-500/20">Trend</span>
               </div>
-              <div class="h-60 w-full"><canvas id="chart-year"></canvas></div>
+              <div class="relative h-64 w-full"><canvas
+                  id="chart-year"></canvas></div>
             </div>
 
-            <!-- Chart 2: Practice Share -->
+            <!-- Chart 2: Practice Share (small) -->
             <div
-              class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-1">
+              class="bento-span-4 chart-glow bg-white rounded-[1.5rem] p-5 sm:p-6 shadow-card border border-slate-200/80">
+              <div class="flex items-start justify-between mb-4">
+                <div>
                   <h3
-                    class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-teal-600"></span>
-                    2. Area Share by WWF Practice (ha)
-                  </h3>
-                  <span class="text-[11px] font-semibold text-slate-400">Pillar
-                    Distribution</span>
+                    class="text-sm font-bold text-slate-800">Practice Share</h3>
+                  <p class="text-[11px] text-slate-400 mt-1">Hectares restored
+                    by WWF practice</p>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-4">Hectares restored
-                  across Forests, Freshwater, Food & Marine</p>
+                <i data-lucide="pie-chart"
+                  class="w-4 h-4 text-gold-500"></i>
               </div>
-              <div class="h-60 w-full"><canvas
+              <div class="h-56 w-full"><canvas
                   id="chart-practice"></canvas></div>
             </div>
 
-            <!-- Chart 3: Plants by Project Tab -->
+            <!-- Chart 3: Plants by Tab (medium) -->
             <div
-              class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-1">
+              class="bento-span-6 chart-glow bg-white rounded-[1.5rem] p-5 sm:p-6 shadow-card border border-slate-200/80">
+              <div class="flex items-start justify-between mb-4">
+                <div>
                   <h3
-                    class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-sky-600"></span>
-                    3. Total Plants by Project Tab
-                  </h3>
-                  <span class="text-[11px] font-semibold text-slate-400">Source
-                    Tabs</span>
+                    class="text-sm font-bold text-slate-800">Plants by Project Tab</h3>
+                  <p class="text-[11px] text-slate-400 mt-1">Plantation
+                    achievements distributed across workbook project tabs</p>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-4">Plantation
-                  achievements distributed across workbook project tabs</p>
+                <i data-lucide="bar-chart-3"
+                  class="w-4 h-4 text-brand-800"></i>
               </div>
               <div class="h-64 w-full"><canvas
                   id="chart-province"></canvas></div>
             </div>
 
-            <!-- Chart 4: Survival by Category -->
+            <!-- Chart 4: Survival by Category (medium) -->
             <div
-              class="bg-white rounded-3xl p-5 sm:p-6 shadow-card border border-slate-200/80 flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-1">
+              class="bento-span-6 chart-glow bg-white rounded-[1.5rem] p-5 sm:p-6 shadow-card border border-slate-200/80">
+              <div class="flex items-start justify-between mb-4">
+                <div>
                   <h3
-                    class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                    4. Average Survival Rate by Category (%)
-                  </h3>
-                  <span class="text-[11px] font-semibold text-slate-400">Success
-                    Rate</span>
+                    class="text-sm font-bold text-slate-800">Survival by Category</h3>
+                  <p class="text-[11px] text-slate-400 mt-1">Ecological survival
+                    success across intervention categories</p>
                 </div>
-                <p class="text-[11px] text-slate-400 mb-4">Ecological survival
-                  success across Afforestation, Rangeland, Watershed & Other</p>
+                <i data-lucide="heart-pulse"
+                  class="w-4 h-4 text-amber-500"></i>
               </div>
               <div class="h-64 w-full"><canvas
                   id="chart-category"></canvas></div>
@@ -898,12 +1120,12 @@
 
           <!-- CATEGORY MATRIX TABLE -->
           <section id="matrix-section" data-dashboard-tab="records"
-            class="hidden bg-white rounded-3xl shadow-card border border-slate-200/80 overflow-hidden">
+            class="hidden bg-white rounded-[1.5rem] shadow-card border border-slate-200/80 overflow-hidden">
             <div
-              class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
+              class="p-5 sm:p-5 border-b border-slate-100 flex items-center justify-between">
               <div class="flex items-center gap-2.5">
                 <div
-                  class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
+                  class="w-8 h-8 rounded-xl bg-emerald-50 text-brand-800 flex items-center justify-center">
                   <i data-lucide="table" class="w-4 h-4"></i>
                 </div>
                 <h3
@@ -912,15 +1134,15 @@
               </div>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-xs">
+              <table class="w-full text-xs" role="table" aria-label="Category performance matrix">
                 <thead
                   class="bg-slate-50/80 text-slate-600 font-bold border-b border-slate-100">
                   <tr>
-                    <th class="py-3 px-5 text-left">Category</th>
-                    <th class="py-3 px-5 text-right">Plants Planted</th>
-                    <th class="py-3 px-5 text-right">Area Covered (ha)</th>
-                    <th class="py-3 px-5 text-right">Avg Survival</th>
-                    <th class="py-3 px-5 text-center">Records</th>
+                    <th class="py-3.5 px-5 text-left font-semibold">Category</th>
+                    <th class="py-3.5 px-5 text-right font-semibold">Plants Planted</th>
+                    <th class="py-3.5 px-5 text-right font-semibold">Area Covered (ha)</th>
+                    <th class="py-3.5 px-5 text-right font-semibold">Avg Survival</th>
+                    <th class="py-3.5 px-5 text-center font-semibold">Records</th>
                   </tr>
                 </thead>
                 <tbody id="category-matrix-body"
@@ -934,12 +1156,12 @@
 
           <!-- COLLAPSIBLE OBSERVATION RECORDS TABLE -->
           <section id="table-section" data-dashboard-tab="records"
-            class="hidden bg-white rounded-3xl shadow-card border border-slate-200/80 overflow-hidden">
+            class="hidden bg-white rounded-[1.5rem] shadow-card border border-slate-200/80 overflow-hidden">
             <div
-              class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              class="p-5 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div class="flex items-center gap-2.5">
                 <div
-                  class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-800 flex items-center justify-center">
+                  class="w-8 h-8 rounded-xl bg-emerald-50 text-brand-800 flex items-center justify-center">
                   <i data-lucide="list" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -961,7 +1183,7 @@
             <!-- Collapsible Container (hidden by default) -->
             <div id="table-collapsible-wrapper" class="hidden">
               <div class="overflow-x-auto custom-scrollbar max-h-[500px]">
-                <table class="w-full text-xs whitespace-nowrap">
+                <table class="w-full text-xs whitespace-nowrap" role="table" aria-label="Observation records">
                   <thead
                     class="bg-gradient-to-r from-brand-950 to-brand-800 text-white text-left sticky top-0 z-10">
                     <tr>
@@ -1001,7 +1223,7 @@
             class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full min-w-0">
             <div class="min-w-0">
               <h2
-                class="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2">
+                class="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2 font-display">
                 <i data-lucide="sheet" class="w-5 h-5 text-brand-800"></i>
                 Project Worksheets
               </h2>
@@ -1026,7 +1248,8 @@
               <i data-lucide="folder" class="w-3.5 h-3.5"></i> Tabs:
             </div>
             <div id="data-tab-switcher"
-              class="flex flex-nowrap items-center gap-1.5 overflow-x-auto custom-scrollbar py-1 flex-1 min-w-0">
+              class="flex flex-nowrap items-center gap-1.5 overflow-x-auto custom-scrollbar py-1 flex-1 min-w-0"
+              role="tablist" aria-label="Project tabs">
               <!-- Injected by JS -->
             </div>
           </div>
@@ -1051,7 +1274,7 @@
                 <input type="text" id="wide-search-input"
                   oninput="filterWideTable(this.value)"
                   placeholder="Search interventions..."
-                  class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition">
+                  class="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition input-luxury">
               </div>
               <button id="wide-edit-toggle-btn" onclick="toggleWideEditMode()"
                 class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-700 text-white hover:bg-slate-800 shadow-sm transition whitespace-nowrap shrink-0">
@@ -1068,7 +1291,7 @@
 
           <!-- Wide Table Container (Strictly isolated horizontal scroll) -->
           <div id="wide-table-wrapper"
-            class="bg-white rounded-3xl shadow-card border border-slate-200/80 w-full min-w-0 max-w-full overflow-hidden page-hidden">
+            class="bg-white rounded-[1.5rem] shadow-card border border-slate-200/80 w-full min-w-0 max-w-full overflow-hidden page-hidden">
             <div
               class="w-full min-w-0 overflow-x-auto custom-scrollbar max-h-[600px]">
               <table id="wide-table" class="w-full text-xs min-w-[1780px]">
@@ -1152,7 +1375,7 @@
                       class="py-2 px-3 text-right font-semibold border-r border-white/10 text-[10px] bg-[#0D3824] text-amber-200">'26
                       Surv %</th>
                     <th
-                      class="py-2 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Remarks
+                      class="py-3 px-3.5 text-left font-semibold border-r border-white/10 text-[10px] bg-[#0D3824]">Remarks
                       / Notes</th>
                     <th
                       class="py-2 px-3 text-center font-semibold bg-[#0D3824] w-20 text-[10px]">Controls</th>
@@ -1177,7 +1400,7 @@
 
           <!-- Empty state -->
           <div id="data-page-empty"
-            class="hidden flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-200/80 shadow-card">
+            class="hidden flex flex-col items-center justify-center py-20 bg-white rounded-[1.5rem] border border-slate-200/80 shadow-card">
             <div
               class="w-16 h-16 rounded-2xl bg-emerald-50 text-brand-800 flex items-center justify-center mb-4">
               <i data-lucide="sheet" class="w-8 h-8"></i>
@@ -1209,9 +1432,10 @@
      MODAL: WHITELIST MANAGER (Admin only)
      ======================================================== -->
     <div id="whitelist-modal"
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn modal-luxury"
+      role="dialog" aria-modal="true" aria-labelledby="whitelist-modal-title">
       <div
-        class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[88vh] flex flex-col animate-scaleIn">
+        class="bg-white rounded-[2rem] max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[88vh] flex flex-col animate-scaleIn">
         <div
           class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
@@ -1349,9 +1573,10 @@
      MODAL: DATA ENTRY / EDIT (Single Long-Format Record)
      ======================================================== -->
     <div id="data-entry-modal"
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn modal-luxury"
+      role="dialog" aria-modal="true" aria-labelledby="entry-modal-title">
       <div
-        class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col animate-scaleIn">
+        class="bg-white rounded-[2rem] max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col animate-scaleIn">
         <div
           class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
@@ -1381,11 +1606,11 @@
             <input type="hidden" id="entry-record-id">
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Category
                   *</label>
                 <select id="entry-category" onchange="onCategoryChange()"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 bg-white input-luxury">
                   <option
                     value="A. AFFORESTATION, REFORESTATION AND REVEGETATION">A.
                     Afforestation &amp; Revegetation</option>
@@ -1398,11 +1623,11 @@
                     Forestry</option>
                 </select>
               </div>
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Code
                   *</label>
                 <select id="entry-code" onchange="onCodeChange()"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white"></select>
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 bg-white input-luxury"></select>
               </div>
             </div>
 
@@ -1414,71 +1639,71 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Practice
                   *</label>
                 <select id="entry-practice"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 bg-white input-luxury">
                   <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
                 </select>
               </div>
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Tab Name
                   *</label>
                 <input type="text" id="entry-tab"
                   placeholder="e.g. WRAP Project"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury">
               </div>
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Year
                   *</label>
                 <select id="entry-year"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 bg-white input-luxury">
                   <option>2023</option><option
                     selected>2024</option><option>2025</option><option>2026</option>
                 </select>
               </div>
             </div>
 
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <label class="text-[11px] font-bold text-slate-700">Project Title
                 *</label>
               <input type="text" id="entry-project"
                 placeholder="e.g. Billion Tree Tsunami - KP Phase II"
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury"
                 required>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Plants
                   Count</label>
                 <input type="number" id="entry-plants" placeholder="e.g. 50000"
                   min="0"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury">
               </div>
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Area
                   (ha)</label>
                 <input type="number" step="0.1" id="entry-area"
                   placeholder="e.g. 75.5" min="0"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury">
               </div>
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Survival
                   (%)</label>
                 <input type="number" step="0.1" id="entry-survival"
                   placeholder="e.g. 80.0" min="0" max="100"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury">
               </div>
             </div>
 
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <label class="text-[11px] font-bold text-slate-700">Remarks /
                 Evidence</label>
               <textarea id="entry-remarks" rows="2"
                 placeholder="GPS survey notes, monitoring reports..."
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"></textarea>
+                class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury"></textarea>
             </div>
 
             <div
@@ -1499,9 +1724,10 @@
      MODAL: CONFIRMATION DIALOG (Reusable Custom Modal)
      ======================================================== -->
     <div id="confirm-modal"
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4 animate-fadeIn">
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4 animate-fadeIn modal-luxury"
+      role="dialog" aria-modal="true" aria-labelledby="confirm-title">
       <div
-        class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200 animate-scaleIn">
+        class="bg-white rounded-[2rem] max-w-md w-full overflow-hidden shadow-2xl border border-slate-200 animate-scaleIn">
         <div
           class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center gap-2.5">
           <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-300"></i>
@@ -1525,14 +1751,15 @@
      MODAL: ADD NEW PROJECT TAB
      ======================================================== -->
     <div id="new-tab-modal"
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn modal-luxury"
+      role="dialog" aria-modal="true" aria-labelledby="new-tab-modal-title">
       <div
-        class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 animate-scaleIn">
+        class="bg-white rounded-[2rem] max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 animate-scaleIn">
         <div
           class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <i data-lucide="folder-plus" class="w-5 h-5 text-emerald-300"></i>
-            <h3 class="text-sm font-bold">Add New Project Tab</h3>
+            <h3 id="new-tab-modal-title" class="text-sm font-bold">Add New Project Tab</h3>
           </div>
           <button onclick="closeNewTabModal()"
             class="text-white/70 hover:text-white transition"><i data-lucide="x"
@@ -1546,27 +1773,27 @@
           </div>
           <form id="new-tab-form" onsubmit="handleNewTabSubmit(event)"
             class="space-y-4">
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <label class="text-[11px] font-bold text-slate-700">Tab Name
                 *</label>
               <input type="text" id="new-tab-name" required
                 placeholder="e.g. Green Punjab Initiative"
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600">
+                class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 input-luxury">
             </div>
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <label class="text-[11px] font-bold text-slate-700">Default
                 Practice *</label>
               <select id="new-tab-practice" required
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white">
+                class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white input-luxury">
                 <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
               </select>
             </div>
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <label class="text-[11px] font-bold text-slate-700">Default
                 Project Title *</label>
               <input type="text" id="new-tab-project" required
                 placeholder="e.g. Green Punjab - Afforestation Phase I"
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600">
+                class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 input-luxury">
             </div>
             <div class="flex items-center justify-end gap-2 pt-2">
               <button type="button" onclick="closeNewTabModal()"
@@ -1584,9 +1811,10 @@
      MODAL: PER-ROW WIDE EDIT (2023–2026 Reporting)
      ======================================================== -->
     <div id="wide-edit-modal"
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn">
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn modal-luxury"
+      role="dialog" aria-modal="true" aria-labelledby="wide-edit-title">
       <div
-        class="bg-white rounded-3xl max-w-5xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[92vh] flex flex-col animate-scaleIn">
+        class="bg-white rounded-[2rem] max-w-5xl w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[92vh] flex flex-col animate-scaleIn">
         <div
           class="bg-gradient-to-r from-brand-950 to-brand-800 p-5 text-white flex items-center justify-between">
           <div class="flex items-center gap-2.5">
@@ -1605,32 +1833,32 @@
             <input type="hidden" id="wide-edit-row-index">
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Practice
                   *</label>
                 <select id="wide-edit-practice"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 bg-white input-luxury">
                   <option>Forests</option><option>Freshwater</option><option>Food</option><option>Marine</option>
                 </select>
               </div>
-              <div class="space-y-1">
+              <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700">Tab Name
                   *</label>
                 <input type="text" id="wide-edit-tab"
                   placeholder="e.g. WRAP Project"
-                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                  class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury">
               </div>
             </div>
 
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <label class="text-[11px] font-bold text-slate-700">Project Title
                 *</label>
               <input type="text" id="wide-edit-project" required
                 placeholder="e.g. Billion Tree Tsunami - KP Phase II"
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury">
             </div>
 
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <label class="text-[11px] font-bold text-slate-700">
                 Type of Intervention (composite: <span
                   class="text-emerald-700 font-mono">A-1. Name —
@@ -1638,10 +1866,10 @@
               </label>
               <textarea id="wide-edit-type" rows="2" required
                 placeholder="A-1. Planting of seedlings — Establishing trees by planting nursery-raised seedlings."
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono"></textarea>
+                class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono input-luxury"></textarea>
               <p class="text-[10px] text-slate-400">Format: <code
-                  class="bg-slate-100 px-1 rounded">CODE. Name —
-                  Description</code></p>
+                class="bg-slate-100 px-1 rounded">CODE. Name —
+                Description</code></p>
             </div>
 
             <!-- Year Blocks: 4 Side-by-Side Cards -->
@@ -1651,24 +1879,24 @@
                 class="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-200 space-y-2.5">
                 <div
                   class="text-[11px] font-extrabold text-emerald-800 text-center pb-1 border-b border-emerald-200">2023</div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label class="text-[10px] font-semibold text-slate-600">Plants
                     (No.)</label>
                   <input type="number" id="wide-edit-p23" min="0"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label class="text-[10px] font-semibold text-slate-600">Area
                     (ha)</label>
                   <input type="number" id="wide-edit-a23" min="0" step="0.1"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label
                     class="text-[10px] font-semibold text-slate-600">Survival
                     (%)</label>
                   <input type="number" id="wide-edit-s23" step="0.1"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
               </div>
 
@@ -1677,24 +1905,24 @@
                 class="p-3.5 rounded-2xl bg-sky-50/50 border border-sky-200 space-y-2.5">
                 <div
                   class="text-[11px] font-extrabold text-sky-800 text-center pb-1 border-b border-sky-200">2024</div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label class="text-[10px] font-semibold text-slate-600">Plants
                     (No.)</label>
                   <input type="number" id="wide-edit-p24" min="0"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label class="text-[10px] font-semibold text-slate-600">Area
                     (ha)</label>
                   <input type="number" id="wide-edit-a24" min="0" step="0.1"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label
                     class="text-[10px] font-semibold text-slate-600">Survival
                     (%)</label>
                   <input type="number" id="wide-edit-s24" step="0.1"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
               </div>
 
@@ -1703,24 +1931,24 @@
                 class="p-3.5 rounded-2xl bg-amber-50/50 border border-amber-200 space-y-2.5">
                 <div
                   class="text-[11px] font-extrabold text-amber-800 text-center pb-1 border-b border-amber-200">2025</div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label class="text-[10px] font-semibold text-slate-600">Plants
                     (No.)</label>
                   <input type="number" id="wide-edit-p25" min="0"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label class="text-[10px] font-semibold text-slate-600">Area
                     (ha)</label>
                   <input type="number" id="wide-edit-a25" min="0" step="0.1"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label
                     class="text-[10px] font-semibold text-slate-600">Survival
                     (%)</label>
                   <input type="number" id="wide-edit-s25" step="0.1"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
               </div>
 
@@ -1729,34 +1957,34 @@
                 class="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-200 space-y-2.5">
                 <div
                   class="text-[11px] font-extrabold text-purple-800 text-center pb-1 border-b border-purple-200">2026</div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label class="text-[10px] font-semibold text-slate-600">Plants
                     (No.)</label>
                   <input type="number" id="wide-edit-p26" min="0"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label class="text-[10px] font-semibold text-slate-600">Area
                     (ha)</label>
                   <input type="number" id="wide-edit-a26" min="0" step="0.1"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <label
                     class="text-[10px] font-semibold text-slate-600">Survival
                     (%)</label>
                   <input type="number" id="wide-edit-s26" step="0.1"
-                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right">
+                    class="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-right input-luxury">
                 </div>
               </div>
             </div>
 
-            <div class="space-y-1">
+            <div class="space-y-1.5">
               <label class="text-[11px] font-bold text-slate-700">Remarks /
                 Evidence</label>
               <textarea id="wide-edit-remarks" rows="2"
                 placeholder="GPS survey notes, monitoring reports..."
-                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500"></textarea>
+                class="w-full px-3 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 input-luxury"></textarea>
             </div>
 
             <div
@@ -1764,7 +1992,7 @@
               <button type="button" onclick="closeWideEditModal()"
                 class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
               <button type="submit"
-                class="px-5 py-2 text-xs font-bold text-white bg-brand-800 hover:bg-brand-900 rounded-xl shadow transition flex items-center gap-2">
+                class="px-5 py-2.5 text-xs font-bold text-white bg-brand-800 hover:bg-brand-900 rounded-xl shadow transition flex items-center gap-2">
                 <i data-lucide="save" class="w-3.5 h-3.5"></i>
                 <span>Save Row Changes</span>
               </button>
@@ -1844,8 +2072,16 @@ function showToast(msg, type='success') {
   const t = document.createElement('div');
   t.className = `pointer-events-auto px-4 py-3 rounded-2xl text-white text-xs font-semibold shadow-lg animate-toast flex items-center gap-2.5 ${colors[type]||colors.info}`;
   t.innerHTML = `<span>${msg}</span>`;
+  t.setAttribute('role', 'status');
   c.appendChild(t);
   setTimeout(() => t.remove(), 3500);
+
+  // Screen reader announcement
+  const sr = document.getElementById('sr-announcements');
+  if (sr) {
+    sr.textContent = msg;
+    setTimeout(() => { if (sr.textContent === msg) sr.textContent = ''; }, 4000);
+  }
 }
 
 // ── Google Sheets API Adapters ────────────────────────────────────────────────
@@ -2110,15 +2346,15 @@ function switchNav(nav) {
   const pgS = document.getElementById('page-subtitle');
 
   if (nav === 'dashboard') {
-    dBtn.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition bg-white/15 text-white shadow-inner';
-    dB2.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition hover:bg-white/10 text-white/80';
+    dBtn.className = 'nav-link-luxury active w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition bg-white/10 text-white shadow-inner';
+    dB2.className = 'nav-link-luxury w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition hover:bg-white/10 text-white/80';
     dView.classList.remove('page-hidden');
     dataP.classList.add('page-hidden');
     pgT.textContent = 'Forestry Dashboard';
     pgS.textContent = '2023–2026 Interventions · Interactive Reporting & Filtering';
   } else {
-    dB2.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition bg-white/15 text-white shadow-inner';
-    dBtn.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition hover:bg-white/10 text-white/80';
+    dB2.className = 'nav-link-luxury active w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition bg-white/10 text-white shadow-inner';
+    dBtn.className = 'nav-link-luxury w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition hover:bg-white/10 text-white/80';
     dView.classList.add('page-hidden');
     dataP.classList.remove('page-hidden');
     pgT.textContent = 'Project Worksheets';
@@ -2193,7 +2429,7 @@ function loginSuccess(email, role, name) {
   currentUser = { email, role, name: name||email };
   localStorage.setItem('wwf_logged_user', JSON.stringify(currentUser));
   document.documentElement.classList.add('user-logged-in');
-  showToast(`Welcome, ${name||email}! (${role.toUpperCase()})`, 'success');
+  showToast(`Welcome back, ${name||email}. Role: ${role.toUpperCase()}`, 'success');
   syncHeaderUI();
   showDashboardPage();
   renderDashboard();
@@ -2205,7 +2441,7 @@ function logoutUser() {
   localStorage.removeItem('wwf_logged_user');
   document.documentElement.classList.remove('user-logged-in');
   showLoginPage();
-  showToast('Signed out successfully.', 'info');
+  showToast('Session ended. See you soon.', 'info');
 }
 
 function syncHeaderUI() {
@@ -2335,7 +2571,7 @@ async function loadAllFromGoogleSheet() {
 function showSection(mode, errMsg='') {
   document.getElementById('data-loading-bar').classList.toggle('hidden', mode!=='loading');
   document.getElementById('data-error-bar').classList.toggle('hidden', mode!=='error');
-  const sections = ['filter-section','kpi-section','charts-section','insights-section','matrix-section','table-section'];
+  const sections = ['filter-section','kpi-section','charts-section','insights-section','matrix-section','table-section','hero-summary'];
   sections.forEach(id => document.getElementById(id).classList.toggle('hidden', mode!=='data'));
   if (mode === 'data') setDashboardSubtab(dashboardSubtab);
   if (mode==='error') document.getElementById('data-error-text').textContent = errMsg;
@@ -2391,30 +2627,113 @@ function getFilteredData() {
   return filtered;
 }
 
+// ── Animated Counter Utility ─────────────────────────────────────────────────
+function animateCounter(el, target, suffix='', duration=800) {
+  const start = 0;
+  const startTime = performance.now();
+  const isFloat = String(target).includes('.');
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = start + (target - start) * eased;
+    el.textContent = (isFloat ? current.toFixed(1) : Math.floor(current).toLocaleString('en-US')) + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+// ── Hero Narrative Strip ──────────────────────────────────────────────────────
+function updateHeroNarrative(data) {
+  const hero = document.getElementById('hero-summary');
+  if (!hero) return;
+  if (!data.length) {
+    hero.classList.add('hidden');
+    return;
+  }
+  const years = ['2023','2024','2025','2026'];
+  const yearIndices = years.map((y,i) => data.some(d=>String(d.Year)===y) ? i : -1).filter(i => i >= 0);
+  const currentYearIdx = yearIndices.length ? Math.max(...yearIndices) : years.length - 1;
+  const currentYear = years[currentYearIdx] || '2026';
+  const currentPlants = data.filter(d => String(d.Year)===currentYear).reduce((s,d)=>s+(d.Plants_Count||0),0);
+  const priorYear = years[currentYearIdx - 1] || null;
+  const priorPlants = priorYear ? data.filter(d => String(d.Year)===priorYear).reduce((s,d)=>s+(d.Plants_Count||0),0) : 0;
+  const change = priorPlants ? (((currentPlants - priorPlants) / priorPlants) * 100).toFixed(1) : 0;
+  const changeSymbol = change >= 0 ? '+' : '';
+  const currentArea = data.filter(d => String(d.Year)===currentYear).reduce((s,d)=>s+(d.Area_Covered_ha||0),0);
+  const projects = [...new Set(data.filter(d=>String(d.Year)===currentYear).map(d=>d.Project_Name).filter(Boolean))].length;
+
+  document.getElementById('hero-text').textContent =
+    `In ${currentYear}, WWF-Pakistan planted ${currentPlants.toLocaleString('en-US')} seedlings across ${projects} active projects, covering ${currentArea.toLocaleString('en-US',{minimumFractionDigits:1})} hectares of critical habitat.`;
+  document.getElementById('hero-year').textContent = currentYear;
+  document.getElementById('hero-change').textContent = `${changeSymbol}${change}%`;
+  hero.classList.remove('hidden');
+}
+
 // ── Render KPI Cards ──────────────────────────────────────────────────────────
 function updateKPIs(data) {
   const plants   = data.reduce((s,d)=>s+(d.Plants_Count||0),0);
   const area     = data.reduce((s,d)=>s+(d.Area_Covered_ha||0),0);
-  const survArr  = data.filter(d=>d.Survival_Rate_pct!=null && d.Survival_Rate_pct!=='').map(d=>{
+  const survArr  = data.filter(d=>d.Survival_Rate_pct!=null && d.Survival_Rate_pct!=='').map(d)=>{
     const n = Number(d.Survival_Rate_pct);
     return (n > 0 && n <= 1) ? n * 100 : n;
   });
   const avgSurv  = survArr.length ? (survArr.reduce((a,b)=>a+b,0)/survArr.length).toFixed(1) : null;
-  document.getElementById('kpi-plants').textContent    = numFmt(plants);
-  document.getElementById('kpi-plants-sub').textContent= `${data.filter(d=>d.Plants_Count).length} rows with plant count`;
-  document.getElementById('kpi-area').textContent      = floatFmt(area);
-  document.getElementById('kpi-area-sub').textContent  = `${data.filter(d=>d.Area_Covered_ha).length} rows with area data`;
-  document.getElementById('kpi-survival').textContent  = avgSurv!=null ? avgSurv+'%' : 'N/A';
-  document.getElementById('kpi-survival-sub').textContent = `avg across ${survArr.length} monitored rows`;
-  document.getElementById('kpi-records').textContent   = data.length;
-  document.getElementById('kpi-records-sub').textContent= `of ${records.length} total live records`;
+
+  const plantsEl = document.getElementById('kpi-plants');
+  const areaEl = document.getElementById('kpi-area');
+  const survEl = document.getElementById('kpi-survival');
+  const recEl = document.getElementById('kpi-records');
+
+  if (plantsEl) {
+    animateCounter(plantsEl, plants, '', 900);
+    document.getElementById('kpi-plants-sub').textContent = `${data.filter(d=>d.Plants_Count).length} rows with plant count`;
+    const maxPlants = Math.max(plants, 1);
+    const bar = document.getElementById('kpi-plants-bar');
+    if (bar) bar.style.width = Math.min((plants / (records.reduce((s,d)=>s+(d.Plants_Count||0),0) || 1)) * 100, 100) + '%';
+  }
+  if (areaEl) {
+    animateCounter(areaEl, area, '', 900);
+    document.getElementById('kpi-area-sub').textContent = `${data.filter(d=>d.Area_Covered_ha).length} rows with area data`;
+    const maxArea = Math.max(area, 1);
+    const totalArea = records.reduce((s,d)=>s+(d.Area_Covered_ha||0),0);
+    const bar = document.getElementById('kpi-area-bar');
+    if (bar) bar.style.width = Math.min((area / (totalArea || 1)) * 100, 100) + '%';
+  }
+  if (survEl) {
+    survEl.textContent = avgSurv!=null ? avgSurv+'%' : 'N/A';
+    document.getElementById('kpi-survival-sub').textContent = `avg across ${survArr.length} monitored rows`;
+    const bar = document.getElementById('kpi-survival-bar');
+    if (bar) bar.style.width = avgSurv ? Math.min(Number(avgSurv), 100) + '%' : '0%';
+  }
+  if (recEl) {
+    animateCounter(recEl, data.length, '', 900);
+    document.getElementById('kpi-records-sub').textContent = `of ${records.length} total live records`;
+    const bar = document.getElementById('kpi-records-bar');
+    if (bar) bar.style.width = Math.min((data.length / Math.max(records.length,1)) * 100, 100) + '%';
+  }
 }
 
-// ── Render Charts ─────────────────────────────────────────────────────────────
+// ── Render Charts (Luxury Dark Theming) ──────────────────────────────────────
 function updateCharts(data) {
   const years = ['2023','2024','2025','2026'];
   const plantsByYear = years.map(y => data.filter(d => String(d.Year)===y).reduce((s,d) => s + (d.Plants_Count||0), 0));
-  
+
+  // Chart.js luxury defaults
+  const luxuryTooltip = {
+    backgroundColor: 'rgba(6,33,21,0.92)',
+    padding: 14,
+    cornerRadius: 12,
+    borderColor: 'rgba(197,160,89,0.3)',
+    borderWidth: 1,
+    titleFont: { family: 'Inter', size: 12, weight: '600' },
+    bodyFont: { family: 'Inter', size: 11 },
+    titleColor: '#e8c48a',
+    bodyColor: '#ffffff',
+    displayColors: true,
+    boxPadding: 4,
+  };
+
   if (charts.year) charts.year.destroy();
   charts.year = new Chart(document.getElementById('chart-year'), {
     type: 'bar',
@@ -2423,10 +2742,16 @@ function updateCharts(data) {
       datasets: [{
         label: 'Plants Planted',
         data: plantsByYear,
-        backgroundColor: '#17563A',
-        hoverBackgroundColor: '#0D3824',
-        borderRadius: 8,
-        barThickness: 36
+        backgroundColor: (ctx) => {
+          const gradient = ctx.chart.ctx.createLinearGradient(0, ctx.chart.height, 0, 0);
+          gradient.addColorStop(0, 'rgba(23,86,58,0.3)');
+          gradient.addColorStop(1, 'rgba(23,86,58,0.9)');
+          return gradient;
+        },
+        hoverBackgroundColor: '#15803d',
+        borderRadius: 10,
+        barThickness: 40,
+        borderSkipped: false,
       }]
     },
     options: {
@@ -2434,19 +2759,23 @@ function updateCharts(data) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f172a',
-          padding: 10,
-          cornerRadius: 8,
-          callbacks: { label: ctx => ` Plants: ${ctx.parsed.y.toLocaleString()}` }
-        }
+        tooltip: luxuryTooltip,
       },
       scales: {
-        x: { grid: { display: false } },
+        x: {
+          grid: { display: false, drawBorder: false },
+          ticks: { color: '#94a3b8', font: { family: 'Inter', size: 11 } },
+          border: { display: false }
+        },
         y: {
           beginAtZero: true,
-          grid: { color: '#f1f5f9' },
-          ticks: { callback: v => v >= 1e6 ? v/1e6+'M' : v >= 1e3 ? v/1e3+'K' : v }
+          grid: { color: 'rgba(148,163,184,0.08)', drawBorder: false },
+          ticks: {
+            color: '#64748b',
+            font: { family: 'Inter', size: 10 },
+            callback: v => v >= 1e6 ? v/1e6+'M' : v >= 1e3 ? v/1e3+'K' : v
+          },
+          border: { display: false }
         }
       }
     }
@@ -2464,25 +2793,28 @@ function updateCharts(data) {
       datasets: [{
         data: areaByPrac,
         backgroundColor: colors.slice(0, practices.length),
-        borderWidth: 2,
-        borderColor: '#ffffff'
+        borderWidth: 3,
+        borderColor: '#ffffff',
+        hoverOffset: 8,
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutout: '65%',
+      cutout: '68%',
       plugins: {
         legend: {
           position: 'right',
-          labels: { boxWidth: 12, font: { size: 11, family: 'Inter' } }
+          labels: {
+            boxWidth: 12,
+            font: { size: 11, family: 'Inter' },
+            color: '#475569',
+            padding: 12,
+            usePointStyle: true,
+            pointStyleWidth: 8,
+          }
         },
-        tooltip: {
-          backgroundColor: '#0f172a',
-          padding: 10,
-          cornerRadius: 8,
-          callbacks: { label: ctx => ` Area: ${Number(ctx.parsed).toLocaleString()} ha` }
-        }
+        tooltip: luxuryTooltip,
       }
     }
   });
@@ -2498,9 +2830,15 @@ function updateCharts(data) {
       datasets: [{
         label: 'Plants Count',
         data: plantsByTab,
-        backgroundColor: '#0284c7',
+        backgroundColor: (ctx) => {
+          const gradient = ctx.chart.ctx.createLinearGradient(0, 0, ctx.chart.width, 0);
+          gradient.addColorStop(0, 'rgba(2,132,199,0.7)');
+          gradient.addColorStop(1, 'rgba(2,132,199,0.3)');
+          return gradient;
+        },
         hoverBackgroundColor: '#0369a1',
-        borderRadius: 6
+        borderRadius: 8,
+        barThickness: 22,
       }]
     },
     options: {
@@ -2509,20 +2847,20 @@ function updateCharts(data) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f172a',
-          padding: 10,
-          cornerRadius: 8,
-          callbacks: { label: ctx => ` Plants: ${ctx.parsed.x.toLocaleString()}` }
-        }
+        tooltip: luxuryTooltip,
       },
       scales: {
         x: {
           beginAtZero: true,
-          grid: { color: '#f1f5f9' },
-          ticks: { callback: v => v >= 1e3 ? v/1e3+'K' : v }
+          grid: { color: 'rgba(148,163,184,0.08)', drawBorder: false },
+          ticks: { color: '#64748b', font: { family: 'Inter', size: 10 }, callback: v => v >= 1e3 ? v/1e3+'K' : v },
+          border: { display: false }
         },
-        y: { grid: { display: false } }
+        y: {
+          grid: { display: false, drawBorder: false },
+          ticks: { color: '#475569', font: { family: 'Inter', size: 10 } },
+          border: { display: false }
+        }
       }
     }
   });
@@ -2552,8 +2890,9 @@ function updateCharts(data) {
       datasets: [{
         label: 'Avg Survival (%)',
         data: survByCategory,
-        backgroundColor: ['#17563A','#f59e0b','#0284c7','#10b981'],
-        borderRadius: 8
+        backgroundColor: ['rgba(23,86,58,0.8)','rgba(245,158,11,0.8)','rgba(2,132,199,0.8)','rgba(16,185,129,0.8)'],
+        borderRadius: 10,
+        barThickness: 36,
       }]
     },
     options: {
@@ -2561,20 +2900,20 @@ function updateCharts(data) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f172a',
-          padding: 10,
-          cornerRadius: 8,
-          callbacks: { label: ctx => ` Survival: ${ctx.parsed.y}%` }
-        }
+        tooltip: luxuryTooltip,
       },
       scales: {
-        x: { grid: { display: false } },
+        x: {
+          grid: { display: false, drawBorder: false },
+          ticks: { color: '#475569', font: { family: 'Inter', size: 10 } },
+          border: { display: false }
+        },
         y: {
           min: 0,
           max: 100,
-          grid: { color: '#f1f5f9' },
-          ticks: { callback: v => v + '%' }
+          grid: { color: 'rgba(148,163,184,0.08)', drawBorder: false },
+          ticks: { color: '#64748b', font: { family: 'Inter', size: 10 }, callback: v => v + '%' },
+          border: { display: false }
         }
       }
     }
@@ -2583,11 +2922,113 @@ function updateCharts(data) {
   const areaByYear = years.map(y => data.filter(d => String(d.Year)===y).reduce((s,d) => s + (Number(d.Area_Covered_ha)||0), 0));
   const interventionCounts = [...new Set(data.map(d => d.Intervention_Name).filter(Boolean))].map(name => ({ name, count: data.filter(d => d.Intervention_Name===name).length })).sort((a,b) => b.count-a.count).slice(0, 10);
   const statusCounts = ['complete','partial','missing'].map(status => data.filter(row => getMonitoringStatus(row)===status).length);
-  const chartDefaults = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0f172a', padding: 10, cornerRadius: 8 } } };
+  const chartDefaults = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: luxuryTooltip,
+    }
+  };
   Object.keys({areaTrend:1, quality:1, intervention:1}).forEach(key => { if (charts[key]) charts[key].destroy(); });
-  charts.areaTrend = new Chart(document.getElementById('chart-area-trend'), { type: 'line', data: { labels: years, datasets: [{ label: 'Area covered', data: areaByYear, borderColor: '#6ee7b7', backgroundColor: 'rgba(52,211,153,.16)', fill: true, tension: .35, pointRadius: 4, pointBackgroundColor: '#d1fae5' }] }, options: { ...chartDefaults, scales: { x: { grid: { display: false }, ticks: { color: '#94a3b8' } }, y: { beginAtZero: true, grid: { color: 'rgba(148,163,184,.15)' }, ticks: { color: '#94a3b8', callback: value => value >= 1000 ? value/1000+'K' : value } } } } });
-  charts.quality = new Chart(document.getElementById('chart-quality'), { type: 'doughnut', data: { labels: ['Complete','Partial','Needs monitoring'], datasets: [{ data: statusCounts, backgroundColor: ['#10b981','#f59e0b','#f43f5e'], borderWidth: 3, borderColor: '#fff' }] }, options: { ...chartDefaults, cutout: '68%', plugins: { ...chartDefaults.plugins, legend: { display: false } } } });
-  charts.intervention = new Chart(document.getElementById('chart-intervention'), { type: 'polarArea', data: { labels: interventionCounts.map(item => item.name), datasets: [{ data: interventionCounts.map(item => item.count), backgroundColor: ['#17563A','#0284c7','#f59e0b','#10b981','#ef4444','#64748b','#84cc16','#0ea5e9','#e11d48','#a16207'], borderWidth: 2, borderColor: '#fff' }] }, options: { ...chartDefaults, scales: { r: { beginAtZero: true, ticks: { display: false }, grid: { color: '#e2e8f0' } } }, plugins: { ...chartDefaults.plugins, legend: { display: true, position: 'right', labels: { boxWidth: 10, font: { size: 10, family: 'Inter' } } } } } });
+  charts.areaTrend = new Chart(document.getElementById('chart-area-trend'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'Area covered',
+        data: areaByYear,
+        borderColor: '#6ee7b7',
+        backgroundColor: (ctx) => {
+          const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height);
+          gradient.addColorStop(0, 'rgba(52,211,153,0.25)');
+          gradient.addColorStop(1, 'rgba(52,211,153,0.02)');
+          return gradient;
+        },
+        fill: true,
+        tension: 0.4,
+        pointRadius: 5,
+        pointBackgroundColor: '#d1fae5',
+        pointBorderColor: '#10b981',
+        pointBorderWidth: 2,
+        pointHoverRadius: 7,
+      }]
+    },
+    options: {
+      ...chartDefaults,
+      scales: {
+        x: {
+          grid: { display: false, drawBorder: false },
+          ticks: { color: '#94a3b8', font: { family: 'Inter', size: 10 } },
+          border: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(148,163,184,0.08)', drawBorder: false },
+          ticks: { color: '#94a3b8', font: { family: 'Inter', size: 10 }, callback: value => value >= 1000 ? value/1000+'K' : value },
+          border: { display: false }
+        }
+      }
+    }
+  });
+  charts.quality = new Chart(document.getElementById('chart-quality'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Complete','Partial','Needs monitoring'],
+      datasets: [{
+        data: statusCounts,
+        backgroundColor: ['rgba(16,185,129,0.85)','rgba(245,158,11,0.85)','rgba(244,63,94,0.85)'],
+        borderWidth: 3,
+        borderColor: '#0f172a',
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      ...chartDefaults,
+      cutout: '68%',
+      plugins: {
+        ...chartDefaults.plugins,
+        legend: { display: false }
+      }
+    }
+  });
+  charts.intervention = new Chart(document.getElementById('chart-intervention'), {
+    type: 'polarArea',
+    data: {
+      labels: interventionCounts.map(item => item.name),
+      datasets: [{
+        data: interventionCounts.map(item => item.count),
+        backgroundColor: ['rgba(23,86,58,0.75)','rgba(2,132,199,0.75)','rgba(245,158,11,0.75)','rgba(16,185,129,0.75)','rgba(239,68,68,0.75)','rgba(100,116,139,0.75)','rgba(132,204,22,0.75)','rgba(14,165,233,0.75)','rgba(225,29,72,0.75)','rgba(161,98,7,0.75)'],
+        borderWidth: 2,
+        borderColor: '#0f172a',
+      }]
+    },
+    options: {
+      ...chartDefaults,
+      scales: {
+        r: {
+          beginAtZero: true,
+          ticks: { display: false, backdropColor: 'transparent' },
+          grid: { color: 'rgba(148,163,184,0.08)' },
+        }
+      },
+      plugins: {
+        ...chartDefaults.plugins,
+        legend: {
+          display: true,
+          position: 'right',
+          labels: {
+            boxWidth: 10,
+            font: { size: 10, family: 'Inter' },
+            color: '#475569',
+            padding: 8,
+            usePointStyle: true,
+            pointStyleWidth: 8,
+          }
+        }
+      }
+    }
+  });
   const qualitySummary = document.getElementById('quality-summary');
   if (qualitySummary) qualitySummary.innerHTML = [['Complete',statusCounts[0],'text-emerald-700'],['Partial',statusCounts[1],'text-amber-700'],['Missing',statusCounts[2],'text-rose-700']].map(item => `<div><div class="text-base font-extrabold ${item[2]}">${item[1]}</div><div class="text-[10px] font-bold uppercase tracking-wide text-slate-400">${item[0]}</div></div>`).join('');
 }
@@ -2606,27 +3047,27 @@ function updateCategoryMatrix(data) {
   let tp=0, ta=0, tss=0, tsc=0, tr=0;
 
   cats.forEach((cat,i) => {
-    const rows = data.filter(d=>d.Intervention_Category===cat);
-    const p = rows.reduce((s,d)=>s+(d.Plants_Count||0),0);
-    const a = rows.reduce((s,d)=>s+(d.Area_Covered_ha||0),0);
-    const sa = rows.filter(d=>d.Survival_Rate_pct!=null && d.Survival_Rate_pct!=='');
-    const ss = sa.reduce((s,d)=>{
-      const n = Number(d.Survival_Rate_pct);
-      return s + ((n > 0 && n <= 1) ? n * 100 : n);
-    },0);
-    tp += p; ta += a; tss += ss; tsc += sa.length; tr += rows.length;
-    const avg = sa.length ? (ss/sa.length).toFixed(1)+'%' : '—';
+     const rows = data.filter(d=>d.Intervention_Category===cat);
+     const p = rows.reduce((s,d)=>s+(d.Plants_Count||0),0);
+     const a = rows.reduce((s,d)=>s+(d.Area_Covered_ha||0),0);
+     const sa = rows.filter(d=>d.Survival_Rate_pct!=null && d.Survival_Rate_pct!=='');
+     const ss = sa.reduce((s,d)=>{
+       const n = Number(d.Survival_Rate_pct);
+       return s + ((n > 0 && n <= 1) ? n * 100 : n);
+     },0);
+     tp += p; ta += a; tss += ss; tsc += sa.length; tr += rows.length;
+     const avg = sa.length ? (ss/sa.length).toFixed(1)+'%' : '—';
 
-    tbody.insertAdjacentHTML('beforeend', `
-      <tr class="hover:bg-slate-50/80 transition">
-        <td class="py-3 px-5 font-bold text-slate-800">${short[i]}</td>
-        <td class="py-3 px-5 text-right font-extrabold text-emerald-700">${numFmt(p)}</td>
-        <td class="py-3 px-5 text-right font-extrabold text-sky-700">${floatFmt(a)}</td>
-        <td class="py-3 px-5 text-right font-bold text-slate-700">${avg}</td>
-        <td class="py-3 px-5 text-center font-semibold text-slate-600">${rows.length}</td>
-      </tr>
-    `);
-  });
+     tbody.insertAdjacentHTML('beforeend', `
+       <tr class="hover:bg-slate-50/80 transition border-l-4 border-l-transparent hover:border-l-gold-500">
+         <td class="py-3.5 px-5 font-bold text-slate-800">${short[i]}</td>
+         <td class="py-3.5 px-5 text-right font-extrabold text-emerald-700">${numFmt(p)}</td>
+         <td class="py-3.5 px-5 text-right font-extrabold text-sky-700">${floatFmt(a)}</td>
+         <td class="py-3.5 px-5 text-right font-bold text-slate-700">${avg}</td>
+         <td class="py-3.5 px-5 text-center font-semibold text-slate-600">${rows.length}</td>
+       </tr>
+     `);
+   });
 
   const oa = tsc > 0 ? (tss/tsc).toFixed(1)+'%' : '—';
   document.getElementById('category-matrix-total').innerHTML = `
@@ -2662,7 +3103,7 @@ function updateTable(data) {
       : '<span class="text-slate-300 text-center block">—</span>';
 
     const tr = document.createElement('tr');
-    tr.className = i%2===0 ? 'bg-white hover:bg-emerald-50/40 transition' : 'bg-slate-50/50 hover:bg-emerald-50/40 transition';
+    tr.className = 'border-l-4 border-l-transparent hover:border-l-gold-500 hover:bg-emerald-50/40 transition';
     tr.innerHTML = `
       <td class="py-3 px-3.5 font-mono text-slate-400 text-[11px]">#${d.Record_ID}</td>
       <td class="py-3 px-3.5 font-extrabold text-brand-800">${d.Intervention_Code||'—'}</td>
@@ -2688,6 +3129,7 @@ function renderDashboard() {
   updateCharts(data);
   updateCategoryMatrix(data);
   updateTable(data);
+  updateHeroNarrative(data);
   if (window.lucide) lucide.createIcons();
 }
 
@@ -2767,7 +3209,7 @@ function toggleWideEditMode() {
   const toggleBtn = document.getElementById('wide-edit-toggle-btn');
   const saveBtn = document.getElementById('wide-save-btn');
   if (isWideEditMode) {
-    toggleBtn.className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-amber-600 text-white hover:bg-amber-700 shadow-sm transition';
+    toggleBtn.className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-gold-600 text-white hover:bg-gold-700 shadow-sm transition';
     toggleBtn.innerHTML = `<i data-lucide="x-circle" class="w-3.5 h-3.5"></i><span>Cancel Edit</span>`;
     saveBtn.classList.remove('hidden');
   } else {
@@ -2823,7 +3265,7 @@ function renderWideTableBody() {
       const spacer = document.createElement('tr');
       spacer.className = 'category-row';
       spacer.innerHTML = `
-        <td colspan="17" class="py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider text-brand-900 border-b border-slate-200">
+        <td colspan="17" class="py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider text-brand-900 border-b border-slate-200 border-l-4 border-l-brand-800">
           <div class="sticky left-4 inline-flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-brand-800"></span>
             <span>${row.Intervention_Category}</span>
@@ -2833,7 +3275,7 @@ function renderWideTableBody() {
       lastCat = row.Intervention_Category;
     }
     const tr = document.createElement('tr');
-    tr.className = idx % 2 === 0 ? 'bg-white hover:bg-emerald-50/40 transition' : 'bg-slate-50/50 hover:bg-emerald-50/40 transition';
+    tr.className = 'border-l-4 border-l-transparent hover:border-l-gold-500 hover:bg-emerald-50/40 transition';
     if (row._isNew) tr.classList.add('bg-amber-50/70');
 
     const newBadge = row._isNew ? `<span class="ml-1 px-1.5 py-0.5 text-[9px] font-extrabold uppercase rounded-md bg-amber-200 text-amber-900 align-middle">New Row</span>` : '';
@@ -3158,7 +3600,7 @@ function addWideRow() {
   YEAR_RANGE.forEach(y => { newRow['p_'+y]=''; newRow['a_'+y]=''; newRow['s_'+y]=''; });
   wideCurrentRows.push(newRow);
   isWideEditMode = true;
-  document.getElementById('wide-edit-toggle-btn').className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-amber-600 text-white hover:bg-amber-700 shadow-sm transition';
+  document.getElementById('wide-edit-toggle-btn').className = 'inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-gold-600 text-white hover:bg-gold-700 shadow-sm transition';
   document.getElementById('wide-edit-toggle-btn').innerHTML = `<i data-lucide="x-circle" class="w-3.5 h-3.5"></i><span>Cancel Edit</span>`;
   document.getElementById('wide-save-btn').classList.remove('hidden');
   renderWideTableBody();
