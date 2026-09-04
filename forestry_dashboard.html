@@ -22,6 +22,9 @@
       src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- html2canvas for card preview downloads -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script>
     tailwind.config = {
@@ -581,16 +584,15 @@
 
       <!-- LEFT SIDEBAR (Luxury Rail) -->
       <aside id="app-sidebar"
-        class="fixed left-0 top-0 h-screen w-64 z-40 mesh-gradient-sidebar text-white shadow-2xl flex flex-col border-r border-white/10">
+        class="sidebar-collapsed fixed left-0 top-0 h-screen w-64 z-40 mesh-gradient-sidebar text-white shadow-2xl flex flex-col border-r border-white/10">
 
         <!-- Sidebar Header -->
         <div
           class="p-4 border-b border-white/10 flex items-center justify-between">
           <div class="flex items-center gap-3 overflow-hidden">
             <div
-              class="w-10 h-10 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md border border-white/20 shrink-0 overflow-hidden">
-              <img src="WWF%20LOGO.jpeg" alt="WWF Logo"
-                class="w-full h-full object-contain" />
+              class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-700 to-brand-900 flex items-center justify-center shadow-md border border-white/15 shrink-0">
+              <i data-lucide="trees" class="w-5 h-5 text-gold-300"></i>
             </div>
             <div class="sidebar-brand min-w-0">
               <h2
@@ -601,9 +603,9 @@
             </div>
           </div>
           <button id="sidebar-toggle" onclick="toggleSidebar()"
-            title="Collapse sidebar"
+            title="Expand sidebar"
             class="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition shrink-0">
-            <i data-lucide="panel-left-close" class="w-4 h-4"></i>
+            <i data-lucide="panel-left-open" class="w-4 h-4"></i>
           </button>
         </div>
 
@@ -651,7 +653,7 @@
 
       <!-- MAIN CONTENT AREA -->
       <div id="app-main"
-        class="flex-1 ml-64 flex flex-col min-h-screen min-w-0 max-w-full overflow-x-hidden">
+        class="sidebar-main-collapsed flex-1 ml-64 flex flex-col min-h-screen min-w-0 max-w-full overflow-x-hidden">
 
         <!-- TOP APPLICATION HEADER -->
         <header
@@ -2048,6 +2050,50 @@
     </div>
 
     <!-- ================================================================
+         MODAL: PREVIEW CARD (Single Row & Category Preview with Download)
+         ================================================================ -->
+    <div id="preview-card-modal"
+      class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 animate-fadeIn modal-luxury overflow-y-auto"
+      role="dialog" aria-modal="true" aria-labelledby="preview-modal-title">
+      <div
+        class="w-full max-w-4xl my-8 bg-transparent relative flex flex-col">
+
+        <!-- Modal Header Controls -->
+        <div class="flex items-center justify-between mb-3 px-2">
+          <h3 id="preview-modal-title"
+            class="text-sm font-extrabold text-white/90 flex items-center gap-2">
+            <i data-lucide="eye" class="w-4 h-4 text-gold-300"></i>
+            <span id="preview-title-text">Preview</span>
+          </h3>
+          <div class="flex items-center gap-2">
+            <button onclick="downloadPreviewAsImage()" id="preview-download-btn"
+              class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-900/30 transition whitespace-nowrap">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>Download Card</span>
+            </button>
+            <button onclick="closePreviewModal()"
+              class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition backdrop-blur-sm">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preview Card Container (rendered & captured for download) -->
+        <div id="preview-card-outer"
+          class="bg-white rounded-[2rem] shadow-luxury overflow-hidden animate-scaleIn">
+          <div id="preview-card-content"
+            class="relative overflow-hidden">
+            <!-- Decorative gradient header band -->
+            <div
+              class="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-brand-800 via-gold-500 to-brand-800"></div>
+            <!-- Inner content injected by JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================================================================
      JAVASCRIPT ENGINE (All algorithms & Google Sheet Live adapters)
      ================================================================ -->
     <script>
@@ -2105,6 +2151,8 @@ let activeDataTab = null;
 let isWideEditMode = false;
 let wideCurrentRows = [];
 let pendingConfirmCallback = null;
+let previewMode   = ''; // 'row' or 'category'
+let previewMeta   = { title: '', subtitle: '' };
 
 // ── Formatters ────────────────────────────────────────────────────────────────
 const numFmt   = n => n != null && n !== '' ? Number(n).toLocaleString('en-US') : '—';
@@ -2524,7 +2572,7 @@ function toggleSidebar() {
 }
 
 function restoreSidebarState() {
-  if (localStorage.getItem('wwf_sidebar_collapsed') === '1') toggleSidebar();
+  if (localStorage.getItem('wwf_sidebar_collapsed') === '0') toggleSidebar();
 }
 
 function switchNav(nav) {
@@ -3483,12 +3531,23 @@ function renderWideTableBody() {
   filteredRows.forEach((row, idx) => {
     if (row.Intervention_Category && row.Intervention_Category !== lastCat) {
       const spacer = document.createElement('tr');
-      spacer.className = 'category-row';
+      spacer.className = 'category-row cursor-pointer hover:bg-brand-50/50 transition';
+      const catSafe = row.Intervention_Category.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      const catVal = row.Intervention_Category;
+      spacer.onclick = (e) => { if (e.target.closest('button')) return; openCategoryPreview(catVal); };
       spacer.innerHTML = `
         <td colspan="17" class="py-2.5 px-4 text-xs font-extrabold uppercase tracking-wider text-brand-900 border-b border-slate-200 border-l-4 border-l-brand-800">
-          <div class="sticky left-4 inline-flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-brand-800"></span>
-            <span>${row.Intervention_Category}</span>
+          <div class="sticky left-4 inline-flex items-center justify-between gap-2 w-full pr-2">
+            <div class="inline-flex items-center gap-2 min-w-0">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-800 shrink-0"></span>
+              <span class="truncate">${row.Intervention_Category}</span>
+            </div>
+            <button onclick="event.stopPropagation(); openCategoryPreview('${catSafe}')"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-800 hover:bg-brand-900 text-white text-[10px] font-bold shadow-sm transition shrink-0"
+              title="Preview & download this category">
+              <i data-lucide="eye" class="w-3 h-3"></i>
+              <span>Preview</span>
+            </button>
           </div>
         </td>`;
       tbody.appendChild(spacer);
@@ -3496,6 +3555,10 @@ function renderWideTableBody() {
     }
     const tr = document.createElement('tr');
     tr.className = 'border-l-4 border-l-transparent hover:border-l-gold-500 hover:bg-emerald-50/40 transition';
+    if (!isWideEditMode) {
+      tr.classList.add('cursor-pointer');
+      tr.onclick = (e) => { if (e.target.closest('button, input, textarea, select')) return; openRowPreview(idx); };
+    }
     if (row._isNew) tr.classList.add('bg-amber-50/70');
 
     const newBadge = row._isNew ? `<span class="ml-1 px-1.5 py-0.5 text-[9px] font-extrabold uppercase rounded-md bg-amber-200 text-amber-900 align-middle">New Row</span>` : '';
@@ -3560,12 +3623,17 @@ function renderWideTableBody() {
     if (canEdit) {
       actions = `
         <div class="flex items-center justify-center gap-1">
-          <button onclick="openWideEditModal(${idx})" class="p-1.5 text-blue-600 hover:text-blue-800 rounded-lg hover:bg-blue-50 transition" title="Edit row modal"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
-          <button onclick="deleteWideRow(${idx})" class="p-1.5 text-rose-600 hover:text-rose-800 rounded-lg hover:bg-rose-50 transition" title="Delete row"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          <button onclick="event.stopPropagation(); openRowPreview(${idx})" class="p-1.5 text-brand-700 hover:text-brand-900 rounded-lg hover:bg-brand-50 transition" title="Preview & download card"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+          <button onclick="event.stopPropagation(); openWideEditModal(${idx})" class="p-1.5 text-blue-600 hover:text-blue-800 rounded-lg hover:bg-blue-50 transition" title="Edit row modal"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+          <button onclick="event.stopPropagation(); deleteWideRow(${idx})" class="p-1.5 text-rose-600 hover:text-rose-800 rounded-lg hover:bg-rose-50 transition" title="Delete row"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
         </div>
       `;
     } else {
-      actions = '<span class="text-slate-300 text-center block">—</span>';
+      actions = `
+        <div class="flex items-center justify-center gap-1">
+          <button onclick="event.stopPropagation(); openRowPreview(${idx})" class="p-1.5 text-brand-700 hover:text-brand-900 rounded-lg hover:bg-brand-50 transition" title="Preview & download card"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button>
+        </div>
+      `;
     }
     const c17 = cell(actions, 'text-center bg-slate-50/40 w-20');
 
@@ -3660,6 +3728,367 @@ function openWideEditModal(idx) {
 }
 
 function closeWideEditModal() { document.getElementById('wide-edit-modal').classList.add('hidden'); }
+
+// ── Preview Card (Row & Category) & Download ──────────────────────────────────
+function _pSurvBadge(val) {
+  if (val == null || val === '') return '<span class="text-slate-400 font-medium">—</span>';
+  const raw = Number(val);
+  const pct = (raw > 0 && raw <= 1) ? raw * 100 : raw;
+  const cls = pct>=80 ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+            : pct>=70 ? 'bg-amber-100 text-amber-800 border-amber-200'
+            : 'bg-rose-100 text-rose-800 border-rose-200';
+  return `<span class="inline-block px-2.5 py-1 text-xs font-bold rounded-lg border ${cls}">${pct.toFixed(1)}%</span>`;
+}
+function _pPracticeBadge(p) {
+  const map = {
+    Forests:    ['bg-emerald-100','text-emerald-800','border-emerald-200'],
+    Freshwater: ['bg-sky-100',    'text-sky-800',    'border-sky-200'],
+    Food:       ['bg-amber-100',  'text-amber-800',  'border-amber-200'],
+    Marine:     ['bg-teal-100',   'text-teal-800',   'border-teal-200'],
+  };
+  const [bg,tx,bd] = map[p] || ['bg-slate-100','text-slate-700','border-slate-200'];
+  return `<span class="inline-flex items-center px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider rounded-full border ${bg} ${tx} ${bd}">${p||'—'}</span>`;
+}
+function _pYearCard(y, p, a, s) {
+  return `
+    <div class="bg-gradient-to-br from-white to-slate-50 rounded-2xl border border-slate-200/80 p-4 shadow-sm">
+      <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">${y} Reporting</div>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="text-center">
+          <div class="text-[9px] font-bold uppercase tracking-wider text-emerald-700 mb-0.5">Plants</div>
+          <div class="text-lg font-extrabold text-emerald-700">${numFmt(p)}</div>
+        </div>
+        <div class="text-center border-l border-r border-slate-100">
+          <div class="text-[9px] font-bold uppercase tracking-wider text-sky-700 mb-0.5">ha</div>
+          <div class="text-lg font-extrabold text-sky-700">${floatFmt(a)}</div>
+        </div>
+        <div class="text-center">
+          <div class="text-[9px] font-bold uppercase tracking-wider text-amber-700 mb-0.5">Surv</div>
+          <div class="pt-0.5">${_pSurvBadge(s)}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function openRowPreview(idx) {
+  if (idx == null || !wideCurrentRows[idx]) { showToast('Row not found.','error'); return; }
+  const row = wideCurrentRows[idx];
+  previewMode = 'row';
+  const code = (row.Intervention_Code || '').trim();
+  const name = (row.Intervention_Name || '').trim();
+  const desc = (row.Intervention_Description || '').trim();
+  const titleText = code ? `${code}  ${name || row.Project_Name || 'Intervention'}` : (row.Project_Name || 'Intervention Record');
+  previewMeta = { title: titleText, subtitle: row.Project_Name || activeDataTab || '' };
+  document.getElementById('preview-title-text').textContent = titleText;
+
+  const remarks = (row.Remarks_Evidence || '').trim();
+  const yearsHtml = YEAR_RANGE.map(y => _pYearCard(y, row['p_'+y], row['a_'+y], row['s_'+y])).join('');
+
+  // Totals for card
+  const tPlants = YEAR_RANGE.reduce((s,y)=>s+(Number(row['p_'+y])||0),0);
+  const tArea   = YEAR_RANGE.reduce((s,y)=>s+(Number(row['a_'+y])||0),0);
+  const survAll = YEAR_RANGE.map(y=>row['s_'+y]).filter(v=>v!=null&&v!=='');
+  const avgSurv = survAll.length
+    ? survAll.reduce((s,v)=>{ const r=Number(v); return s+((r>0&&r<=1)?r*100:r); },0)/survAll.length
+    : null;
+
+  const content = `
+    <div class="px-0 pt-6 pb-0">
+      <!-- Luxury hero header -->
+      <div class="relative px-8 pb-8 mb-0 border-b border-slate-100">
+        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-800 via-gold-500 to-brand-800"></div>
+        <div class="absolute -top-6 -right-6 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
+          <div class="space-y-2">
+            ${_pPracticeBadge(row.Practice)}
+            <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight leading-tight font-display">
+              ${(row.Project_Name||'').replace(/</g,'&lt;')||'<span class="text-slate-400">Untitled Project</span>'}
+            </h2>
+            <p class="text-xs text-slate-500 font-medium">${(activeDataTab?activeDataTab+' · ':'')}WWF-Pakistan Forestry Intervention</p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-700 to-brand-900 text-white flex items-center justify-center shadow-lg border border-white/10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="m5 12 7-7 7 7"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Intervention block -->
+        <div class="relative bg-gradient-to-r from-slate-950 via-brand-900 to-slate-950 rounded-2xl p-5 text-white overflow-hidden border border-white/10 shadow-inner">
+          <div class="absolute inset-0 opacity-40 pointer-events-none" style="background-image: radial-gradient(circle at 90% 20%, rgba(197,160,89,0.18), transparent 45%), radial-gradient(circle at 10% 80%, rgba(34,197,94,0.12), transparent 50%);"></div>
+          <div class="relative">
+            <div class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-gold-300/80 mb-1.5">Type of Intervention</div>
+            ${code?`<div class="inline-flex items-center gap-2 mb-2"><span class="px-2.5 py-0.5 text-[10px] font-extrabold rounded-lg bg-gold-500/20 text-gold-300 border border-gold-500/30">${code.replace(/</g,'&lt;')}</span></div>`:''}
+            <h3 class="text-base font-bold text-white mb-1.5 font-display">${(name||'').replace(/</g,'&lt;')||'<span class="text-white/60">—</span>'}</h3>
+            ${desc?`<p class="text-xs text-white/75 leading-relaxed">${desc.replace(/</g,'&lt;')}</p>`:''}
+            ${(row.Intervention_Category||'')?`<div class="mt-3 pt-3 border-t border-white/10 text-[10px] font-semibold uppercase tracking-wider text-white/55">${(row.Intervention_Category).replace(/</g,'&lt;')}</div>`:''}
+          </div>
+        </div>
+      </div>
+
+      <!-- Impact KPIs strip -->
+      <div class="px-8 py-5 bg-gradient-to-b from-slate-50/50 to-white border-b border-slate-100">
+        <div class="grid grid-cols-4 gap-3">
+          <div class="text-center p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+            <div class="text-[9px] font-extrabold uppercase tracking-wider text-emerald-700 mb-1">Total Plants</div>
+            <div class="text-2xl font-extrabold text-emerald-800">${numFmt(tPlants)}</div>
+          </div>
+          <div class="text-center p-3 rounded-xl bg-sky-50 border border-sky-100">
+            <div class="text-[9px] font-extrabold uppercase tracking-wider text-sky-700 mb-1">Area (ha)</div>
+            <div class="text-2xl font-extrabold text-sky-800">${floatFmt(tArea)}</div>
+          </div>
+          <div class="text-center p-3 rounded-xl bg-amber-50 border border-amber-100">
+            <div class="text-[9px] font-extrabold uppercase tracking-wider text-amber-700 mb-1">Avg Survival</div>
+            <div class="text-2xl font-extrabold text-amber-800">${avgSurv!=null?avgSurv.toFixed(1)+'%':'—'}</div>
+          </div>
+          <div class="text-center p-3 rounded-xl bg-purple-50 border border-purple-100">
+            <div class="text-[9px] font-extrabold uppercase tracking-wider text-purple-700 mb-1">Reporting</div>
+            <div class="text-2xl font-extrabold text-purple-800">${YEAR_RANGE.length}y</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Year cards grid -->
+      <div class="px-8 py-6">
+        <div class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Multi-year Monitoring</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          ${yearsHtml}
+        </div>
+      </div>
+
+      <!-- Remarks -->
+      ${remarks?`
+      <div class="px-8 pb-8">
+        <div class="rounded-2xl border border-gold-200/60 bg-gradient-to-br from-amber-50/80 to-white p-5 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-gold-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div class="text-[10px] font-extrabold uppercase tracking-wider text-gold-700 mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            Remarks &amp; Evidence
+          </div>
+          <p class="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">${remarks.replace(/</g,'&lt;')}</p>
+        </div>
+      </div>`:`<div class="px-8 pb-8"></div>`}
+
+      <!-- Footer brand strip -->
+      <div class="px-8 py-4 bg-gradient-to-r from-brand-950 via-brand-900 to-brand-950 text-white/80 flex items-center justify-between border-t border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="m5 12 7-7 7 7"/></svg>
+          </div>
+          <div>
+            <div class="text-[10px] font-extrabold uppercase tracking-wider text-white">WWF-Pakistan</div>
+            <div class="text-[9px] text-white/50 font-medium">Forestry Interventions Portal</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] font-extrabold text-gold-300">2023 – 2026</div>
+          <div class="text-[9px] text-white/50 font-medium">Generated ${new Date().toLocaleDateString('en-PK')}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('preview-card-content').innerHTML = content;
+  document.getElementById('preview-card-modal').classList.remove('hidden');
+  if (window.lucide) lucide.createIcons();
+}
+
+function openCategoryPreview(catName) {
+  if (!catName || !wideCurrentRows.length) { showToast('Category data not available.','error'); return; }
+  const rows = wideCurrentRows.filter(r => (r.Intervention_Category || '') === catName);
+  if (!rows.length) { showToast('No rows found for this category.','warning'); return; }
+  previewMode = 'category';
+  previewMeta = { title: catName, subtitle: `${rows.length} intervention${rows.length!==1?'s':''}` };
+  document.getElementById('preview-title-text').textContent = catName;
+
+  // Aggregate totals
+  let tPlants = 0, tArea = 0, survVals = [];
+  YEAR_RANGE.forEach(y => {
+    rows.forEach(r => {
+      tPlants += Number(r['p_'+y]) || 0;
+      tArea   += Number(r['a_'+y]) || 0;
+      if (r['s_'+y] != null && r['s_'+y] !== '') {
+        const raw = Number(r['s_'+y]);
+        survVals.push((raw > 0 && raw <= 1) ? raw * 100 : raw);
+      }
+    });
+  });
+  const avgSurv = survVals.length ? survVals.reduce((s,v)=>s+v,0)/survVals.length : null;
+
+  // Category short code (e.g. "A")
+  const catLetter = (catName.match(/^([A-Z])\./) || [])[1] || '';
+
+  // Build per-intervention rows
+  const rowsHtml = rows.map((row, i) => {
+    const code = (row.Intervention_Code || '').trim();
+    const name = (row.Intervention_Name || '').trim() || (row.compositeType || '').split('\n')[0] || 'Untitled';
+    const yPlants = YEAR_RANGE.reduce((s,y)=>s+(Number(row['p_'+y])||0),0);
+    const yArea   = YEAR_RANGE.reduce((s,y)=>s+(Number(row['a_'+y])||0),0);
+    const rs = YEAR_RANGE.map(y=>row['s_'+y]).filter(v=>v!=null&&v!=='');
+    const ra = rs.length ? rs.reduce((s,v)=>{const r=Number(v);return s+((r>0&&r<=1)?r*100:r);},0)/rs.length : null;
+    const borderTop = i ? 'border-t border-slate-100' : '';
+    return `
+      <div class="px-6 py-4 ${borderTop} hover:bg-emerald-50/30 transition">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              ${code?`<span class="px-2 py-0.5 text-[9px] font-extrabold rounded-md bg-brand-50 text-brand-800 border border-brand-100">${code.replace(/</g,'&lt;')}</span>`:''}
+              <span class="text-sm font-bold text-slate-900 truncate">${name.replace(/</g,'&lt;')}</span>
+            </div>
+            <div class="text-[11px] text-slate-500 truncate">${(row.Project_Name||'').replace(/</g,'&lt;')||activeDataTab||''}</div>
+          </div>
+          <div class="flex items-center gap-4 shrink-0">
+            <div class="text-right">
+              <div class="text-[9px] font-bold uppercase tracking-wider text-emerald-700">Plants</div>
+              <div class="text-sm font-extrabold text-emerald-700">${numFmt(yPlants)}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[9px] font-bold uppercase tracking-wider text-sky-700">ha</div>
+              <div class="text-sm font-extrabold text-sky-700">${floatFmt(yArea)}</div>
+            </div>
+            <div class="text-right min-w-[58px]">
+              <div class="text-[9px] font-bold uppercase tracking-wider text-amber-700">Surv</div>
+              <div class="pt-0.5">${ra!=null?_pSurvBadge(ra/100):'<span class="text-slate-400 text-xs">—</span>'}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const content = `
+    <div class="px-0 pt-6 pb-0">
+      <!-- Category hero -->
+      <div class="relative px-8 pb-7 mb-0 border-b border-slate-100 overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-800 via-gold-500 to-brand-800"></div>
+        <div class="absolute -top-10 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-16 -left-16 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative flex items-start gap-4 mb-5">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-800 to-brand-950 text-white flex items-center justify-center shadow-xl border border-white/10 shrink-0">
+            <span class="text-3xl font-extrabold font-display text-gold-300">${catLetter}</span>
+          </div>
+          <div class="flex-1 min-w-0 space-y-2">
+            <div class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gold-600">Intervention Category</div>
+            <h2 class="text-xl font-extrabold text-slate-900 tracking-tight leading-tight font-display">${catName.replace(/</g,'&lt;')}</h2>
+            <p class="text-xs text-slate-500 font-medium">${activeDataTab?activeDataTab+' · ':''}${rows.length} intervention${rows.length!==1?'s':''} · WWF-Pakistan Forestry Portfolio</p>
+          </div>
+        </div>
+
+        <!-- Category KPIs -->
+        <div class="relative grid grid-cols-4 gap-3">
+          <div class="p-4 rounded-2xl bg-gradient-to-br from-emerald-50 to-white border border-emerald-200/70 shadow-sm">
+            <div class="text-[9px] font-extrabold uppercase tracking-wider text-emerald-700 mb-1">Total Plants</div>
+            <div class="text-2xl font-extrabold text-emerald-800">${numFmt(tPlants)}</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-gradient-to-br from-sky-50 to-white border border-sky-200/70 shadow-sm">
+            <div class="text-[9px] font-extrabold uppercase tracking-wider text-sky-700 mb-1">Total Area (ha)</div>
+            <div class="text-2xl font-extrabold text-sky-800">${floatFmt(tArea)}</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-200/70 shadow-sm">
+            <div class="text-[9px] font-extrabold uppercase tracking-wider text-amber-700 mb-1">Avg Survival</div>
+            <div class="text-2xl font-extrabold text-amber-800">${avgSurv!=null?avgSurv.toFixed(1)+'%':'—'}</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-gradient-to-br from-brand-50 to-white border border-brand-200/70 shadow-sm">
+            <div class="text-[9px] font-extrabold uppercase tracking-wider text-brand-800 mb-1">Interventions</div>
+            <div class="text-2xl font-extrabold text-brand-900">${rows.length}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Intervention list -->
+      <div class="px-0">
+        <div class="px-8 pt-5 pb-2">
+          <div class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-400">Portfolio Roll-up</div>
+        </div>
+        <div class="bg-white">
+          ${rowsHtml}
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-2 px-8 py-4 bg-gradient-to-r from-brand-950 via-brand-900 to-brand-950 text-white/80 flex items-center justify-between border-t border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="m5 12 7-7 7 7"/></svg>
+          </div>
+          <div>
+            <div class="text-[10px] font-extrabold uppercase tracking-wider text-white">WWF-Pakistan</div>
+            <div class="text-[9px] text-white/50 font-medium">Forestry Interventions Portal</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] font-extrabold text-gold-300">Category Report</div>
+          <div class="text-[9px] text-white/50 font-medium">Generated ${new Date().toLocaleDateString('en-PK')}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('preview-card-content').innerHTML = content;
+  document.getElementById('preview-card-modal').classList.remove('hidden');
+  if (window.lucide) lucide.createIcons();
+}
+
+function closePreviewModal() {
+  document.getElementById('preview-card-modal').classList.add('hidden');
+  previewMode = '';
+  previewMeta = { title: '', subtitle: '' };
+}
+
+async function downloadPreviewAsImage() {
+  const card = document.getElementById('preview-card-outer');
+  const btn = document.getElementById('preview-download-btn');
+  if (!card) { showToast('Preview card not found.','error'); return; }
+  const origText = btn.innerHTML;
+  btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg><span>Rendering…</span>`;
+  btn.disabled = true;
+  try {
+    const canvas = await html2canvas(card, {
+      backgroundColor: '#ffffff',
+      scale: window.devicePixelRatio > 1.5 ? 2 : 1.5,
+      useCORS: true,
+      logging: false,
+    });
+    const blob = await new Promise(res => canvas.toBlob(b => res(b), 'image/png', 0.95));
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const stamp = new Date().toISOString().slice(0,10);
+    const safeFn = s => (s||'').replace(/[^\w\-]+/g,'_').slice(0,40) || 'preview';
+    let fname;
+    if (previewMode === 'row') {
+      fname = `WWF_Intervention_${safeFn(previewMeta.title)}_${stamp}.png`;
+    } else if (previewMode === 'category') {
+      fname = `WWF_Category_${safeFn(previewMeta.title)}_${stamp}.png`;
+    } else {
+      fname = `WWF_Preview_${stamp}.png`;
+    }
+    a.download = fname;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 5000);
+    showToast(`Downloaded ${fname}`,'success');
+  } catch (e) {
+    console.error(e);
+    showToast('Failed to render card image: '+ (e.message||e), 'error');
+  } finally {
+    btn.innerHTML = origText;
+    btn.disabled = false;
+    if (window.lucide) lucide.createIcons();
+  }
+}
+
+// Preview modal: ESC close & backdrop close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const m = document.getElementById('preview-card-modal');
+    if (m && !m.classList.contains('hidden')) closePreviewModal();
+  }
+});
+document.addEventListener('click', e => {
+  const m = document.getElementById('preview-card-modal');
+  if (m && !m.classList.contains('hidden') && e.target === m) closePreviewModal();
+});
 
 async function handleWideEditSubmit(e) {
   e.preventDefault();
