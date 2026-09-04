@@ -699,7 +699,7 @@ async function loadAllFromGoogleSheet() {
   try {
     const gasResult = await pGAS;
     if (gasResult.ok) {
-      applyData(gasResult.records, gasResult.whitelist, 'âœ“ Google Sheets Live');
+      applyData(gasResult.records, gasResult.whitelist, 'âœ“ Live');
       if (window.lucide) lucide.createIcons();
       persistCache();
       return;
